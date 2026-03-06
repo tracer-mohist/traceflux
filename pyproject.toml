@@ -1,0 +1,55 @@
+# pyproject.toml
+[project]
+name = "traceflux"
+version = "0.1.0"
+description = "Lightweight text search engine with noise filtering and associative search"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [
+  { name = "Tracer", email = "tracer.mohist@outlook.com" }
+]
+keywords = [
+  "search",
+  "text-processing",
+  "information-retrieval",
+  "unix-philosophy"
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Text Processing :: Indexing",
+]
+
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7.0",
+  "pytest-cov>=4.0",
+]
+
+[project.scripts]
+traceflux = "traceflux.cli:main"
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+addopts = "-v --cov=traceflux --cov-report=term-missing"
+
+[tool.coverage.run]
+source = ["traceflux"]
+omit = ["*/tests/*", "*/__init__.py"]
