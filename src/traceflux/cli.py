@@ -44,8 +44,8 @@ def setup_parser() -> argparse.ArgumentParser:
     search_parser.add_argument(
         "paths",
         nargs="*",
-        default=["."],
-        help="Paths to search (default: current directory)",
+        default=[],
+        help="Paths to search (default: stdin or current directory)",
     )
     search_parser.add_argument(
         "-n", "--limit",
@@ -74,8 +74,8 @@ def setup_parser() -> argparse.ArgumentParser:
     index_parser.add_argument(
         "paths",
         nargs="*",
-        default=["."],
-        help="Paths to index (default: current directory)",
+        default=[],
+        help="Paths to index (default: stdin or current directory)",
     )
     index_parser.add_argument(
         "-o", "--output",
@@ -97,8 +97,8 @@ def setup_parser() -> argparse.ArgumentParser:
     patterns_parser.add_argument(
         "paths",
         nargs="*",
-        default=["."],
-        help="Paths to analyze (default: current directory)",
+        default=[],
+        help="Paths to analyze (default: stdin or current directory)",
     )
     patterns_parser.add_argument(
         "--min-length",
@@ -132,8 +132,8 @@ def setup_parser() -> argparse.ArgumentParser:
     assoc_parser.add_argument(
         "paths",
         nargs="*",
-        default=["."],
-        help="Paths to analyze (default: current directory)",
+        default=[],
+        help="Paths to analyze (default: stdin or current directory)",
     )
     assoc_parser.add_argument(
         "--limit",
@@ -168,9 +168,28 @@ def setup_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def scan_paths(paths: list[str]) -> list[tuple[str, str]]:
-    """Scan paths and return list of (filepath, content) tuples."""
+def scan_paths(paths: list[str], read_stdin: bool = False) -> list[tuple[str, str]]:
+    """Scan paths and return list of (filepath, content) tuples.
+    
+    Args:
+        paths: List of file/directory paths
+        read_stdin: If True and paths is empty or contains "-", read from stdin
+    
+    Returns:
+        List of (name, content) tuples
+    """
     documents = []
+    
+    # Handle stdin input
+    if read_stdin and (not paths or paths == ["-"]):
+        import sys
+        content = sys.stdin.read()
+        if content.strip():
+            documents.append(("stdin", content))
+        return documents
+    
+    # Filter out "-" from paths if present
+    paths = [p for p in paths if p != "-"]
     
     for path_str in paths:
         path = Path(path_str)
@@ -233,7 +252,14 @@ def cmd_search(args: argparse.Namespace) -> int:
     global verbose
     verbose = args.verbose
     
-    documents = scan_paths(args.paths)
+    # Use stdin if no paths provided and stdin is not a tty
+    import sys
+    use_stdin = not args.paths and not sys.stdin.isatty()
+    
+    if use_stdin:
+        documents = scan_paths([], read_stdin=True)
+    else:
+        documents = scan_paths(args.paths if args.paths else ["."])
     
     if not documents:
         print("No documents found to search.", file=sys.stderr)
@@ -301,7 +327,14 @@ def cmd_index(args: argparse.Namespace) -> int:
     global verbose
     verbose = args.verbose
     
-    documents = scan_paths(args.paths)
+    # Use stdin if no paths provided and stdin is not a tty
+    import sys
+    use_stdin = not args.paths and not sys.stdin.isatty()
+    
+    if use_stdin:
+        documents = scan_paths([], read_stdin=True)
+    else:
+        documents = scan_paths(args.paths if args.paths else ["."])
     
     if not documents:
         print("No documents found to index.", file=sys.stderr)
@@ -339,7 +372,14 @@ def cmd_index(args: argparse.Namespace) -> int:
 
 def cmd_patterns(args: argparse.Namespace) -> int:
     """Execute patterns command."""
-    documents = scan_paths(args.paths)
+    # Use stdin if no paths provided and stdin is not a tty
+    import sys
+    use_stdin = not args.paths and not sys.stdin.isatty()
+    
+    if use_stdin:
+        documents = scan_paths([], read_stdin=True)
+    else:
+        documents = scan_paths(args.paths if args.paths else ["."])
     
     if not documents:
         print("No documents found to analyze.", file=sys.stderr)
@@ -381,7 +421,14 @@ def cmd_patterns(args: argparse.Namespace) -> int:
 
 def cmd_associations(args: argparse.Namespace) -> int:
     """Execute associations command."""
-    documents = scan_paths(args.paths)
+    # Use stdin if no paths provided and stdin is not a tty
+    import sys
+    use_stdin = not args.paths and not sys.stdin.isatty()
+    
+    if use_stdin:
+        documents = scan_paths([], read_stdin=True)
+    else:
+        documents = scan_paths(args.paths if args.paths else ["."])
     
     if not documents:
         print("No documents found to analyze.", file=sys.stderr)

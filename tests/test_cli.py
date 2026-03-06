@@ -30,7 +30,7 @@ class TestCLIParser:
         args = parser.parse_args(["search", "test"])
         assert args.command == "search"
         assert args.query == "test"
-        assert args.paths == ["."]
+        assert args.paths == []
         assert args.limit == 20
 
     def test_search_command_with_options(self):
@@ -49,7 +49,7 @@ class TestCLIParser:
         parser = setup_parser()
         args = parser.parse_args(["index"])
         assert args.command == "index"
-        assert args.paths == ["."]
+        assert args.paths == []
         assert args.output is None
 
     def test_index_command_with_output(self):
@@ -65,7 +65,7 @@ class TestCLIParser:
         parser = setup_parser()
         args = parser.parse_args(["patterns"])
         assert args.command == "patterns"
-        assert args.paths == ["."]
+        assert args.paths == []
         assert args.min_length == 3
         assert args.limit == 50
 
@@ -84,7 +84,7 @@ class TestCLIParser:
         args = parser.parse_args(["associations", "test"])
         assert args.command == "associations"
         assert args.query == "test"
-        assert args.paths == ["."]
+        assert args.paths == []
         assert args.limit == 10
 
 
