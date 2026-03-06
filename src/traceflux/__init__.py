@@ -6,5 +6,15 @@ __author__ = "Tracer"
 
 from traceflux.scanner import Scanner
 from traceflux.index import PatternIndex
+from traceflux.patterns import PatternDetector
+from traceflux.graph import CooccurrenceGraph
+from traceflux.pagerank import WeightedPageRank, compute_pagerank
 
-__all__ = ["Scanner", "PatternIndex"]
+__all__ = [
+    "Scanner",
+    "PatternIndex",
+    "PatternDetector",
+    "CooccurrenceGraph",
+    "WeightedPageRank",
+    "compute_pagerank",
+]
