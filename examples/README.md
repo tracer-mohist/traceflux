@@ -2,20 +2,53 @@
 
 Practical usage examples for real-world scenarios.
 
-Each example is a self-contained script or command sequence.
+traceflux works like `grep` or `rg`:
+- Search files/directories directly
+- **Or** read from stdin (pipe input)
+- Output can be piped to other tools
 
 ---
 
 ## Quick Examples
 
-### 1. Find Related Terms
+### 1. Search Files Directly
 
 ```bash
 # What's related to "proxy" in my codebase?
 traceflux associations "proxy" src/ --hops 2
+
+# Search for a pattern
+traceflux search "def " src/ --limit 10
 ```
 
-### 2. Explore with Pipes
+### 2. Pipe Input to traceflux
+
+```bash
+# Search content from stdin
+cat file.txt | traceflux search "pattern"
+
+# Combine multiple files
+find . -name "*.py" | xargs cat | traceflux associations "proxy"
+
+# Filter then analyze
+git diff HEAD~1 | traceflux patterns
+```
+
+### 3. Pipe traceflux Output to Other Tools
+
+```bash
+# Filter results with grep
+traceflux search "pattern" src/ | grep -v test
+
+# Extract specific fields with jq
+traceflux associations "pattern" src/ --json | \
+  jq -r '.associations[].term'
+
+# Count and sort
+traceflux patterns src/ --json | jq '.patterns | length'
+```
+
+### 4. Combined Pipeline
 
 ```bash
 # Get top 5 related terms, then search for each
@@ -25,22 +58,6 @@ traceflux associations "pattern" src/ --json | \
     echo "=== Searching for: $term ==="
     traceflux search "$term" src/ --limit 3
   done
-```
-
-### 3. Discover API Endpoints
-
-```bash
-# Find all API-related patterns
-traceflux associations "api" src/ --json | \
-  jq -r '.associations[].term' | \
-  grep -E "(route|endpoint|handler|url)"
-```
-
-### 4. Explore Configuration
-
-```bash
-# What configuration options exist?
-traceflux associations "config" src/ --hops 2 --explain
 ```
 
 ---
