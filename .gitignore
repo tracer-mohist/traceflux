@@ -21,13 +21,18 @@ wheels/
 *.egg
 
 # Virtual environments
+.venv/
 venv/
-env/
 ENV/
+env/
+
+# PDM
+.pdm-python
+.pdm.toml
 
 # IDE
-.vscode/
 .idea/
+.vscode/
 *.swp
 *.swo
 *~
@@ -36,11 +41,9 @@ ENV/
 .pytest_cache/
 .coverage
 htmlcov/
+.tox/
+.nox/
 
-# Documents
-*.pdf
-*.docx
-
-# Research drafts
-drafts/*.tmp
-research/*.tmp
+# Misc
+.DS_Store
+Thumbs.db
