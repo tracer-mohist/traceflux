@@ -132,6 +132,54 @@ traceflux associations "proxy" src/ --json | \
 
 ---
 
+## Best Practices
+
+### Getting Meaningful Associations
+
+traceflux detects **repeated patterns** (not dictionary words). For better results:
+
+```bash
+# Default (short patterns, may be fragments)
+traceflux patterns src/
+
+# Better: longer patterns
+traceflux patterns src/ --min-length 8
+
+# Best: filter by frequency
+traceflux patterns src/ --min-length 6 --limit 20
+```
+
+### Understanding the Trade-offs
+
+| Feature | Choice | Trade-off |
+|---------|--------|-----------|
+| Tokenization | None (language-independent) | Patterns may be fragments |
+| Dictionary | None (works out-of-box) | Need to tune `--min-length` |
+| ML/Embeddings | None (lightweight) | No semantic understanding |
+
+**Benefits**: Works on any language, no training, fast  
+**Trade-offs**: Adjust parameters for your corpus
+
+### Typical Workflows
+
+```bash
+# 1. Explore codebase structure
+traceflux patterns src/ --min-length 8 --limit 20
+
+# 2. Find related concepts
+traceflux associations "PageRank" src/ --hops 2
+
+# 3. Search and refine
+traceflux search "proxy" src/ | grep -v test
+
+# 4. Pipeline exploration
+traceflux associations "pattern" src/ --json | \
+  jq -r '.associations[:5][].term' | \
+  xargs -I {} traceflux search {} src/ --limit 3
+```
+
+---
+
 ## How It Works
 
 ### Architecture

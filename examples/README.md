@@ -260,6 +260,23 @@ traceflux associations "api" src/ --json | \
 
 ## Tips
 
+### Getting Meaningful Results
+
+traceflux detects repeated patterns (not dictionary words):
+
+```bash
+# Short patterns (may be fragments)
+traceflux patterns src/
+
+# Longer, more meaningful patterns
+traceflux patterns src/ --min-length 8
+
+# Filter by frequency
+traceflux patterns src/ --min-length 6 --limit 20
+```
+
+See: `../README.md` for trade-offs explanation.
+
 ### Combine with Standard Tools
 
 ```bash
