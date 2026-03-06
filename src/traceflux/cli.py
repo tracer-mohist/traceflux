@@ -288,6 +288,10 @@ def cmd_search(args: argparse.Namespace) -> int:
                         print(f"    Context: ...{context}...")
                         break
             print()
+        
+        # Show suggestions (related terms)
+        if not args.json:
+            _show_suggestions(query, documents, limit=5)
     
     return 0
 
@@ -456,6 +460,39 @@ def main(argv: Optional[list[str]] = None) -> int:
         return 0
     
     return args.func(args)
+
+
+def _show_suggestions(query: str, documents: list[tuple[str, str]], limit: int = 5) -> None:
+    """Show related term suggestions after search results.
+    
+    Args:
+        query: Original search query
+        documents: List of (filepath, content) tuples
+        limit: Maximum suggestions to show
+    """
+    # Build co-occurrence graph
+    detector = PatternDetector(min_support=2, min_length=3)
+    graph = CooccurrenceGraph()
+    
+    for filepath, content in documents:
+        patterns = detector.find_patterns(content)
+        pattern_list = list(patterns.keys())
+        graph.add_document_cooccurrences(pattern_list, window_size=5)
+    
+    # Check if query exists in graph
+    if not graph.has_node(query):
+        return
+    
+    # Get associations
+    pagerank_scores = compute_pagerank(graph)
+    search = AssociativeSearch(graph, pagerank_scores, lambda_param=0.7)
+    result = search.find_associations(query, max_degree=2, top_k=limit * 2)
+    
+    if result.associations:
+        print("Related terms:")
+        for assoc in result.associations[:limit]:
+            print(f"  • {assoc.pattern:25s} (strength: {assoc.score:.3f}, degree {assoc.degree})")
+        print()
 
 
 if __name__ == "__main__":
