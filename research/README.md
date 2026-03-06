@@ -1,70 +1,63 @@
-# Research Notes
+# Research Index
 
-**Purpose**: Store research drafts, analysis, and experimental ideas.
+**Purpose**: Organized research notes for traceflux development.
 
-**Format**: Markdown files with date prefix.
+**Structure**: By topic, not just date.
 
 ---
 
-## Structure
+## Categories
 
+### 01-foundations/ — Mathematical & Theoretical Foundations
+
+Core mathematical principles underlying traceflux.
+
+- `character-level-analysis.md` — Character sequences, n-grams, set theory, graph theory
+- (Future) Information theory, formal language theory
+
+### 02-associations/ — Association Discovery
+
+How to find and present associations.
+
+- `six-degrees-theory.md` — Small-world networks, multi-hop associations
+- (Future) Co-occurrence algorithms, graph traversal
+
+### 03-philosophy/ — Design Philosophy & Principles
+
+Why we design this way, not that way.
+
+- `search-vs-judgment.md` — Search provides associations, user provides judgment
+- `multi-hop-noise.md` — Embracing "noise" as feature, not bug
+- (Future) User experience principles, ethical considerations
+
+---
+
+## Quick Reference
+
+| Question | Read This |
+|----------|-----------|
+| How to handle multiple languages? | `01-foundations/character-level-analysis.md` |
+| Why multi-hop associations? | `02-associations/six-degrees-theory.md` |
+| Should we filter "noise"? | `03-philosophy/multi-hop-noise.md` |
+| What is traceflux's role? | `03-philosophy/search-vs-judgment.md` |
+
+---
+
+## Filing New Research
+
+**Template**:
 ```
 research/
-├── README.md           # This file (index)
-├── 2026-03-06_*.md     # Date-prefixed research notes
-└── ...
+├── 01-foundations/     # Math, theory, algorithms
+├── 02-associations/    # Discovery methods
+├── 03-philosophy/      # Design principles
+└── README.md           # This index
 ```
 
----
-
-## Naming Convention
-
-`YYYY-MM-DD_topic.md`
-
-Examples:
-- `2026-03-06_keyword-association.md`
-- `2026-03-07_stop-words-analysis.md`
-- `2026-03-08_scoring-algorithms.md`
-
----
-
-## Template
-
-```markdown
-# Research: [Topic]
-
-**Date**: YYYY-MM-DD  
-**Status**: Draft / Review / Complete
-
-## Question
-
-What are we trying to understand?
-
-## Analysis
-
-Research, experiments, findings.
-
-## Conclusion
-
-What did we learn?
-
-## Next Steps
-
-What to do next?
-```
-
----
-
-## Guidelines
-
-1. **Date prefix** — Chronological ordering
-2. **One topic per file** — Focused research
-3. **Status tracking** — Draft → Review → Complete
-4. **Link related notes** — Cross-reference for navigation
+**Naming**: `YYYY-MM-DD_topic.md`
 
 ---
 
 **Related**:
-- `design/` — Design documents (stable)
-- `drafts/` — Work-in-progress drafts
-- `docs/` — Final documentation
+- `../design/` — Stable design documents
+- `../drafts/` — Work-in-progress
