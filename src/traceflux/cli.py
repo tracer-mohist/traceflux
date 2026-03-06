@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Optional
 
 from traceflux import Scanner, PatternDetector, PatternIndex, CooccurrenceGraph, compute_pagerank
+from traceflux.associations import AssociativeSearch
 
 
 def setup_parser() -> argparse.ArgumentParser:
@@ -122,7 +123,7 @@ def setup_parser() -> argparse.ArgumentParser:
     assoc_parser = subparsers.add_parser(
         "associations",
         help="Find related terms",
-        description="Discover terms related to your query.",
+        description="Discover terms related to your query using co-occurrence graph.",
     )
     assoc_parser.add_argument(
         "query",
@@ -141,9 +142,26 @@ def setup_parser() -> argparse.ArgumentParser:
         help="Maximum associations to show (default: 10)",
     )
     assoc_parser.add_argument(
+        "--hops",
+        type=int,
+        default=2,
+        help="Maximum degrees of separation (default: 2)",
+    )
+    assoc_parser.add_argument(
+        "--min-strength",
+        type=float,
+        default=0.0,
+        help="Minimum association strength (default: 0.0)",
+    )
+    assoc_parser.add_argument(
         "--json",
         action="store_true",
         help="Output in JSON format",
+    )
+    assoc_parser.add_argument(
+        "--explain",
+        action="store_true",
+        help="Show explanation for associations",
     )
     assoc_parser.set_defaults(func=cmd_associations)
     
@@ -384,26 +402,46 @@ def cmd_associations(args: argparse.Namespace) -> int:
         print(f"No associations found for '{query}'")
         return 0
     
-    # Get related terms (simple approach: neighbors sorted by edge weight)
-    neighbors = graph.neighbors(query)
-    neighbor_weights = [(n, graph.get_weight(query, n)) for n in neighbors]
-    sorted_neighbors = sorted(neighbor_weights, key=lambda x: x[1], reverse=True)
+    # Compute PageRank for ranking
+    pagerank_scores = compute_pagerank(graph)
+    
+    # Use AssociativeSearch for multi-hop associations
+    search = AssociativeSearch(graph, pagerank_scores, lambda_param=0.7)
+    result = search.find_associations(
+        query,
+        max_degree=args.hops,
+        top_k=args.limit * 2,  # Get more, then filter by min_strength
+        min_score=args.min_strength
+    )
     
     # Output
     if args.json:
         output = {
             "query": query,
             "associations": [
-                {"term": term, "strength": strength}
-                for term, strength in sorted_neighbors[:args.limit]
+                {
+                    "term": assoc.pattern,
+                    "strength": assoc.score,
+                    "degree": assoc.degree,
+                    "pagerank": assoc.pagerank,
+                    "path": assoc.path if args.explain else None,
+                }
+                for assoc in result.associations[:args.limit]
             ],
+            "total_found": result.total_found,
         }
         print(json.dumps(output, indent=2))
     else:
-        print(f"Associations for '{query}':\n")
+        print(f"Associations for '{query}' (hops={args.hops}):\n")
         
-        for term, strength in sorted_neighbors[:args.limit]:
-            print(f"  {term:30s} strength: {strength:.2f}")
+        for assoc in result.associations[:args.limit]:
+            if args.explain:
+                print(f"  {assoc.pattern:30s} strength: {assoc.score:.3f} (degree {assoc.degree}, path: {' → '.join(assoc.path)})")
+            else:
+                print(f"  {assoc.pattern:30s} strength: {assoc.score:.3f} (degree {assoc.degree})")
+        
+        if not result.associations:
+            print("  (no associations found)")
     
     return 0
 
