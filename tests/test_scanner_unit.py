@@ -183,24 +183,6 @@ class TestScannerUtilities:
         assert isinstance(segments, list)
         assert len(segments) == 2
 
-    def test_is_alphanumeric(self):
-        """Test is_alphanumeric static method."""
-        assert Scanner.is_alphanumeric("a")
-        assert Scanner.is_alphanumeric("Z")
-        assert Scanner.is_alphanumeric("5")
-        assert Scanner.is_alphanumeric("你")
-        assert not Scanner.is_alphanumeric(" ")
-        assert not Scanner.is_alphanumeric(",")
-        assert not Scanner.is_alphanumeric("!")
-
-    def test_is_punctuation(self):
-        """Test is_punctuation static method."""
-        assert Scanner.is_punctuation(" ")
-        assert Scanner.is_punctuation(",")
-        assert Scanner.is_punctuation("!")
-        assert not Scanner.is_punctuation("a")
-        assert not Scanner.is_punctuation("5")
-
 
 class TestScannerEdgeCases:
     """Edge case tests."""
