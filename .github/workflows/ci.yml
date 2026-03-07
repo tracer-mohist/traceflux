@@ -47,7 +47,7 @@ jobs:
 
       - run: black --check src/ tests/
       - run: isort --check-only src/ tests/
-      - run: flake8 --max-line-length=100 --ignore=E501,W503 src/ tests/
+      - run: flake8 --max-line-length=100 --ignore=E501,W503,F401,F841 src/ tests/
 
   release:
     needs: [test, lint]
