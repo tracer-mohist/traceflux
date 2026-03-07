@@ -5,7 +5,7 @@
 - [ ] **Phase 8: Release Automation Upgrade** (python-semantic-release)
   - [x] **Step 1: Configuration** ✅ (30 min)
     - [x] Add minimal config to pyproject.toml
-    - [x] Configure commit parser (angular)
+    - [x] Configure commit parser (conventional)
     - [x] Disable auto-publish (manual confirmation)
     - [x] Disable PyPI publishing
   - [x] **Step 2: Documentation** ✅ (30 min)
@@ -13,8 +13,12 @@
     - [ ] Update RELEASE.md with new workflow
     - [ ] Create commit examples
   - [ ] **Step 3: Testing** (1-2 releases)
-    - [ ] Test version calculation
-    - [ ] Test CHANGELOG generation
+    - [x] Fix CLI JSON output (json.dumps)
+    - [x] Update test expectations (version 1.0.0, limit 20)
+    - [x] Fix flake8 errors (F821, E203, W293)
+    - [x] CI/CD passing ✅
+    - [ ] Test version calculation (semantic-release version --print)
+    - [ ] Test CHANGELOG generation (semantic-release changelog)
     - [ ] Test GitHub Release creation
     - [ ] Verify manual confirmation works
   - [ ] **Step 4: Evaluation**
