@@ -38,6 +38,76 @@ git checkout -b feature/your-feature-name
 
 ---
 
+## Commit Convention
+
+We use **Conventional Commits** for standardized version management.
+
+### Format
+
+```
+<type>: <description>
+
+[optional body]
+
+[optional footer]
+```
+
+### Types
+
+| Type | Description | Version Impact |
+|------|-------------|----------------|
+| `feat:` | New feature | Minor (1.1.0) |
+| `fix:` | Bug fix | Patch (1.0.1) |
+| `docs:` | Documentation only | None |
+| `style:` | Code style (formatting) | None |
+| `refactor:` | Code refactoring | None |
+| `test:` | Add or update tests | None |
+| `chore:` | Maintenance tasks | None |
+
+### Breaking Changes
+
+Add `BREAKING CHANGE:` in the footer:
+
+```
+feat: remove deprecated API
+
+BREAKING CHANGE: old_api() is removed, use new_api() instead
+```
+
+→ Triggers **Major** version bump (2.0.0)
+
+### Examples
+
+```bash
+# Feature
+git commit -m "feat: add multi-hop association search"
+
+# Bug fix
+git commit -m "fix: handle empty input gracefully"
+
+# Documentation
+git commit -m "docs: update installation guide"
+
+# Refactor
+git commit -m "refactor: simplify PageRank calculation"
+
+# Breaking change
+git commit -m "feat: redesign association API
+
+BREAKING CHANGE: AssociationResult structure changed"
+```
+
+### Why Conventional Commits?
+
+- ✅ **Automated versioning** - Commit type determines version bump
+- ✅ **Clear changelog** - Automatically generated from commits
+- ✅ **Standardized** - Industry-standard convention
+- ✅ **Transparent** - Anyone can predict version changes
+
+**Learn more**: [Conventional Commits Specification](https://www.conventionalcommits.org/)
+
+---
+
 ## What We're Looking For
 
 ### High Priority Contributions
