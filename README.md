@@ -76,6 +76,7 @@ traceflux search "pattern" .
 
 Want to contribute or modify traceflux?
 
+**Quick Start** (5 minutes):
 ```bash
 # Clone repository
 git clone https://github.com/tracer-mohist/traceflux.git
@@ -84,14 +85,20 @@ cd traceflux
 # Install for development (editable)
 pipx install -e .
 
+# Enable git hooks (auto quality checks)
+git config core.hooksPath .githooks
+
 # Run tests
 pytest
-
-# Run directly (no installation)
-python -m traceflux.cli --help
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for full guidelines.
+**Documentation**:
+- [Getting Started Guide](docs/GETTING_STARTED.md) — First-time setup
+- [Contributing Guidelines](CONTRIBUTING.md) — How to contribute
+- [Testing Guide](docs/TESTING.md) — Run and write tests
+- [Release Protocol](.github/RELEASE_PROTOCOL.md) — Version management
+
+**Join us!** We welcome contributions of all kinds — code, docs, bug reports, ideas.
 
 ---
 
