@@ -12,4 +12,9 @@ from .index import cmd_index
 from .patterns import cmd_patterns
 from .associations import cmd_associations
 
-__all__ = ["cmd_search", "cmd_index", "cmd_patterns", "cmd_associations"]
+__all__ = [
+    "cmd_search",
+    "cmd_index", 
+    "cmd_patterns",
+    "cmd_associations",
+]
