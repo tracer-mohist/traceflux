@@ -5,6 +5,7 @@ import argparse
 import sys
 from typing import Optional
 
+from traceflux import __version__
 from traceflux.cli.commands import cmd_search, cmd_index, cmd_patterns, cmd_associations
 
 
@@ -19,7 +20,7 @@ def setup_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--version",
         action="version",
-        version=f"%(prog)s 0.1.0",
+        version=f"%(prog)s {__version__}",
     )
     
     subparsers = parser.add_subparsers(
