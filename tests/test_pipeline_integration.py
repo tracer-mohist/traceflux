@@ -65,7 +65,7 @@ class TestFullPipeline:
         def search(query):
             results = index.get(query)
             return results
-        
+
         def search_files(query, paths):
             index = build_index(paths)
             results = index.get(query)
