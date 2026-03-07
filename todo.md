@@ -22,19 +22,20 @@
     - [ ] Assess maintainer experience
     - [ ] Decide: enable auto-publish or keep manual
 
-- [ ] **Phase 7: Documentation Cleanup** (Simplify)
-  - [ ] **Remove Redundant Files**
-    - [ ] Delete RELEASE_NOTES.md (duplicate)
-    - [ ] Delete RELEASE_NOTES_TEMPLATE.md (script has logic)
-    - [ ] Delete INSTALLATION_TEST.md (temporary)
-    - [ ] Delete docs/README.md (duplicate)
-    - [ ] Delete docs/PROJECT-STATUS.md (outdated)
-    - [ ] Delete docs/PYTHON-INFRASTRUCTURE-PLAN.md (outdated)
-  - [ ] **Reorganize**
-    - [ ] Create research/ directory
-    - [ ] Move IMPLEMENTATION-DESIGN.md to research/
-    - [ ] Merge TESTING.md (keep root version)
-  - [ ] **Simplify Content**
+- [x] **Phase 7: Documentation Cleanup** (Simplify) ✅
+  - [x] **Remove Redundant Files** (7 files deleted)
+    - [x] Delete RELEASE_NOTES.md (duplicate)
+    - [x] Delete RELEASE_NOTES_TEMPLATE.md (script has logic)
+    - [x] Delete INSTALLATION_TEST.md (temporary)
+    - [x] Delete docs/README.md (duplicate)
+    - [x] Delete docs/PROJECT-STATUS.md (outdated)
+    - [x] Delete docs/PYTHON-INFRASTRUCTURE-PLAN.md (outdated)
+    - [x] Delete docs/TESTING.md (duplicate)
+  - [x] **Reorganize**
+    - [x] Create research/ directory
+    - [x] Move IMPLEMENTATION-DESIGN.md to research/
+    - [x] Merge TESTING.md (keep root version)
+  - [ ] **Simplify Content** (Deferred to Phase 8 completion)
     - [ ] Trim README.md to <200 lines
     - [ ] Ensure single responsibility per doc
     - [ ] Update all internal links
