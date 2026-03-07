@@ -24,7 +24,7 @@ class TestCLIParser:
         with pytest.raises(SystemExit):
             main(["--version"])
         captured = capsys.readouterr()
-        assert "0.1.0" in captured.out
+        assert "1.0.0" in captured.out
 
     def test_search_command_basic(self):
         """Search command parses arguments correctly."""
@@ -69,7 +69,7 @@ class TestCLIParser:
         assert args.command == "patterns"
         assert args.paths == []
         assert args.min_length == 3
-        assert args.limit == 50
+        assert args.limit == 20
 
     def test_patterns_command_with_options(self):
         """Patterns command with options."""
