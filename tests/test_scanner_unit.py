@@ -1,5 +1,13 @@
 # tests/test_scanner.py
-"""Tests for PNI scanner."""
+"""Scanner Unit Tests.
+
+Tests for PNI (Punctuation Namespace Index) scanner.
+
+Core Logic Verified:
+- PNI segmentation: content vs punctuation separation
+- Position tracking: accurate start/end positions
+- Multi-language support: space is punctuation (language-independent)
+"""
 
 import pytest
 from traceflux.scanner import Scanner, Segment
@@ -13,12 +21,16 @@ class TestScannerBasic:
         self.scanner = Scanner()
 
     def test_empty_text(self):
-        """Empty text yields no segments."""
+        # Scenario: User scans empty file or directory
+        # Expected: No segments emitted (graceful handling)
+        # If fails: Empty files cause crashes
         segments = list(self.scanner.scan(""))
         assert len(segments) == 0
 
     def test_single_word(self):
-        """Single word without punctuation."""
+        # Scenario: Single word without punctuation (minimal input)
+        # Expected: One segment with correct content and positions
+        # If fails: Basic tokenization broken
         segments = list(self.scanner.scan("Hello"))
         assert len(segments) == 1
         assert segments[0].content == "Hello"
@@ -28,14 +40,18 @@ class TestScannerBasic:
         assert segments[0].end_pos == 5
 
     def test_word_with_trailing_punct(self):
-        """Word with trailing punctuation."""
+        # Scenario: Word with trailing punctuation (e.g., "Hello,")
+        # Expected: Content separated from punctuation
+        # If fails: Pattern detection includes punctuation noise
         segments = list(self.scanner.scan("Hello,"))
         assert len(segments) == 1
         assert segments[0].content == "Hello"
         assert segments[0].post_punct == ","
 
     def test_word_with_surrounding_punct(self):
-        """Word with surrounding punctuation."""
+        # Scenario: Word surrounded by punctuation (e.g., "(Hello)")
+        # Expected: Content extracted, punctuation preserved separately
+        # If fails: Code patterns like "(x)" detected as "x" only
         segments = list(self.scanner.scan(",Hello!"))
         assert len(segments) == 1
         assert segments[0].content == "Hello"
@@ -43,14 +59,18 @@ class TestScannerBasic:
         assert segments[0].post_punct == "!"
 
     def test_multiple_words(self):
-        """Multiple words separated by spaces."""
+        # Scenario: Multiple space-separated words
+        # Expected: Each word is separate segment (space is punctuation)
+        # If fails: Multi-word patterns not detected correctly
         segments = list(self.scanner.scan("Hello world"))
         assert len(segments) == 2
         assert segments[0].content == "Hello"
         assert segments[1].content == "world"
 
     def test_sentence(self):
-        """Complete sentence."""
+        # Scenario: Complete sentence with mixed punctuation
+        # Expected: All content words separated, punctuation tracked
+        # If fails: Natural language text parsed incorrectly
         text = "Hello, world! How are you?"
         segments = list(self.scanner.scan(text))
 
