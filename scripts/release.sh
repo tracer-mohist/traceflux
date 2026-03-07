@@ -9,7 +9,7 @@
 # 2. Updates version in pyproject.toml and __version__.py
 # 3. Runs tests
 # 4. Creates git commit and tag
-# 5. Pushes to GitHub (triggers CI/CD for release)
+# 5. Pushes to GitHub (triggers CI/CD for GitHub Release)
 
 set -euo pipefail
 
@@ -152,6 +152,6 @@ echo ""
 print_info "Next steps:"
 echo "  1. Review changes: git show"
 echo "  2. Push to GitHub: git push origin main --tags"
-echo "  3. CI/CD will automatically create GitHub Release"
+echo "  3. CI/CD will automatically create GitHub Release (no PyPI)"
 echo ""
 print_info "Or push now: git push origin main --tags"

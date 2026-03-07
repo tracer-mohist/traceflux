@@ -87,21 +87,18 @@ This triggers CI/CD pipeline:
 2. 🔍 Linting checks (black, flake8, isort, mypy)
 3. 📦 Package build
 4. 🚀 GitHub Release creation
-5. 📤 PyPI publication (if configured)
 
 ### Step 5: Verify Release
 
 **Check GitHub Release**:
 - Visit: https://github.com/tracer-mohist/traceflux/releases
-- Verify release notes and assets
+- Verify release notes
 
-**Check PyPI** (if configured):
-- Visit: https://pypi.org/project/traceflux/
-- Verify new version published
-
-**Test installation**:
+**Test installation** (from source):
 ```bash
-pip install traceflux==1.0.1
+git clone https://github.com/tracer-mohist/traceflux.git
+cd traceflux
+pip install -e .
 traceflux --version
 ```
 
@@ -145,24 +142,19 @@ git push origin main --tags
 
 | Event | Branch/Tag | Actions |
 |-------|------------|---------|
-| Push | `main` | Test, Lint, Build |
+| Push | `main` | Test, Lint |
 | Pull Request | `main` | Test, Lint |
-| Tag | `v*` | Test, Lint, Build, Release, PyPI |
+| Tag | `v*` | Test, Lint, GitHub Release |
 
 ### Jobs
 
-1. **test** - Run tests on Python 3.10-3.13
-2. **lint** - Code quality checks
-3. **build** - Build distribution packages
-4. **release** - Create GitHub Release (tag only)
-5. **publish** - Upload to PyPI (tag only)
+1. **test** - Run tests (Python 3.12)
+2. **lint** - Code quality checks (black, isort, flake8)
+3. **release** - Create GitHub Release (tag only)
 
 ### Secrets Required
 
-For PyPI publication, configure GitHub secret:
-- `PYPI_API_TOKEN` - PyPI API token
-
-**Create token**: https://pypi.org/manage/account/token/
+None required for GitHub Releases only.
 
 ---
 

@@ -59,9 +59,7 @@ git push origin main --tags
 # CI/CD will automatically:
 # - Run tests
 # - Check code quality
-# - Build package
 # - Create GitHub Release
-# - Publish to PyPI (if configured)
 ```
 
 ---
@@ -140,4 +138,4 @@ grep '^__version__ = ' src/traceflux/__version__.py
 - [Release Guide](RELEASE.md)
 - [Contributing Guide](../CONTRIBUTING.md)
 - [GitHub Actions](https://github.com/tracer-mohist/traceflux/actions)
-- [PyPI Package](https://pypi.org/project/traceflux/)
+- [GitHub Releases](https://github.com/tracer-mohist/traceflux/releases)
