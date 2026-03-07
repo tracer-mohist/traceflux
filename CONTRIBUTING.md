@@ -29,12 +29,14 @@ cd traceflux
 # 3. Install for development
 pipx install -e .
 
-# 4. Create a branch
-git checkout -b feature/your-feature-name
+# 4. Create a branch (use issue/<number>-<description> format)
+git checkout -b issue/42-your-feature-name
 
-# 5. Make your changes, test, and commit
-# 6. Push and open a Pull Request
+# 5. Make your changes, test, and commit (follow Conventional Commits)
+# 6. Push and open a Pull Request (required - no direct pushes to main)
 ```
+
+**Important**: We use **Pull Requests for all changes** - no direct pushes to `main`. See [Branch Protection & PR Workflow](.github/BRANCH_PROTECTION.md) for details.
 
 ---
 
@@ -237,6 +239,22 @@ This automatically runs code quality checks before each commit:
 
 ## Pull Request Process
 
+### Branch Naming
+
+**Format**: `issue/<number>-<short-description>`
+
+```bash
+# Good
+git checkout -b issue/42-multi-hop-search
+git checkout -b issue/38-fix-empty-input
+
+# Avoid
+git checkout -b feature/new-stuff
+git checkout -b my-branch
+```
+
+**Why**: Clear traceability to issues, easy to identify purpose.
+
 ### Before Submitting
 
 1. **Update documentation** if behavior changes
@@ -247,24 +265,29 @@ This automatically runs code quality checks before each commit:
 
 ### Submitting a PR
 
-1. Create a branch from `main`:
+1. **Ensure branch is up to date**:
    ```bash
    git checkout main
-   git checkout -b feature/your-feature-name
+   git pull origin main
+   git checkout issue/42-your-feature
+   git rebase main  # Or merge
    ```
 
-2. Make your changes and commit:
+2. **Make your changes and commit** (follow Conventional Commits):
    ```bash
    git add .
-   git commit -m "Description of changes"
+   git commit -m "feat: add multi-hop search"
    ```
 
-3. Push to your fork:
+3. **Push to your fork**:
    ```bash
-   git push origin feature/your-feature-name
+   git push -u origin issue/42-your-feature
    ```
 
-4. Open a Pull Request on GitHub using the PR template
+4. **Open a Pull Request** on GitHub:
+   - Use the PR template
+   - Title must follow Conventional Commits
+   - Reference the issue: "Closes #42"
 
 ### Review Process
 
@@ -273,11 +296,22 @@ This automatically runs code quality checks before each commit:
 - At least one maintainer approval required
 - Address review feedback promptly
 
+### Merge Strategy
+
+**Use "Create a merge commit"** (NOT squash or rebase):
+
+- ✅ Preserves individual commit history
+- ✅ Clear traceability to PR and issue
+- ✅ Easier to revert if needed
+
+**Avoid squash merge** unless PR has many small "fix typo" commits.
+
 ### After Approval
 
 - Maintainer will merge the PR
-- No squash unless requested (preserve commit history)
 - Delete your feature branch after merge
+
+**Full details**: See [Branch Protection & PR Workflow](.github/BRANCH_PROTECTION.md)
 
 ---
 
@@ -344,6 +378,15 @@ def public_function(param: str, count: int = 1) -> List[str]:
 
 ## Commit Guidelines
 
+### Why Conventional Commits Matter
+
+**Automated versioning depends on correct commit messages**:
+- `feat:` → Minor version bump (1.1.0)
+- `fix:` → Patch version bump (1.0.1)
+- `feat: ... BREAKING CHANGE:` → Major version bump (2.0.0)
+
+**Wrong commit messages = broken automation**
+
 ### Commit Message Format
 
 ```
@@ -354,40 +397,53 @@ def public_function(param: str, count: int = 1) -> List[str]:
 <footer>
 ```
 
-**Types**:
-- `feat`: New feature
-- `fix`: Bug fix
-- `docs`: Documentation changes
-- `style`: Code style changes (formatting, etc.)
-- `refactor`: Code refactoring
-- `test`: Test additions or changes
-- `chore`: Maintenance tasks
+**Rules**:
+- Lowercase after type: `feat: add`, NOT `feat: Add`
+- Imperative mood: `add`, NOT `added` or `adding`
+- No period at end
+- Max 72 chars for subject line
 
-**Examples**:
+### Types
+
+| Type | Description | Example |
+|------|-------------|---------|
+| `feat` | New feature | `feat: add multi-hop search` |
+| `fix` | Bug fix | `fix: handle empty input` |
+| `docs` | Documentation only | `docs: update README` |
+| `style` | Code style (formatting) | `style: fix whitespace` |
+| `refactor` | Code refactoring | `refactor: simplify parser` |
+| `test` | Test additions/changes | `test: add edge cases` |
+| `chore` | Maintenance tasks | `chore: update dependencies` |
+
+### Good vs Bad Examples
+
+```bash
+# ✅ Good
+git commit -m "feat: add multi-hop association search"
+git commit -m "fix: handle empty input gracefully"
+git commit -m "docs: update installation guide"
+git commit -m "refactor: simplify PageRank calculation"
+
+# ❌ Bad (avoid these)
+git commit -m "Added new feature"           # Wrong tense
+git commit -m "FIX: something"              # Uppercase type
+git commit -m "feat: Added new feature"     # Past tense
+git commit -m "fix bug"                     # Missing type
+git commit -m "WIP"                         # Too vague
+git commit -m "asdfasdf"                    # Nonsense
 ```
-feat(cli): add --verbose flag to search command
 
-Add --verbose flag to show detailed output.
-Shows context for each match.
+### Breaking Changes
 
-Closes: #42
+Add `BREAKING CHANGE:` in the footer:
+
+```bash
+git commit -m "feat: remove deprecated API
+
+BREAKING CHANGE: old_api() is removed, use new_api() instead"
 ```
 
-```
-fix(patterns): handle empty text input
-
-Return empty dict when text is empty.
-Prevents IndexError in PatternDetector.
-
-Fixes: #38
-```
-
-```
-docs(README): update installation instructions
-
-Clarify pipx installation as recommended method.
-Remove pip installation from main section.
-```
+→ Triggers **Major** version bump (2.0.0)
 
 ### Git Email
 
@@ -397,6 +453,8 @@ git config user.email "YOUR_ID+username@users.noreply.github.com"
 ```
 
 This protects your privacy while linking commits to your GitHub account.
+
+**Learn more**: [Conventional Commits Specification](https://www.conventionalcommits.org/)
 
 ---
 
