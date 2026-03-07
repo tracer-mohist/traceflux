@@ -78,66 +78,44 @@ traceflux is a tool for **thinking**, not just searching.
 
 ## Technical Architecture
 
-### Layers
+### Layers (Top to Bottom)
 
-```
-┌─────────────────────────────────────────────────────────┐
-│  CLI Layer (cli.py)                                     │
-│  - Human interface                                      │
-│  - Argument parsing, output formatting                  │
-└─────────────────────────────────────────────────────────┘
-                          │
-                          ▼
-┌─────────────────────────────────────────────────────────┐
-│  Association Layer (associations.py)                    │
-│  - BFS traversal on co-occurrence graph                 │
-│  - Multi-hop discovery (1, 2, 3+ degrees)               │
-│  - PageRank-weighted ranking                            │
-└─────────────────────────────────────────────────────────┘
-                          │
-                          ▼
-┌─────────────────────────────────────────────────────────┐
-│  Graph Layer (graph.py)                                 │
-│  - Co-occurrence graph construction                     │
-│  - Edge weights from co-occurrence frequency            │
-└─────────────────────────────────────────────────────────┘
-                          │
-                          ▼
-┌─────────────────────────────────────────────────────────┐
-│  Pattern Layer (patterns.py)                            │
-│  - LZ77-style repeated pattern detection                │
-│  - Suffix array + LCP algorithm                         │
-└─────────────────────────────────────────────────────────┘
-                          │
-                          ▼
-┌─────────────────────────────────────────────────────────┐
-│  Scanner Layer (scanner.py)                             │
-│  - PNI (Punctuation Namespace Index) segmentation       │
-│  - Language-independent tokenization                    │
-└─────────────────────────────────────────────────────────┘
-```
+1. **CLI Layer** `(cli/)`
+   - Human interface
+   - Argument parsing, output formatting
+
+2. **Association Layer** `(associations.py)`
+   - BFS traversal on co-occurrence graph
+   - Multi-hop discovery (1, 2, 3+ degrees)
+   - PageRank-weighted ranking
+
+3. **Graph Layer** `(graph.py)`
+   - Co-occurrence graph construction
+   - Edge weights from co-occurrence frequency
+
+4. **Pattern Layer** `(patterns.py)`
+   - LZ77-style repeated pattern detection
+   - Suffix array + LCP algorithm
+
+5. **Scanner Layer** `(scanner.py)`
+   - PNI (Punctuation Namespace Index) segmentation
+   - Language-independent tokenization
 
 ### Data Flow
 
-```
+```text
 Text Files
-    │
-    ▼
+  ↓
 Scanner → Segments (content + positions)
-    │
-    ▼
+  ↓
 PatternDetector → Patterns (repeated sequences)
-    │
-    ▼
+  ↓
 CooccurrenceGraph → Edges (patterns that appear together)
-    │
-    ▼
+  ↓
 PageRank → Scores (pattern importance)
-    │
-    ▼
+  ↓
 AssociativeSearch → Associations (ranked, multi-hop)
-    │
-    ▼
+  ↓
 CLI → Human-readable output
 ```
 
