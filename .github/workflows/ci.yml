@@ -1,109 +1,64 @@
 # CI/CD Pipeline for traceflux
-# 
+#
+# Philosophy: Simple, Practical, Elegant
+# - Single Python version (cost control)
+# - GitHub Releases only (no PyPI)
+# - Minimal jobs (test + lint + release)
+#
 # Triggers:
-# - Push to main branch
-# - Pull requests to main branch
-# - Git tags (v*)
-#
-# Jobs:
-# 1. test - Run tests (single Python version)
-# 2. lint - Code quality checks
-# 3. release - Create GitHub Release (on tag only)
-#
-# Note: Single Python version to reduce CI/CD costs.
-#       No PyPI publishing (GitHub Releases only).
+# - PR to main: test + lint
+# - Push to main: test + lint
+# - Tag v*: test + lint + GitHub Release
 
-name: CI/CD
+name: CI
 
 on:
+  pull_request:
+    branches: [main]
   push:
     branches: [main]
     tags:
       - 'v*'
-  pull_request:
-    branches: [main]
 
 jobs:
   test:
-    name: Test
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -e ".[dev]"
+      - run: pip install -e ".[dev]"
 
-      - name: Run tests
-        run: |
-          pytest -v
+      - run: pytest -v
 
   lint:
-    name: Lint
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install black flake8 isort
+      - run: pip install black flake8 isort
 
-      - name: Check formatting (black)
-        run: |
-          black --check src/ tests/
-
-      - name: Check imports (isort)
-        run: |
-          isort --check-only src/ tests/
-
-      - name: Lint (flake8)
-        run: |
-          flake8 --max-line-length=100 --ignore=E501,W503 src/ tests/
+      - run: black --check src/ tests/
+      - run: isort --check-only src/ tests/
+      - run: flake8 --max-line-length=100 --ignore=E501,W503 src/ tests/
 
   release:
-    name: Release
+    needs: [test, lint]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')
     permissions:
       contents: write
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Get version from tag
-        id: get_version
-        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
-
-      - name: Generate release notes
-        id: release_notes
-        run: |
-          # Extract changelog for this version
-          if [[ -f "CHANGELOG.md" ]]; then
-            # Get content between this version and previous
-            awk "/^## \[${{ steps.get_version.outputs.VERSION }}\]/ {flag=1; next} /^## \[/ {flag=0} flag" CHANGELOG.md > release_notes.md
-          else
-            echo "Release v${{ steps.get_version.outputs.VERSION }}" > release_notes.md
-          fi
-        shell: bash
+      - uses: actions/checkout@v4
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          body_path: release_notes.md
-          draft: false
-          prerelease: ${{ contains(github.ref, '-alpha') || contains(github.ref, '-beta') || contains(github.ref, '-rc') }}
           generate_release_notes: true
