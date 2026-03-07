@@ -418,7 +418,7 @@ class PatternDetector:
                 if pattern_len >= self.min_length:
                     # Get pattern from first suffix in group
                     pos = suffix_array.get_position(group_start)
-                    pattern_text = text[pos : pos + pattern_len]
+                    pattern_text = text[pos : pos + pattern_len]  # noqa: E203
 
                     # Collect all positions in the group
                     positions = []
