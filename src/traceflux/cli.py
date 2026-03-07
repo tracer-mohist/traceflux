@@ -9,6 +9,7 @@ from typing import Optional
 
 from traceflux import Scanner, PatternDetector, PatternIndex, CooccurrenceGraph, compute_pagerank
 from traceflux.associations import AssociativeSearch
+from traceflux.output import OutputFormatter
 
 
 def setup_parser() -> argparse.ArgumentParser:
@@ -204,7 +205,7 @@ def scan_paths(paths: list[str], read_stdin: bool = False) -> list[tuple[str, st
                 content = path.read_text(encoding="utf-8", errors="ignore")
                 documents.append((str(path), content))
             except Exception as e:
-                print(f"Warning: Could not read {path}: {e}", file=sys.stderr)
+                print(f"WARNING: Could not read {path}: {e}", file=sys.stderr)
         
         elif path.is_dir():
             # Walk directory, skip common non-text dirs
@@ -244,7 +245,7 @@ def scan_paths(paths: list[str], read_stdin: bool = False) -> list[tuple[str, st
                             documents.append((str(file), content))
                     except Exception as e:
                         if verbose:
-                            print(f"Warning: Could not read {file}: {e}", file=sys.stderr)
+                            print(f"WARNING: Could not read {file}: {e}", file=sys.stderr)
     
     return documents
 
@@ -261,6 +262,9 @@ def cmd_search(args: argparse.Namespace) -> int:
     global verbose
     verbose = args.verbose
     
+    # Create formatter for this command
+    fmt = OutputFormatter()
+    
     # Use stdin if no paths provided and stdin is not a tty
     import sys
     use_stdin = not args.paths and not sys.stdin.isatty()
@@ -271,7 +275,7 @@ def cmd_search(args: argparse.Namespace) -> int:
         documents = scan_paths(args.paths if args.paths else ["."])
     
     if not documents:
-        print("No documents found to search.", file=sys.stderr)
+        fmt.error("No documents found to search")
         return 1
     
     # Search directly in content (like grep)
@@ -298,7 +302,7 @@ def cmd_search(args: argparse.Namespace) -> int:
             results.append((filepath, positions))
     
     if not results:
-        print(f"No results found for '{query}'")
+        fmt.print(f"No results found for '{query}'")
         return 0
     
     # Format output
@@ -311,14 +315,15 @@ def cmd_search(args: argparse.Namespace) -> int:
             ],
             "total_matches": sum(len(pos) for _, pos in results),
         }
-        print(json.dumps(output, indent=2))
+        fmt.print(json.dumps(output, indent=2))
     else:
-        print(f"Found '{query}' in {len(results)} file(s):\n")
+        fmt.success(f"Found '{query}' in {len(results)} file(s)")
+        fmt.print()
         
         for doc_id, positions in results[:args.limit]:
             count = len(positions)
-            print(f"  {doc_id}")
-            print(f"    {count} occurrence(s) at positions: {positions[:10]}{'...' if len(positions) > 10 else ''}")
+            fmt.print(f"  {doc_id}")
+            fmt.print(f"    {count} occurrence(s) at positions: {positions[:10]}{'...' if len(positions) > 10 else ''}")
             
             if args.verbose:
                 # Show context for first occurrence
@@ -328,13 +333,13 @@ def cmd_search(args: argparse.Namespace) -> int:
                         start = max(0, pos - 40)
                         end = min(len(content), pos + len(query) + 40)
                         context = content[start:end]
-                        print(f"    Context: ...{context}...")
+                        fmt.print(f"    Context: ...{context}...")
                         break
-            print()
+            fmt.print()
         
         # Show suggestions (related terms)
         if not args.json:
-            _show_suggestions(query, documents, limit=5)
+            _show_suggestions(query, documents, limit=5, formatter=fmt)
     
     return 0
 
@@ -344,6 +349,9 @@ def cmd_index(args: argparse.Namespace) -> int:
     global verbose
     verbose = args.verbose
     
+    # Create formatter
+    fmt = OutputFormatter()
+    
     # Use stdin if no paths provided and stdin is not a tty
     import sys
     use_stdin = not args.paths and not sys.stdin.isatty()
@@ -354,7 +362,7 @@ def cmd_index(args: argparse.Namespace) -> int:
         documents = scan_paths(args.paths if args.paths else ["."])
     
     if not documents:
-        print("No documents found to index.", file=sys.stderr)
+        fmt.error("No documents found to index")
         return 1
     
     # Build index
@@ -363,7 +371,7 @@ def cmd_index(args: argparse.Namespace) -> int:
     index = PatternIndex()
     
     if verbose:
-        print(f"Indexing {len(documents)} document(s)...")
+        fmt.info(f"Indexing {len(documents)} document(s)")
     
     for filepath, content in documents:
         patterns = detector.find_patterns(content)
@@ -372,23 +380,26 @@ def cmd_index(args: argparse.Namespace) -> int:
             index.add(pattern, filepath, positions)
         
         if verbose:
-            print(f"  Indexed {filepath}: {len(patterns)} patterns")
+            fmt.info(f"Indexed {filepath}: {len(patterns)} patterns")
     
     # Save index
     output_path = args.output or ".traceflux_index.json"
     index.save(output_path)
     
     stats = index.stats()
-    print(f"Index saved to {output_path}")
-    print(f"  Patterns: {stats['pattern_count']}")
-    print(f"  Documents: {stats['doc_count']}")
-    print(f"  Total occurrences: {stats['total_occurrences']}")
+    fmt.success(f"Index saved to {output_path}")
+    fmt.print(f"  Patterns: {stats['pattern_count']}")
+    fmt.print(f"  Documents: {stats['doc_count']}")
+    fmt.print(f"  Total occurrences: {stats['total_occurrences']}")
     
     return 0
 
 
 def cmd_patterns(args: argparse.Namespace) -> int:
     """Execute patterns command."""
+    # Create formatter
+    fmt = OutputFormatter()
+    
     # Use stdin if no paths provided and stdin is not a tty
     import sys
     use_stdin = not args.paths and not sys.stdin.isatty()
@@ -399,7 +410,7 @@ def cmd_patterns(args: argparse.Namespace) -> int:
         documents = scan_paths(args.paths if args.paths else ["."])
     
     if not documents:
-        print("No documents found to analyze.", file=sys.stderr)
+        fmt.error("No documents found to analyze")
         return 1
     
     # Extract patterns
@@ -426,18 +437,22 @@ def cmd_patterns(args: argparse.Namespace) -> int:
             ],
             "total_patterns": len(all_patterns),
         }
-        print(json.dumps(output, indent=2))
+        fmt.print(json.dumps(output, indent=2))
     else:
-        print(f"Top {min(args.limit, len(sorted_patterns))} patterns:\n")
+        fmt.print(f"Top {min(args.limit, len(sorted_patterns))} patterns:")
+        fmt.print()
         
         for pattern, freq in sorted_patterns[:args.limit]:
-            print(f"  {pattern:30s} {freq:5d} occurrence(s)")
+            fmt.print(f"  {pattern:30s} {freq:5d} occurrence(s)")
     
     return 0
 
 
 def cmd_associations(args: argparse.Namespace) -> int:
     """Execute associations command."""
+    # Create formatter
+    fmt = OutputFormatter()
+    
     # Use stdin if no paths provided and stdin is not a tty
     import sys
     use_stdin = not args.paths and not sys.stdin.isatty()
@@ -448,7 +463,7 @@ def cmd_associations(args: argparse.Namespace) -> int:
         documents = scan_paths(args.paths if args.paths else ["."])
     
     if not documents:
-        print("No documents found to analyze.", file=sys.stderr)
+        fmt.error("No documents found to analyze")
         return 1
     
     # Build co-occurrence graph from scanner segments
@@ -469,7 +484,7 @@ def cmd_associations(args: argparse.Namespace) -> int:
     query = args.query.lower()
     
     if not graph.has_node(query):
-        print(f"No associations found for '{query}'")
+        fmt.print(f"No associations found for '{query}'")
         return 0
     
     # Compute PageRank for ranking
@@ -500,22 +515,24 @@ def cmd_associations(args: argparse.Namespace) -> int:
             ],
             "total_found": result.total_found,
         }
-        print(json.dumps(output, indent=2))
+        fmt.print(json.dumps(output, indent=2))
     else:
-        print(f"Associations for '{query}' (hops={args.hops}):\n")
+        fmt.success(f"Associations for '{query}' (hops={args.hops})")
+        fmt.print()
         
         for assoc in result.associations[:args.limit]:
             if args.explain:
-                print(f"  {assoc.pattern:30s} strength: {assoc.score:.3f} (degree {assoc.degree}, path: {' → '.join(assoc.path)})")
+                fmt.print(f"  {assoc.pattern:30s} strength: {assoc.score:.3f} (degree {assoc.degree}, path: {' -> '.join(assoc.path)})")
             else:
-                print(f"  {assoc.pattern:30s} strength: {assoc.score:.3f} (degree {assoc.degree})")
+                fmt.print(f"  {assoc.pattern:30s} strength: {assoc.score:.3f} (degree {assoc.degree})")
         
         if not result.associations:
-            print("  (no associations found)")
+            fmt.print("  (no associations found)")
         
         # Show type distribution if requested
         if args.show_types:
-            print(f"\nType distribution for '{query}':")
+            fmt.print()
+            fmt.print(f"Type distribution for '{query}':")
             type_counts = {}
             for filepath, content in documents:
                 segments = list(scanner.scan(content))
@@ -526,7 +543,7 @@ def cmd_associations(args: argparse.Namespace) -> int:
             
             for type_key, count in sorted(type_counts.items(), key=lambda x: -x[1]):
                 pre, post = type_key.split('|')
-                print(f"  ({repr(pre)}, {repr(post)}): {count} occurrence(s)")
+                fmt.print(f"  ({repr(pre)}, {repr(post)}): {count} occurrence(s)")
     
     return 0
 
@@ -543,14 +560,19 @@ def main(argv: Optional[list[str]] = None) -> int:
     return args.func(args)
 
 
-def _show_suggestions(query: str, documents: list[tuple[str, str]], limit: int = 5) -> None:
+def _show_suggestions(query: str, documents: list[tuple[str, str]], limit: int = 5, formatter: OutputFormatter = None) -> None:
     """Show related term suggestions after search results.
     
     Args:
         query: Original search query
         documents: List of (filepath, content) tuples
         limit: Maximum suggestions to show
+        formatter: Output formatter (uses default if None)
     """
+    from traceflux.output import OutputFormatter
+    
+    fmt = formatter or OutputFormatter()
+    
     # Build co-occurrence graph
     detector = PatternDetector(min_support=2, min_length=3)
     graph = CooccurrenceGraph()
@@ -570,10 +592,10 @@ def _show_suggestions(query: str, documents: list[tuple[str, str]], limit: int =
     result = search.find_associations(query, max_degree=2, top_k=limit * 2)
     
     if result.associations:
-        print("Related terms:")
+        fmt.print("Related terms:")
         for assoc in result.associations[:limit]:
-            print(f"  • {assoc.pattern:25s} (strength: {assoc.score:.3f}, degree {assoc.degree})")
-        print()
+            fmt.print(f"  - {assoc.pattern:25s} (strength: {assoc.score:.3f}, degree {assoc.degree})")
+        fmt.print()
 
 
 if __name__ == "__main__":
