@@ -1,11 +1,57 @@
 # src/traceflux/patterns.py
-"""LZ77-style Pattern Detection.
+"""LZ77-style Pattern Detection using Suffix Arrays.
 
-Find maximal repeated patterns in text sequences using suffix arrays.
-Operates on character sequences - language independent.
+Find maximal repeated patterns in text sequences efficiently.
+This module implements pattern detection using suffix arrays and LCP
+(Longest Common Prefix) arrays for O(n log n) pattern discovery.
 
-Algorithm: Suffix Array + LCP (Longest Common Prefix)
-Complexity: O(n log n) for construction, O(n) for pattern extraction
+## Algorithm Overview
+
+1. **Build Suffix Array**: Sort all suffixes of the text
+2. **Compute LCP Array**: Find longest common prefix between adjacent suffixes
+3. **Extract Patterns**: Group suffixes with common prefixes, collect positions
+
+## When to Use
+
+Use pattern detection when you want to:
+- Find repeated structures in code (function calls, imports)
+- Discover common phrases in documents
+- Identify recurring patterns without knowing them in advance
+
+Use direct search (traceflux search) when you:
+- Know what you're looking for
+- Want to find a specific term
+- Need case-insensitive matching
+
+## Complexity
+
+- Suffix Array construction: O(n log n)
+- LCP Array computation: O(n) using Kasai's algorithm
+- Pattern extraction: O(n)
+- **Total**: O(n log n) where n = text length
+
+## Example
+
+```python
+from traceflux.patterns import PatternDetector
+
+# Find patterns that appear at least twice
+detector = PatternDetector(min_support=2, min_length=3)
+patterns = detector.find_patterns("hello world, hello universe")
+
+# patterns = {"hello": [0, 13], "ello": [1, 14], ...}
+```
+
+## Language Independence
+
+This module operates on character sequences, not words.
+It works equally well on:
+- English text
+- Source code
+- Binary data (as bytes)
+- Any character sequence
+
+No tokenization or language-specific processing.
 """
 
 from dataclasses import dataclass
@@ -16,10 +62,19 @@ from typing import Dict, List, Optional
 class Pattern:
     """A repeated pattern with occurrence information.
 
+    Represents a pattern found in text with its positions.
+
     Attributes:
-        text: The pattern text
+        text: The pattern text (exact substring)
         positions: List of start positions in source text
-        length: Length of the pattern
+        length: Length of the pattern in characters
+
+    Example:
+        >>> pattern = Pattern(text="hello", positions=[0, 13], length=5)
+        >>> pattern.frequency
+        2
+        >>> pattern.is_maximal()
+        True
     """
 
     text: str
@@ -28,122 +83,286 @@ class Pattern:
 
     @property
     def frequency(self) -> int:
-        """Number of occurrences."""
+        """Number of occurrences of this pattern.
+
+        Returns:
+            Count of times pattern appears in source text
+
+        Example:
+            >>> pattern = Pattern("test", [0, 10, 20], 4)
+            >>> pattern.frequency
+            3
+        """
         return len(self.positions)
 
     def is_maximal(self) -> bool:
         """Check if pattern is maximal (cannot be extended).
 
         A pattern is maximal if extending it by one character
-        in any direction reduces its frequency.
+        in any direction would reduce its frequency.
 
-        Note: This is a simplified check. Full maximality requires
-        context analysis.
+        Example:
+            In "hello world, hello universe":
+            - "hello" is maximal (extending to "hello " appears 2 times,
+              but "hello w" appears only 1 time)
+            - "ello" is NOT maximal (can extend to "hello" with same frequency)
+
+        Note:
+            Current implementation uses simplified check:
+            - Returns True if frequency >= min_support
+            - Full implementation would check left/right extensions
+            - This is sufficient for traceflux use cases
+
+        Returns:
+            True if pattern appears to be maximal
         """
-        # For now, consider all detected patterns as potentially maximal
-        # Full implementation would check left/right extensions
+        # Simplified maximality check
+        # Full implementation would verify that extending the pattern
+        # by one character (left or right) reduces frequency
         return self.frequency >= 2
 
 
 class SuffixArray:
-    """Suffix array construction and utilities.
+    """Suffix array for efficient pattern matching.
 
-    Builds sorted suffix array for efficient pattern matching.
-    Uses Python's built-in sort (Timsort) for simplicity.
+    A suffix array is a sorted array of all suffixes of a text.
+    It enables fast pattern discovery and substring searches.
 
-    For production use with large texts, consider:
-    - SA-IS algorithm (O(n) linear time)
-    - DC3 algorithm (O(n) linear time)
+    ## Structure
+
+    For text "banana":
+    - Suffixes: ["banana", "anana", "nana", "ana", "na", "a"]
+    - Sorted:   ["a", "ana", "anana", "banana", "na", "nana"]
+    - Indices:  [5,    3,     1,       0,        4,    2   ]
+
+    The suffixes array stores the starting indices [5, 3, 1, 0, 4, 2].
+
+    ## Implementation
+
+    Uses Python's built-in Timsort (O(n log n)) for simplicity.
+
+    For large texts (>1MB), consider:
+    - **SA-IS algorithm**: O(n) linear time, complex implementation
+    - **DC3 algorithm**: O(n) linear time, good for very large texts
+
+    For traceflux use cases (typical files <1MB), Timsort is sufficient.
+
+    ## Example
+
+    ```python
+    sa = SuffixArray("banana")
+    sa.suffixes  # [5, 3, 1, 0, 4, 2]
+    sa.get_suffix(0)  # "a" (first sorted suffix)
+    sa.get_position(0)  # 5 (starts at index 5 in original text)
+    ```
     """
 
     def __init__(self, text: str):
         """Build suffix array for text.
 
         Args:
-            text: Input text
+            text: Input text to build suffix array for
+
+        Example:
+            >>> sa = SuffixArray("banana")
+            >>> sa.length
+            6
+            >>> len(sa.suffixes)
+            6
         """
         self.text = text
         self.length = len(text)
         # Suffix array: indices sorted by suffix
+        # suffixes[rank] = starting position of suffix at that rank
         self.suffixes: List[int] = sorted(
             range(self.length),
             key=lambda i: text[i:]
         )
 
     def get_suffix(self, rank: int) -> str:
-        """Get suffix at given rank.
+        """Get suffix string at given rank.
 
         Args:
-            rank: Position in suffix array
+            rank: Position in sorted suffix array (0 = first suffix)
 
         Returns:
-            Suffix string
+            Suffix string starting at that rank
+
+        Example:
+            >>> sa = SuffixArray("banana")
+            >>> sa.get_suffix(0)  # First sorted suffix
+            'a'
+            >>> sa.get_suffix(3)  # Fourth sorted suffix
+            'banana'
         """
         start = self.suffixes[rank]
         return self.text[start:]
 
     def get_position(self, rank: int) -> int:
-        """Get original position for suffix at rank.
+        """Get original text position for suffix at rank.
 
         Args:
-            rank: Position in suffix array
+            rank: Position in sorted suffix array
 
         Returns:
-            Original position in text
+            Starting position in original text
+
+        Example:
+            >>> sa = SuffixArray("banana")
+            >>> sa.get_position(0)  # "a" starts at index 5
+            5
+            >>> sa.get_position(3)  # "banana" starts at index 0
+            0
         """
         return self.suffixes[rank]
 
 
 class PatternDetector:
-    """Detect repeated patterns in text.
+    """Detect repeated patterns in text using suffix arrays.
 
-    Uses suffix array + LCP to find maximal repeats.
+    Finds all patterns that appear at least min_support times.
+    Uses suffix array + LCP (Longest Common Prefix) for efficient O(n log n)
+    pattern discovery.
 
-    Example:
-        >>> detector = PatternDetector(min_support=2)
-        >>> patterns = detector.find_patterns("hello hello world")
-        >>> "hello" in patterns
-        True
+    ## How It Works
+
+    1. Build suffix array for the text
+    2. Compute LCP array (longest common prefix between adjacent suffixes)
+    3. Group suffixes with common prefixes
+    4. Extract patterns that meet min_support threshold
+
+    ## Parameters
+
+    - **min_support**: Minimum times a pattern must appear (default: 2)
+      - Higher = fewer, more significant patterns
+      - Lower = more patterns, including noise
+
+    - **min_length**: Minimum pattern length (default: 2)
+      - Filters out single characters
+      - Typical: 2-5 characters
+
+    - **case_insensitive**: Treat "Hello" and "hello" as same (default: False)
+      - Useful for natural language
+      - Keep False for source code (case matters)
+
+    ## Example
+
+    ```python
+    from traceflux.patterns import PatternDetector
+
+    # Find patterns appearing at least twice
+    detector = PatternDetector(min_support=2, min_length=3)
+
+    text = "hello world, hello universe, goodbye world"
+    patterns = detector.find_patterns(text)
+
+    # patterns = {
+    #     "hello": [0, 13],
+    #     " world": [5, 31],
+    #     "ello": [1, 14],
+    #     ...
+    # }
+    ```
+
+    ## Use Cases
+
+    **Source Code Analysis**:
+    - Find repeated function calls
+    - Identify common import patterns
+    - Discover code clones
+
+    **Document Analysis**:
+    - Find repeated phrases
+    - Identify common terminology
+    - Discover writing patterns
+
+    **Log Analysis**:
+    - Find repeated error patterns
+    - Identify common sequences
+    - Discover anomalies
     """
 
     def __init__(self, min_support: int = 2, min_length: int = 2, case_insensitive: bool = False):
         """Initialize pattern detector.
 
         Args:
-            min_support: Minimum occurrences to consider a pattern
-            min_length: Minimum pattern length to detect
-            case_insensitive: If True, treat "Hello" and "hello" as same pattern
+            min_support: Minimum occurrences to consider a pattern (default: 2)
+                Higher values find only frequent patterns.
+                Lower values find more patterns including rare ones.
+            min_length: Minimum pattern length in characters (default: 2)
+                Filters out single characters which are usually noise.
+            case_insensitive: If True, normalize case before detection (default: False)
+                Useful for natural language text.
+                Keep False for source code where case matters.
+
+        Example:
+            >>> detector = PatternDetector(min_support=2, min_length=3)
+            >>> detector.min_support
+            2
+            >>> detector.min_length
+            3
         """
         self.min_support = min_support
         self.min_length = min_length
         self.case_insensitive = case_insensitive
 
     def _compute_lcp(self, text: str, suffix_array: SuffixArray) -> List[int]:
-        """Compute LCP (Longest Common Prefix) array.
+        """Compute LCP (Longest Common Prefix) array using Kasai's algorithm.
 
-        LCP[i] = length of common prefix between suffix[i] and suffix[i-1]
+        The LCP array stores the length of the longest common prefix between
+        each adjacent pair of suffixes in the sorted suffix array.
 
-        Uses Kasai's algorithm: O(n) time
+        ## LCP Array Structure
+
+        For text "banana" with sorted suffixes:
+        - Rank 0: "a" (index 5)
+        - Rank 1: "ana" (index 3)
+        - Rank 2: "anana" (index 1)
+        - Rank 3: "banana" (index 0)
+        - Rank 4: "na" (index 4)
+        - Rank 5: "nana" (index 2)
+
+        LCP array: [0, 1, 3, 0, 0, 2]
+        - LCP[0] = 0 (no previous suffix)
+        - LCP[1] = 1 ("a" and "ana" share "a")
+        - LCP[2] = 3 ("ana" and "anana" share "ana")
+        - LCP[3] = 0 ("anana" and "banana" share nothing)
+        - LCP[4] = 0 ("banana" and "na" share nothing)
+        - LCP[5] = 2 ("na" and "nana" share "na")
+
+        ## Kasai's Algorithm
+
+        Time complexity: O(n) - linear time
+        Key insight: When moving from position i to i+1, the LCP can decrease
+        by at most 1. This allows amortized O(n) computation.
 
         Args:
-            text: Original text
-            suffix_array: SuffixArray instance
+            text: Original text string
+            suffix_array: Pre-computed SuffixArray instance
 
         Returns:
-            LCP array (length = len(text))
+            LCP array where LCP[i] = length of common prefix between
+            suffix at rank i and suffix at rank i-1.
+            LCP[0] is always 0 (no previous suffix).
+
+        Reference:
+            Kasai, T., et al. (2001). "Linear-Time Longest-Common-Prefix
+            Computation in Suffix Arrays and Its Applications."
         """
         n = len(text)
         if n == 0:
             return []
 
-        # Rank array: rank[i] = position of suffix starting at i
+        # Rank array: rank[i] = position of suffix starting at position i
+        # This is the inverse of the suffix array
         rank = [0] * n
         for i, pos in enumerate(suffix_array.suffixes):
             rank[pos] = i
 
         lcp = [0] * n
-        h = 0  # Current LCP length
+        h = 0  # Current LCP length (carried between iterations)
 
+        # Process suffixes in original text order (not sorted order)
         for i in range(n):
             if rank[i] > 0:
                 # Get previous suffix in sorted order
@@ -156,7 +375,8 @@ class PatternDetector:
 
                 lcp[rank[i]] = h
 
-                # Decrease h for next iteration (Kasai's insight)
+                # Decrease h for next iteration (Kasai's key insight)
+                # When moving to next position, LCP can decrease by at most 1
                 if h > 0:
                     h -= 1
 
