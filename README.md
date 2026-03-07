@@ -50,59 +50,55 @@ This is **associative discovery** — lifting off by stepping on related concept
 
 ### Installation
 
-**Option 1: Install via pipx (Recommended)**
+**Recommended**: Install via pipx (isolated environment, no system pollution)
 
 ```bash
-# Install from GitHub (latest development version)
+# Install from GitHub
 pipx install git+https://github.com/tracer-mohist/traceflux.git
-
-# Or install from specific branch/tag
-pipx install git+https://github.com/tracer-mohist/traceflux.git@main
-pipx install git+https://github.com/tracer-mohist/traceflux.git@v1.0.0
 
 # Verify installation
 traceflux --help
+traceflux search "pattern" .
 ```
 
-**Option 2: Install from source**
+**Why pipx?**
+- ✅ Isolated virtual environment
+- ✅ No dependency conflicts
+- ✅ Easy to update (`pipx upgrade traceflux`)
+- ✅ No sudo required
+- ✅ Clean uninstall (`pipx uninstall traceflux`)
+
+**Not recommended**: `pip install` (pollutes system Python environment)
+
+---
+
+### For Developers
+
+Want to contribute or modify traceflux?
 
 ```bash
 # Clone repository
 git clone https://github.com/tracer-mohist/traceflux.git
 cd traceflux
 
-# Install with pip
-pip install -e .
+# Install for development (editable)
+pipx install -e .
 
-# Or use PDM (if available)
-pipx install pdm
-pdm install
+# Run tests
+pytest
 
-# Verify installation
-traceflux --help
-```
-
-**Option 3: Run directly (Development)**
-
-```bash
-cd /path/to/traceflux
-
-# Run directly without installation
-python -m traceflux.cli --help
-
-# Or activate virtual environment
-.venv/bin/activate
+# Run directly (no installation)
 python -m traceflux.cli --help
 ```
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for full guidelines.
+
+---
 
 ### Uninstall
 
 ```bash
-# If installed via pipx
 pipx uninstall traceflux
-
-# If installed via pip
-pip uninstall traceflux
 ```
 
 ### Basic Usage
