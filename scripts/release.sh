@@ -21,9 +21,36 @@ print_info() { echo -e "${BLUE}ℹ️  $1${NC}"; }
 print_success() { echo -e "${GREEN}✅ $1${NC}"; }
 print_error() { echo -e "${RED}❌ $1${NC}"; }
 
+# Show help
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    echo "Usage: $0 <version>"
+    echo ""
+    echo "Create a new release for traceflux."
+    echo ""
+    echo "Arguments:"
+    echo "  version    Semantic version (MAJOR.MINOR.PATCH)"
+    echo ""
+    echo "Examples:"
+    echo "  $0 1.0.1         # Patch release"
+    echo "  $0 1.1.0         # Minor release"
+    echo "  $0 2.0.0         # Major release"
+    echo "  $0 1.0.1-beta    # Pre-release"
+    echo ""
+    echo "What it does:"
+    echo "  1. Updates pyproject.toml (single source of truth)"
+    echo "  2. Runs tests (must pass)"
+    echo "  3. Creates git commit and tag"
+    echo ""
+    echo "Next steps:"
+    echo "  git push origin main --tags"
+    echo "  CI/CD will create GitHub Release"
+    exit 0
+fi
+
 if [[ $# -ne 1 ]]; then
     print_error "Usage: $0 <version>"
     print_info "Example: $0 1.0.1"
+    print_info "Run '$0 --help' for more information"
     exit 1
 fi
 

@@ -4,6 +4,11 @@
 
 This document provides guidelines and instructions for contributing to traceflux.
 
+**Related**:
+- [Release Protocol](.github/RELEASE_PROTOCOL.md) — Version management and release process
+- [CI/CD Pipeline](.github/workflows/ci.yml) — Automated testing and release
+- [Release Guide](docs/RELEASE.md) — User-facing release documentation
+
 ---
 
 ## Quick Start
