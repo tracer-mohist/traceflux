@@ -128,7 +128,10 @@ for pattern, score in top_10:
 """
 
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Tuple
+from typing import TYPE_CHECKING, Dict, List, Optional, Tuple
+
+if TYPE_CHECKING:
+    from traceflux.graph import CooccurrenceGraph
 
 
 @dataclass

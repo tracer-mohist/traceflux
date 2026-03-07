@@ -195,7 +195,7 @@ class TestCooccurrenceGraphStats:
         # Complete graph K4: 4 nodes, 6 edges
         nodes = ["a", "b", "c", "d"]
         for i, n1 in enumerate(nodes):
-            for n2 in nodes[i + 1 :]:
+            for n2 in nodes[i + 1 :]:  # noqa: E203
                 self.graph.add_cooccurrence(n1, n2)
 
         stats = self.graph.get_stats()
