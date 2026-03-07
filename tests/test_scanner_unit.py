@@ -169,16 +169,14 @@ class TestScannerMultilang:
         assert segments[1].content == "بالعالم"
 
     def test_numbers(self):
-        """Text with numbers."""
+        """Text with numbers - semantic segmentation preserves version numbers."""
         text = "Version 3.14.2"
         segments = list(self.scanner.scan(text))
 
-        # Numbers are alphanumeric, dots are punctuation
-        assert len(segments) == 4
+        # Semantic segmentation: dots between digits are preserved (version numbers)
+        assert len(segments) == 2
         assert segments[0].content == "Version"
-        assert segments[1].content == "3"
-        assert segments[2].content == "14"
-        assert segments[3].content == "2"
+        assert segments[1].content == "3.14.2"
 
 
 class TestScannerUtilities:

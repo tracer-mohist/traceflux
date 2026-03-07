@@ -60,15 +60,17 @@ class Scanner:
         ', '
     """
 
-    def __init__(self, min_content_len: int = 1):
+    def __init__(self, min_content_len: int = 1, semantic_segmentation: bool = True):
         """Initialize scanner.
 
         Args:
             min_content_len: Minimum content length to emit segment.
-                            Segments with shorter content are merged
-                            with adjacent punctuation.
+            semantic_segmentation: If True, use context-aware segmentation
+                                  (preserves IP addresses, identifiers, versions).
+                                  If False, use simple alphanumeric segmentation.
         """
         self.min_content_len = min_content_len
+        self.semantic_segmentation = semantic_segmentation
 
     @staticmethod
     def is_alphanumeric(char: str) -> bool:
@@ -98,13 +100,51 @@ class Scanner:
         """
         return not char.isalnum()
 
+    def is_content_char(self, char: str, prev_char: str = None, next_char: str = None) -> bool:
+        """Check if character should be part of content (semantic-aware).
+
+        When semantic_segmentation is True:
+        - Letters and digits are always content
+        - Underscore (_) is content (identifiers: proxy_config)
+        - Dot (.) is content between digits (IP: 127.0.0.1, version: v3.14.2)
+        - Dot (.) between letters is punctuation (file.txt)
+
+        Args:
+            char: Current character
+            prev_char: Previous character (for context)
+            next_char: Next character (for context)
+
+        Returns:
+            True if character should be part of content
+        """
+        if not self.semantic_segmentation:
+            return self.is_alphanumeric(char)
+
+        # Letters and digits are always content
+        if char.isalnum():
+            return True
+
+        # Underscore is content (for identifiers like proxy_config, HTTP_PROXY)
+        if char == '_':
+            return True
+
+        # Dot is content between digits (IP addresses, version numbers)
+        if char == '.':
+            if prev_char and prev_char.isdigit():
+                return True
+            if next_char and next_char.isdigit():
+                return True
+
+        # Everything else is punctuation
+        return False
+
     def scan(self, text: str) -> Iterator[Segment]:
         """Scan text and yield segments.
 
         One-pass O(n) algorithm:
         1. Iterate through characters left-to-right
-        2. Group consecutive alphanumerics as content
-        3. Group consecutive non-alphanumerics as punctuation
+        2. Group consecutive content chars (semantic-aware if enabled)
+        3. Group consecutive non-content as punctuation
         4. Emit segments with position tracking
 
         Args:
@@ -122,14 +162,24 @@ class Scanner:
         while pos < length:
             # Collect pre-punctuation
             pre_start = pos
-            while pos < length and self.is_punctuation(text[pos]):
-                pos += 1
+            while pos < length:
+                prev_char = text[pos - 1] if pos > 0 else None
+                next_char = text[pos + 1] if pos < length - 1 else None
+                if not self.is_content_char(text[pos], prev_char, next_char):
+                    pos += 1
+                else:
+                    break
             pre_punct = text[pre_start:pos]
 
-            # Collect content
+            # Collect content (using semantic-aware rules)
             content_start = pos
-            while pos < length and self.is_alphanumeric(text[pos]):
-                pos += 1
+            while pos < length:
+                prev_char = text[pos - 1] if pos > 0 else None
+                next_char = text[pos + 1] if pos < length - 1 else None
+                if self.is_content_char(text[pos], prev_char, next_char):
+                    pos += 1
+                else:
+                    break
             content = text[content_start:pos]
 
             # Collect post-punctuation
