@@ -118,6 +118,87 @@ pytest tests/test_scanner_unit.py -v
 pytest tests/test_scanner_unit.py::test_scan_simple_text -v
 ```
 
+### Code Quality Tools
+
+**Install development dependencies**:
+```bash
+pip install -e ".[dev]"
+pip install black flake8 isort mypy
+```
+
+**Format code**:
+```bash
+black src/ tests/
+isort src/ tests/
+```
+
+**Check code quality**:
+```bash
+black --check src/ tests/
+isort --check-only src/ tests/
+flake8 --max-line-length=100 --ignore=E501,W503 src/ tests/
+mypy src/ --ignore-missing-imports
+```
+
+### Git Hooks (Recommended)
+
+**Enable pre-commit hooks**:
+```bash
+git config core.hooksPath .githooks
+```
+
+This automatically runs code quality checks before each commit:
+- Python syntax validation
+- Code formatting check (black)
+- Import order check (isort)
+- Linting (flake8)
+
+---
+
+## Pull Request Process
+
+### Before Submitting
+
+1. **Update documentation** if behavior changes
+2. **Add tests** for new features or bug fixes
+3. **Run all tests** locally: `pytest`
+4. **Check code quality**: `black --check`, `flake8`
+5. **Update CHANGELOG.md** with your changes
+
+### Submitting a PR
+
+1. Create a branch from `main`:
+   ```bash
+   git checkout main
+   git checkout -b feature/your-feature-name
+   ```
+
+2. Make your changes and commit:
+   ```bash
+   git add .
+   git commit -m "Description of changes"
+   ```
+
+3. Push to your fork:
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+
+4. Open a Pull Request on GitHub using the PR template
+
+### Review Process
+
+- All PRs require **manual review** before merging
+- CI/CD must pass (tests, linting)
+- At least one maintainer approval required
+- Address review feedback promptly
+
+### After Approval
+
+- Maintainer will merge the PR
+- No squash unless requested (preserve commit history)
+- Delete your feature branch after merge
+
 ---
 
 ## Code Style
