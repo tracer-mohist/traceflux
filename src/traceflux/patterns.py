@@ -106,15 +106,17 @@ class PatternDetector:
         True
     """
 
-    def __init__(self, min_support: int = 2, min_length: int = 2):
+    def __init__(self, min_support: int = 2, min_length: int = 2, case_insensitive: bool = False):
         """Initialize pattern detector.
 
         Args:
             min_support: Minimum occurrences to consider a pattern
             min_length: Minimum pattern length to detect
+            case_insensitive: If True, treat "Hello" and "hello" as same pattern
         """
         self.min_support = min_support
         self.min_length = min_length
+        self.case_insensitive = case_insensitive
 
     def _compute_lcp(self, text: str, suffix_array: SuffixArray) -> List[int]:
         """Compute LCP (Longest Common Prefix) array.
@@ -238,14 +240,21 @@ class PatternDetector:
         if len(text) < self.min_length * self.min_support:
             return {}
 
-        # Build suffix array
-        suffix_array = SuffixArray(text)
+        # For case-insensitive matching, work with lowercase text
+        # but preserve original positions
+        if self.case_insensitive:
+            text_normalized = text.lower()
+        else:
+            text_normalized = text
+
+        # Build suffix array on normalized text
+        suffix_array = SuffixArray(text_normalized)
 
         # Compute LCP array
-        lcp = self._compute_lcp(text, suffix_array)
+        lcp = self._compute_lcp(text_normalized, suffix_array)
 
-        # Find repeated patterns
-        patterns = self._find_repeats_with_lcp(text, suffix_array, lcp)
+        # Find repeated patterns in normalized text
+        patterns = self._find_repeats_with_lcp(text_normalized, suffix_array, lcp)
 
         # Filter by minimum support
         filtered = {

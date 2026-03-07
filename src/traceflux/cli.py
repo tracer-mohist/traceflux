@@ -248,7 +248,11 @@ verbose = False  # Global flag for scan_paths
 
 
 def cmd_search(args: argparse.Namespace) -> int:
-    """Execute search command."""
+    """Execute search command.
+    
+    Search works like grep: finds query in text directly.
+    Does NOT rely on pre-detected patterns (that's what 'patterns' command is for).
+    """
     global verbose
     verbose = args.verbose
     
@@ -265,20 +269,28 @@ def cmd_search(args: argparse.Namespace) -> int:
         print("No documents found to search.", file=sys.stderr)
         return 1
     
-    # Build index
-    scanner = Scanner()
-    detector = PatternDetector(min_support=2, min_length=3)
-    index = PatternIndex()
+    # Search directly in content (like grep)
+    # Case-insensitive search
+    query = args.query
+    query_lower = query.lower()
+    
+    results = []  # List of (filepath, [positions])
     
     for filepath, content in documents:
-        patterns = detector.find_patterns(content)
+        positions = []
+        content_lower = content.lower()
+        start = 0
         
-        for pattern, positions in patterns.items():
-            index.add(pattern, filepath, positions)
-    
-    # Search
-    query = args.query.lower()
-    results = index.get(query)
+        # Find all occurrences (case-insensitive)
+        while True:
+            pos = content_lower.find(query_lower, start)
+            if pos == -1:
+                break
+            positions.append(pos)
+            start = pos + 1
+        
+        if positions:
+            results.append((filepath, positions))
     
     if not results:
         print(f"No results found for '{query}'")
@@ -434,17 +446,19 @@ def cmd_associations(args: argparse.Namespace) -> int:
         print("No documents found to analyze.", file=sys.stderr)
         return 1
     
-    # Build co-occurrence graph
-    scanner = Scanner()
-    detector = PatternDetector(min_support=2, min_length=3)
+    # Build co-occurrence graph from scanner segments
+    # This finds associations between words/terms, not just repeated patterns
+    scanner = Scanner(min_content_len=2)  # Skip single-char segments
     graph = CooccurrenceGraph()
     
     for filepath, content in documents:
-        patterns = detector.find_patterns(content)
+        segments = list(scanner.scan(content))
         
-        # Add patterns to graph
-        pattern_list = list(patterns.keys())
-        graph.add_document_cooccurrences(pattern_list, window_size=5)
+        # Extract content from segments (lowercase for normalization)
+        terms = [seg.content.lower() for seg in segments if seg.content]
+        
+        # Add co-occurrences within window
+        graph.add_document_cooccurrences(terms, window_size=5)
     
     # Find associations
     query = args.query.lower()
