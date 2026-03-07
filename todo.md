@@ -3,13 +3,13 @@
 ## Active (当前进行)
 
 - [ ] **Phase 8: Release Automation Upgrade** (python-semantic-release)
-  - [ ] **Step 1: Configuration** (30 min)
-    - [ ] Add minimal config to pyproject.toml
-    - [ ] Configure commit parser (angular)
-    - [ ] Disable auto-publish (manual confirmation)
-    - [ ] Disable PyPI publishing
-  - [ ] **Step 2: Documentation** (30 min)
-    - [ ] Add Conventional Commits guide to CONTRIBUTING.md
+  - [x] **Step 1: Configuration** ✅ (30 min)
+    - [x] Add minimal config to pyproject.toml
+    - [x] Configure commit parser (angular)
+    - [x] Disable auto-publish (manual confirmation)
+    - [x] Disable PyPI publishing
+  - [x] **Step 2: Documentation** ✅ (30 min)
+    - [x] Add Conventional Commits guide to CONTRIBUTING.md
     - [ ] Update RELEASE.md with new workflow
     - [ ] Create commit examples
   - [ ] **Step 3: Testing** (1-2 releases)
