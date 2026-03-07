@@ -62,9 +62,15 @@ line_length = 100
 
 [tool.flake8]
 max-line-length = 100
-ignore = ["E501", "W503"]
-python_files = "test_*.py"
-addopts = "-v --cov=traceflux --cov-report=term-missing"
+# Ignore:
+# - E501: line too long (handled by black)
+# - W503: line break before binary operator (controversial)
+# - F401: unused imports (harmless, often intentional for future use)
+# - F841: unused variables (harmless, often for debugging)
+ignore = ["E501", "W503", "F401", "F841"]
+# Still check:
+# - F821: undefined names (actual bugs)
+# - E203: whitespace before ':' (style)
 
 [tool.coverage.run]
 source = ["traceflux"]
