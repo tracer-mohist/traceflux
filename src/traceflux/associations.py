@@ -252,7 +252,7 @@ class AssociativeSearch:
         self,
         graph: CooccurrenceGraph,
         pagerank_scores: Optional[Dict[str, float]] = None,
-        lambda_param: float = 0.7
+        lambda_param: float = 0.7,
     ):
         """Initialize associative search.
 
@@ -297,11 +297,7 @@ class AssociativeSearch:
         self.lambda_param = lambda_param
 
     def find_associations(
-        self,
-        query: str,
-        max_degree: int = 3,
-        top_k: int = 20,
-        min_score: float = 0.0
+        self, query: str, max_degree: int = 3, top_k: int = 20, min_score: float = 0.0
     ) -> AssociationResult:
         """Find patterns associated with query using BFS traversal.
 
@@ -398,12 +394,7 @@ class AssociativeSearch:
         - **Typical**: <50ms for graphs with <1000 nodes, max_degree=3
         """
         if not self.graph.has_node(query):
-            return AssociationResult(
-                query=query,
-                associations=[],
-                total_found=0,
-                max_degree=0
-            )
+            return AssociationResult(query=query, associations=[], total_found=0, max_degree=0)
 
         # BFS traversal
         visited: Set[str] = {query}
@@ -433,7 +424,7 @@ class AssociativeSearch:
                             degree=new_degree,
                             score=score,
                             path=new_path,
-                            pagerank=self.pagerank_scores.get(neighbor, 0.0)
+                            pagerank=self.pagerank_scores.get(neighbor, 0.0),
                         )
                         associations.append(assoc)
 
@@ -450,7 +441,7 @@ class AssociativeSearch:
             query=query,
             associations=top_associations,
             total_found=len(associations),
-            max_degree=max(assoc.degree for assoc in top_associations) if top_associations else 0
+            max_degree=max(assoc.degree for assoc in top_associations) if top_associations else 0,
         )
 
     def _calculate_score(self, pattern: str, degree: int) -> float:
@@ -474,16 +465,12 @@ class AssociativeSearch:
         distance_score = 1.0 / degree if degree > 0 else 1.0
 
         # Combined score
-        combined = (self.lambda_param * pr_score +
-                   (1 - self.lambda_param) * distance_score)
+        combined = self.lambda_param * pr_score + (1 - self.lambda_param) * distance_score
 
         return combined
 
     def find_multi_query_associations(
-        self,
-        queries: List[str],
-        max_degree: int = 3,
-        top_k: int = 20
+        self, queries: List[str], max_degree: int = 3, top_k: int = 20
     ) -> AssociationResult:
         """Find associations for multiple queries.
 
@@ -511,23 +498,17 @@ class AssociativeSearch:
                     all_associations[assoc.pattern] = assoc
 
         # Sort and return top-k
-        sorted_assocs = sorted(
-            all_associations.values(),
-            key=lambda a: -a.score
-        )[:top_k]
+        sorted_assocs = sorted(all_associations.values(), key=lambda a: -a.score)[:top_k]
 
         return AssociationResult(
             query=", ".join(queries),
             associations=sorted_assocs,
             total_found=len(all_associations),
-            max_degree=max(a.degree for a in sorted_assocs) if sorted_assocs else 0
+            max_degree=max(a.degree for a in sorted_assocs) if sorted_assocs else 0,
         )
 
     def get_association_paths(
-        self,
-        query: str,
-        target: str,
-        max_degree: int = 5
+        self, query: str, target: str, max_degree: int = 5
     ) -> List[List[str]]:
         """Find all paths between query and target.
 
@@ -572,7 +553,7 @@ def find_associations(
     query: str,
     pagerank_scores: Optional[Dict[str, float]] = None,
     max_degree: int = 3,
-    top_k: int = 20
+    top_k: int = 20,
 ) -> List[Tuple[str, int, float]]:
     """Convenience function to find associations.
 
@@ -589,7 +570,4 @@ def find_associations(
     search = AssociativeSearch(graph, pagerank_scores)
     result = search.find_associations(query, max_degree, top_k)
 
-    return [
-        (assoc.pattern, assoc.degree, assoc.score)
-        for assoc in result.associations
-    ]
+    return [(assoc.pattern, assoc.degree, assoc.score) for assoc in result.associations]

@@ -14,8 +14,9 @@ For development installations, it falls back to a dev version.
 ## Example
 
 ```python
-from traceflux import __version__
-print(__version__)  # "1.0.0" (installed) or "0.0.0-dev" (development)
+from traceflux import __version__, __version_info__
+print(__version__)        # "1.0.0" (installed) or "0.0.0-dev" (development)
+print(__version_info__)   # (1, 0, 0) or (0, 0, 0)
 ```
 """
 
@@ -23,6 +24,13 @@ import importlib.metadata
 
 try:
     __version__ = importlib.metadata.version("traceflux")
+    # Parse version string to tuple (major, minor, patch)
+    try:
+        parts = __version__.split("-")[0].split(".")  # Remove pre-release suffix
+        __version_info__ = tuple(int(p) for p in parts[:3])
+    except (ValueError, IndexError):
+        __version_info__ = (0, 0, 0)
 except importlib.metadata.PackageNotFoundError:
     # Development mode: package not installed
     __version__ = "0.0.0-dev"
+    __version_info__ = (0, 0, 0)

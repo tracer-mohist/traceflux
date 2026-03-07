@@ -174,10 +174,7 @@ class SuffixArray:
         self.length = len(text)
         # Suffix array: indices sorted by suffix
         # suffixes[rank] = starting position of suffix at that rank
-        self.suffixes: List[int] = sorted(
-            range(self.length),
-            key=lambda i: text[i:]
-        )
+        self.suffixes: List[int] = sorted(range(self.length), key=lambda i: text[i:])
 
     def get_suffix(self, rank: int) -> str:
         """Get suffix string at given rank.
@@ -369,8 +366,7 @@ class PatternDetector:
                 j = suffix_array.suffixes[rank[i] - 1]
 
                 # Extend match while characters match
-                while (i + h < n and j + h < n and
-                       text[i + h] == text[j + h]):
+                while i + h < n and j + h < n and text[i + h] == text[j + h]:
                     h += 1
 
                 lcp[rank[i]] = h
@@ -383,10 +379,7 @@ class PatternDetector:
         return lcp
 
     def _find_repeats_with_lcp(
-        self,
-        text: str,
-        suffix_array: SuffixArray,
-        lcp: List[int]
+        self, text: str, suffix_array: SuffixArray, lcp: List[int]
     ) -> Dict[str, List[int]]:
         """Find repeated patterns using LCP array.
 
@@ -425,7 +418,7 @@ class PatternDetector:
                 if pattern_len >= self.min_length:
                     # Get pattern from first suffix in group
                     pos = suffix_array.get_position(group_start)
-                    pattern_text = text[pos:pos + pattern_len]
+                    pattern_text = text[pos : pos + pattern_len]
 
                     # Collect all positions in the group
                     positions = []
@@ -485,10 +478,7 @@ class PatternDetector:
 
         return filtered
 
-    def find_patterns_with_metadata(
-        self,
-        text: str
-    ) -> List[Pattern]:
+    def find_patterns_with_metadata(self, text: str) -> List[Pattern]:
         """Find patterns and return as Pattern objects.
 
         Args:
@@ -500,11 +490,7 @@ class PatternDetector:
         pattern_dict = self.find_patterns(text)
 
         return [
-            Pattern(
-                text=pattern,
-                positions=sorted(positions),
-                length=len(pattern)
-            )
+            Pattern(text=pattern, positions=sorted(positions), length=len(pattern))
             for pattern, positions in pattern_dict.items()
         ]
 
@@ -531,9 +517,11 @@ class PatternDetector:
 
             # Check if any longer pattern contains this one with same frequency
             for other in patterns:
-                if (len(other.text) > len(pattern.text) and
-                    pattern.text in other.text and
-                    other.frequency == pattern.frequency):
+                if (
+                    len(other.text) > len(pattern.text)
+                    and pattern.text in other.text
+                    and other.frequency == pattern.frequency
+                ):
                     is_maximal = False
                     break
 
@@ -542,10 +530,7 @@ class PatternDetector:
 
         return maximal
 
-    def get_pattern_stats(
-        self,
-        patterns: Dict[str, List[int]]
-    ) -> Dict:
+    def get_pattern_stats(self, patterns: Dict[str, List[int]]) -> Dict:
         """Get statistics about detected patterns.
 
         Args:

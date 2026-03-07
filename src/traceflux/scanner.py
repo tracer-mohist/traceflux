@@ -33,8 +33,8 @@ class Segment:
         """Compute punct_type after initialization."""
         if self.punct_type is None:
             # Type is first char of pre and post (or empty)
-            pre_char = self.pre_punct[0:1] if self.pre_punct else ''
-            post_char = self.post_punct[0:1] if self.post_punct else ''
+            pre_char = self.pre_punct[0:1] if self.pre_punct else ""
+            post_char = self.post_punct[0:1] if self.post_punct else ""
             self.punct_type = (pre_char, post_char)
 
     def __len__(self) -> int:
@@ -140,11 +140,11 @@ class Scanner:
             return True
 
         # Underscore is content (for identifiers like proxy_config, HTTP_PROXY)
-        if char == '_':
+        if char == "_":
             return True
 
         # Dot is content between digits (IP addresses, version numbers)
-        if char == '.':
+        if char == ".":
             if prev_char and prev_char.isdigit():
                 return True
             if next_char and next_char.isdigit():

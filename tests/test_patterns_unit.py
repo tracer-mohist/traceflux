@@ -262,7 +262,7 @@ class TestPatternDetectorEdgeCases:
         # Algorithm finds patterns at various lengths due to suffix array grouping
         assert len(patterns) > 0
         # Verify that "x" patterns are detected (may be various lengths)
-        assert any(all(c == 'x' for c in p) for p in patterns.keys())
+        assert any(all(c == "x" for c in p) for p in patterns.keys())
 
     def test_unicode_characters(self):
         """Handle Unicode characters correctly."""
