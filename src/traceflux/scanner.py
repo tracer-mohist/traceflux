@@ -19,6 +19,7 @@ class Segment:
         post_punct: Punctuation characters after content (may be empty)
         start_pos: Start position in original text
         end_pos: End position in original text
+        punct_type: Punctuation type identifier (pre[0:1], post[0:1])
     """
 
     pre_punct: str
@@ -26,6 +27,15 @@ class Segment:
     post_punct: str
     start_pos: int
     end_pos: int
+    punct_type: tuple = None
+
+    def __post_init__(self):
+        """Compute punct_type after initialization."""
+        if self.punct_type is None:
+            # Type is first char of pre and post (or empty)
+            pre_char = self.pre_punct[0:1] if self.pre_punct else ''
+            post_char = self.post_punct[0:1] if self.post_punct else ''
+            self.punct_type = (pre_char, post_char)
 
     def __len__(self) -> int:
         """Total length including punctuation."""
@@ -40,6 +50,11 @@ class Segment:
     def content_end(self) -> int:
         """Position where content ends (before post_punct)."""
         return self.end_pos - len(self.post_punct)
+
+    @property
+    def type_key(self) -> str:
+        """Get string key for punct_type (for dict indexing)."""
+        return f"{self.punct_type[0]}|{self.punct_type[1]}"
 
 
 class Scanner:

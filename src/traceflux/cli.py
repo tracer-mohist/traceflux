@@ -163,6 +163,11 @@ def setup_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Show explanation for associations",
     )
+    assoc_parser.add_argument(
+        "--show-types",
+        action="store_true",
+        help="Show punctuation type distribution for query term",
+    )
     assoc_parser.set_defaults(func=cmd_associations)
     
     return parser
@@ -507,6 +512,21 @@ def cmd_associations(args: argparse.Namespace) -> int:
         
         if not result.associations:
             print("  (no associations found)")
+        
+        # Show type distribution if requested
+        if args.show_types:
+            print(f"\nType distribution for '{query}':")
+            type_counts = {}
+            for filepath, content in documents:
+                segments = list(scanner.scan(content))
+                for seg in segments:
+                    if seg.content.lower() == query:
+                        type_key = seg.type_key
+                        type_counts[type_key] = type_counts.get(type_key, 0) + 1
+            
+            for type_key, count in sorted(type_counts.items(), key=lambda x: -x[1]):
+                pre, post = type_key.split('|')
+                print(f"  ({repr(pre)}, {repr(post)}): {count} occurrence(s)")
     
     return 0
 
