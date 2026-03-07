@@ -69,3 +69,30 @@ addopts = "-v --cov=traceflux --cov-report=term-missing"
 [tool.coverage.run]
 source = ["traceflux"]
 omit = ["*/tests/*", "*/__init__.py"]
+
+# =============================================================================
+# Release Automation (python-semantic-release)
+# Minimal config for Phase 8
+# =============================================================================
+
+[tool.semantic_release]
+# Version source
+version_toml = ["pyproject.toml:project.version"]
+
+# Commit parser (Conventional Commits)
+commit_parser = "angular"
+
+# Changelog
+changelog_file = "CHANGELOG.md"
+changelog_sections = ["feature", "fix", "breaking", "deprecation", "documentation", "performance", "refactor"]
+
+# Publish settings (manual confirmation for now)
+upload_to_release = false  # Manual: run `semantic-release publish` after review
+upload_to_pypi = false     # Not using PyPI yet
+
+# Branch configuration
+branch = "main"
+tag_format = "v{version}"
+
+# Logging
+logging_use_named_masks = true
