@@ -50,14 +50,59 @@ This is **associative discovery** — lifting off by stepping on related concept
 
 ### Installation
 
+**Option 1: Install via pipx (Recommended)**
+
 ```bash
-cd /home/openclaw/tracer/dev-repo/traceflux
+# Install from GitHub (latest development version)
+pipx install git+https://github.com/tracer-mohist/traceflux.git
 
-# Activate virtual environment (PDM)
+# Or install from specific branch/tag
+pipx install git+https://github.com/tracer-mohist/traceflux.git@main
+pipx install git+https://github.com/tracer-mohist/traceflux.git@v1.0.0
+
+# Verify installation
+traceflux --help
+```
+
+**Option 2: Install from source**
+
+```bash
+# Clone repository
+git clone https://github.com/tracer-mohist/traceflux.git
+cd traceflux
+
+# Install with pip
+pip install -e .
+
+# Or use PDM (if available)
+pipx install pdm
+pdm install
+
+# Verify installation
+traceflux --help
+```
+
+**Option 3: Run directly (Development)**
+
+```bash
+cd /path/to/traceflux
+
+# Run directly without installation
+python -m traceflux.cli --help
+
+# Or activate virtual environment
 .venv/bin/activate
+python -m traceflux.cli --help
+```
 
-# Or run directly
-.venv/bin/python -m traceflux.cli --help
+### Uninstall
+
+```bash
+# If installed via pipx
+pipx uninstall traceflux
+
+# If installed via pip
+pip uninstall traceflux
 ```
 
 ### Basic Usage
