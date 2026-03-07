@@ -2,11 +2,12 @@
 """Integration tests for association engine."""
 
 import pytest
-from traceflux.scanner import Scanner
-from traceflux.patterns import PatternDetector
+
+from traceflux.associations import Association, AssociativeSearch
 from traceflux.graph import CooccurrenceGraph
 from traceflux.pagerank import compute_pagerank
-from traceflux.associations import AssociativeSearch, Association
+from traceflux.patterns import PatternDetector
+from traceflux.scanner import Scanner
 
 
 class TestAssociationBasic:

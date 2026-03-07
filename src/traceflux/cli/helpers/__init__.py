@@ -5,7 +5,7 @@ Shared helper functions used by multiple CLI commands.
 
 import sys
 from pathlib import Path
-from typing import List, Tuple, Optional
+from typing import List, Optional, Tuple
 
 from traceflux.output import OutputFormatter
 
@@ -146,7 +146,7 @@ def show_suggestions(
           - config                    (strength: 0.320, degree 1)
           - session                   (strength: 0.318, degree 1)
     """
-    from traceflux import PatternDetector, CooccurrenceGraph, compute_pagerank
+    from traceflux import CooccurrenceGraph, PatternDetector, compute_pagerank
     from traceflux.associations import AssociativeSearch
     from traceflux.output import OutputFormatter
 

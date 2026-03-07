@@ -1,9 +1,11 @@
 # tests/test_index.py
 """Tests for Pattern Index."""
 
-import pytest
 import json
 from pathlib import Path
+
+import pytest
+
 from traceflux.index import PatternIndex
 
 

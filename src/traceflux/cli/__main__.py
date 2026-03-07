@@ -2,6 +2,7 @@
 """Allow running traceflux.cli as a module: python -m traceflux.cli"""
 
 import sys
+
 from traceflux.cli.main import main
 
 if __name__ == "__main__":

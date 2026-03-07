@@ -10,6 +10,7 @@ Core Logic Verified:
 """
 
 import pytest
+
 from traceflux.scanner import Scanner, Segment
 
 

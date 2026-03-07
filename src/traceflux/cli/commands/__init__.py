@@ -7,10 +7,10 @@ Each module implements a single traceflux command:
 - associations: Find related terms
 """
 
-from .search import cmd_search
+from .associations import cmd_associations
 from .index import cmd_index
 from .patterns import cmd_patterns
-from .associations import cmd_associations
+from .search import cmd_search
 
 __all__ = [
     "cmd_search",

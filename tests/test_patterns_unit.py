@@ -2,7 +2,8 @@
 """Tests for LZ77-style pattern detection."""
 
 import pytest
-from traceflux.patterns import Pattern, SuffixArray, PatternDetector
+
+from traceflux.patterns import Pattern, PatternDetector, SuffixArray
 
 
 class TestSuffixArray:

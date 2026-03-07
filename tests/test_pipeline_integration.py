@@ -4,16 +4,17 @@
 Test full data flow: scanner → patterns → index → graph → pagerank → associations.
 """
 
-import pytest
 import tempfile
 from pathlib import Path
 
-from traceflux.scanner import Scanner
-from traceflux.patterns import PatternDetector
-from traceflux.index import PatternIndex
-from traceflux.graph import CooccurrenceGraph
-from traceflux.pagerank import compute_pagerank
+import pytest
+
 from traceflux.associations import AssociativeSearch
+from traceflux.graph import CooccurrenceGraph
+from traceflux.index import PatternIndex
+from traceflux.pagerank import compute_pagerank
+from traceflux.patterns import PatternDetector
+from traceflux.scanner import Scanner
 
 
 class TestFullPipeline:

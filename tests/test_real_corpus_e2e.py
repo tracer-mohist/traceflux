@@ -9,12 +9,13 @@ These tests validate that traceflux produces meaningful results on:
 3. Markdown documentation
 """
 
-import pytest
 from pathlib import Path
 
+import pytest
+
 from traceflux.cli import main
-from traceflux.scanner import Scanner
 from traceflux.graph import CooccurrenceGraph
+from traceflux.scanner import Scanner
 
 
 class TestPythonCodeCorpus:
