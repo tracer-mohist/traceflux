@@ -2,9 +2,9 @@
 
 import sys
 
-from traceflux import Scanner, PatternDetector
-from traceflux.output import OutputFormatter
+from traceflux import PatternDetector, Scanner
 from traceflux.cli.helpers import scan_paths
+from traceflux.output import OutputFormatter
 
 
 def cmd_patterns(args) -> int:

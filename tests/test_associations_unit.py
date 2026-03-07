@@ -2,10 +2,11 @@
 """Tests for Associative Search."""
 
 import pytest
+
 from traceflux.associations import (
-    AssociativeSearch,
     Association,
     AssociationResult,
+    AssociativeSearch,
     find_associations,
 )
 from traceflux.graph import CooccurrenceGraph

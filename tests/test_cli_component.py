@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """Unit tests for traceflux CLI."""
 
-import pytest
 import json
 from io import StringIO
+
+import pytest
+
 from traceflux.cli import main, setup_parser
 
 

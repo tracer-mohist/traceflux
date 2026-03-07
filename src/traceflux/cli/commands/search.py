@@ -7,8 +7,8 @@ Does NOT rely on pre-detected patterns (that's what 'patterns' command is for).
 import sys
 from typing import List, Tuple
 
-from traceflux.output import OutputFormatter
 from traceflux.cli.helpers import scan_paths, show_suggestions
+from traceflux.output import OutputFormatter
 
 
 def cmd_search(args) -> int:

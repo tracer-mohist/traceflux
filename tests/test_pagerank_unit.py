@@ -2,8 +2,9 @@
 """Tests for Weighted PageRank."""
 
 import pytest
-from traceflux.pagerank import WeightedPageRank, PageRankResult, compute_pagerank
+
 from traceflux.graph import CooccurrenceGraph
+from traceflux.pagerank import PageRankResult, WeightedPageRank, compute_pagerank
 
 
 class TestPageRankBasic:

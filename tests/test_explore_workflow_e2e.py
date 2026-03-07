@@ -12,16 +12,17 @@ Each test answers:
 3. What breaks if this fails?
 """
 
-import pytest
 import tempfile
 from pathlib import Path
 
-from traceflux.scanner import Scanner
-from traceflux.patterns import PatternDetector
-from traceflux.graph import CooccurrenceGraph
-from traceflux.pagerank import compute_pagerank
+import pytest
+
 from traceflux.associations import AssociativeSearch
 from traceflux.cli import main
+from traceflux.graph import CooccurrenceGraph
+from traceflux.pagerank import compute_pagerank
+from traceflux.patterns import PatternDetector
+from traceflux.scanner import Scanner
 
 
 class TestExploreCodebaseWorkflow:

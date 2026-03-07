@@ -2,10 +2,10 @@
 
 import sys
 
-from traceflux import Scanner, CooccurrenceGraph, compute_pagerank
+from traceflux import CooccurrenceGraph, Scanner, compute_pagerank
 from traceflux.associations import AssociativeSearch
-from traceflux.output import OutputFormatter
 from traceflux.cli.helpers import scan_paths
+from traceflux.output import OutputFormatter
 
 
 def cmd_associations(args) -> int:

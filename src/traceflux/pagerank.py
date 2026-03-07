@@ -127,8 +127,8 @@ for pattern, score in top_10:
 - Langville, A. N., & Meyer, C. D. (2011). "Google's PageRank and Beyond."
 """
 
-from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass
+from typing import Dict, List, Optional, Tuple
 
 
 @dataclass

@@ -2,6 +2,7 @@
 """Tests for Co-occurrence Graph."""
 
 import pytest
+
 from traceflux.graph import CooccurrenceGraph, GraphStats
 
 

@@ -6,7 +6,7 @@ import sys
 from typing import Optional
 
 from traceflux import __version__
-from traceflux.cli.commands import cmd_search, cmd_index, cmd_patterns, cmd_associations
+from traceflux.cli.commands import cmd_associations, cmd_index, cmd_patterns, cmd_search
 
 
 def setup_parser() -> argparse.ArgumentParser:
