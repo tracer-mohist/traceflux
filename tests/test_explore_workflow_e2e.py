@@ -47,7 +47,7 @@ class TestExploreCodebaseWorkflow:
         # If fails: Cannot discover unknown related concepts
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir = Path(tmpdir)
-            
+
             # Create realistic code files
             (tmpdir / "config.py").write_text("""
 # Proxy configuration
@@ -77,37 +77,37 @@ def check_proxychains():
 [core]
     gitproxy = 'proxycommand'
 """)
-            
+
             # Run full pipeline
             all_text = ""
             for f in tmpdir.glob("*"):
                 if f.is_file():
                     all_text += f.read_text() + "\n"
-            
+
             # Step 1: Detect patterns
             detector = PatternDetector(min_support=2, min_length=3)
             patterns = detector.find_patterns(all_text)
-            
+
             # Should find repeated patterns
             assert len(patterns) > 0
             assert any("proxy" in p.lower() for p in patterns.keys())
-            
+
             # Step 2: Build co-occurrence graph
             graph = CooccurrenceGraph()
             graph.add_document_cooccurrences(list(patterns.keys()), window_size=5)
-            
+
             # Graph should have nodes
             assert graph.node_count() >= 3
-            
+
             # Step 3: Compute PageRank
             pagerank_scores = compute_pagerank(graph)
             assert len(pagerank_scores) > 0
-            
+
             # Step 4: Find associations
             if graph.has_node("proxy"):
                 search = AssociativeSearch(graph, pagerank_scores, lambda_param=0.7)
                 result = search.find_associations("proxy", max_degree=2, top_k=10)
-                
+
                 # Should find associations (may vary based on pattern detection)
                 assert result.query == "proxy"
 
@@ -117,7 +117,7 @@ def check_proxychains():
         # If fails: Cannot "lift off by stepping on each other's feet"
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir = Path(tmpdir)
-            
+
             # Create files with layered concepts
             (tmpdir / "proxy_setup.txt").write_text("""
 proxy configuration:
@@ -131,15 +131,15 @@ proxychains configuration:
 - chain multiple proxies
 - tunnel through SSH
 """)
-            
+
             # First exploration: "proxy"
             text = (tmpdir / "proxy_setup.txt").read_text()
             detector = PatternDetector(min_support=2, min_length=3)
             patterns = detector.find_patterns(text)
-            
+
             graph = CooccurrenceGraph()
             graph.add_document_cooccurrences(list(patterns.keys()), window_size=5)
-            
+
             # Should be able to start exploration
             assert graph.node_count() > 0
 
@@ -176,10 +176,10 @@ INFO: connection restored
 ERROR: connection timeout to cache
 ERROR: connection timeout to cache
 """
-        
+
         detector = PatternDetector(min_support=2, min_length=3)
         patterns = detector.find_patterns(log_content)
-        
+
         # Should find repeated error patterns
         assert len(patterns) > 0
         # PatternDetector returns dict: {pattern_text: [positions]}
@@ -198,13 +198,13 @@ ERROR: cache miss
 ERROR: database connection failed
 WARN: falling back to cache
 """
-        
+
         detector = PatternDetector(min_support=2, min_length=3)
         patterns = detector.find_patterns(log_content)
-        
+
         graph = CooccurrenceGraph()
         graph.add_document_cooccurrences(list(patterns.keys()), window_size=5)
-        
+
         # Should show correlations between errors
         assert graph.node_count() >= 2
 
@@ -230,15 +230,15 @@ class TestPipeCompositionWorkflow:
         # Expected: Reads from stdin, processes normally
         # If fails: UNIX composition broken
         import subprocess
-        
+
         result = subprocess.run(
             ["python", "-m", "traceflux.cli", "patterns", "--min-length", "3"],
             input="hello hello world world",
             capture_output=True,
             text=True,
-            cwd=Path(__file__).parent.parent
+            cwd=Path(__file__).parent.parent,
         )
-        
+
         # Should process stdin without error
         assert result.returncode == 0 or "No documents" not in result.stderr
 
@@ -249,7 +249,7 @@ class TestPipeCompositionWorkflow:
         with tempfile.TemporaryDirectory() as tmpdir:
             test_file = Path(tmpdir) / "test.txt"
             test_file.write_text("hello world hello")
-            
+
             result = main(["patterns", str(tmpdir), "--json"])
             assert result == 0
 
@@ -276,7 +276,7 @@ class TestEmptyInputWorkflow:
         # If fails: First impression is broken
         with tempfile.TemporaryDirectory() as tmpdir:
             result = main(["search", "test", tmpdir])
-            
+
             # Should handle gracefully (error code is OK, crash is not)
             assert result in [0, 1]  # 0 = no results, 1 = error message
 
@@ -287,7 +287,7 @@ class TestEmptyInputWorkflow:
         with tempfile.TemporaryDirectory() as tmpdir:
             test_file = Path(tmpdir) / "test.txt"
             test_file.write_text("hello world")
-            
+
             result = main(["search", "nonexistent", str(tmpdir)])
             assert result == 0  # Not an error, just no results
 
@@ -317,10 +317,10 @@ class TestMultiLanguageWorkflow:
 proxy = 代理服务器
 HTTP_PROXY = http://example.com
 """
-        
+
         detector = PatternDetector(min_support=2, min_length=2)
         patterns = detector.find_patterns(text)
-        
+
         # Should find patterns in both languages
         assert len(patterns) > 0
 
@@ -329,10 +329,10 @@ HTTP_PROXY = http://example.com
         # Expected: No crashes, graceful handling
         # If fails: Modern text processing broken
         text = "Hello 😀 World 🌍 proxy配置"
-        
+
         scanner = Scanner()
         segments = list(scanner.scan(text))
-        
+
         # Should not crash, should produce segments
         assert len(segments) > 0
 
@@ -362,10 +362,10 @@ class TestLargeFileWorkflow:
             large_file = Path(tmpdir) / "large.txt"
             lines = ["ERROR: connection timeout\n", "INFO: retry\n"] * 500
             large_file.write_text("".join(lines))
-            
+
             detector = PatternDetector(min_support=2, min_length=3)
             patterns = detector.find_patterns(large_file.read_text())
-            
+
             # Should find patterns
             assert len(patterns) > 0
 
@@ -392,7 +392,7 @@ class TestDocumentationDiscoveryWorkflow:
         # If fails: Cannot help navigate documentation
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir = Path(tmpdir)
-            
+
             # Create documentation files
             (tmpdir / "api.md").write_text("""
 # API Documentation
@@ -409,15 +409,15 @@ Configure proxy in config file.
 ## Environment Variables
 HTTP_PROXY, HTTPS_PROXY
 """)
-            
+
             # Combine all docs
             all_docs = ""
             for md_file in tmpdir.glob("*.md"):
                 all_docs += md_file.read_text() + "\n"
-            
+
             detector = PatternDetector(min_support=2, min_length=3)
             patterns = detector.find_patterns(all_docs)
-            
+
             # Should find documentation topics
             assert len(patterns) > 0
             assert any("proxy" in p.lower() for p in patterns.keys())
@@ -426,7 +426,7 @@ HTTP_PROXY, HTTPS_PROXY
 # E2E Test Summary
 # ================
 # Total: 8 tests (within 5-15 limit)
-# 
+#
 # Coverage:
 # 1. Explore codebase (core value)
 # 2. Log analysis (operational use)

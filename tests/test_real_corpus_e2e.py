@@ -46,15 +46,15 @@ def load_config():
         # If fails: Cannot explore codebases
         import io
         import sys
-        
+
         old_stdout = sys.stdout
         sys.stdout = io.StringIO()
-        
+
         result = main(["search", "proxy", str(test_file)])
-        
+
         output = sys.stdout.getvalue()
         sys.stdout = old_stdout
-        
+
         assert result == 0
         assert "Found 'proxy'" in output
         assert "occurrence" in output
@@ -65,15 +65,15 @@ def load_config():
         # If fails: Cannot discover unknown concepts
         import io
         import sys
-        
+
         old_stdout = sys.stdout
         sys.stdout = io.StringIO()
-        
+
         result = main(["associations", "proxy", str(test_file), "--hops", "2"])
-        
+
         output = sys.stdout.getvalue()
         sys.stdout = old_stdout
-        
+
         assert result == 0
         # Should find associations
         assert "Associations for 'proxy'" in output
@@ -104,15 +104,15 @@ class TestLogFileCorpus:
         # If fails: Cannot analyze logs
         import io
         import sys
-        
+
         old_stdout = sys.stdout
         sys.stdout = io.StringIO()
-        
+
         result = main(["search", "timeout", str(test_file)])
-        
+
         output = sys.stdout.getvalue()
         sys.stdout = old_stdout
-        
+
         assert result == 0
         assert "Found 'timeout'" in output
 
@@ -122,15 +122,15 @@ class TestLogFileCorpus:
         # If fails: Cannot identify error patterns
         import io
         import sys
-        
+
         old_stdout = sys.stdout
         sys.stdout = io.StringIO()
-        
+
         result = main(["associations", "ERROR", str(test_file), "--hops", "2"])
-        
+
         output = sys.stdout.getvalue()
         sys.stdout = old_stdout
-        
+
         assert result == 0
         assert "Associations for 'error'" in output
         # Should find error-related terms
@@ -178,15 +178,15 @@ session = setup_proxy(config)
         # If fails: Cannot navigate docs
         import io
         import sys
-        
+
         old_stdout = sys.stdout
         sys.stdout = io.StringIO()
-        
+
         result = main(["search", "proxy", str(test_file)])
-        
+
         output = sys.stdout.getvalue()
         sys.stdout = old_stdout
-        
+
         assert result == 0
         assert "Found 'proxy'" in output
 
@@ -196,15 +196,15 @@ session = setup_proxy(config)
         # If fails: Cannot discover doc structure
         import io
         import sys
-        
+
         old_stdout = sys.stdout
         sys.stdout = io.StringIO()
-        
+
         result = main(["associations", "configuration", str(test_file), "--hops", "2"])
-        
+
         output = sys.stdout.getvalue()
         sys.stdout = old_stdout
-        
+
         assert result == 0
         assert "Associations for 'configuration'" in output
 
@@ -218,7 +218,7 @@ class TestSemanticSegmentation:
         # If fails: IP addresses fragmented
         scanner = Scanner(semantic_segmentation=True)
         segments = list(scanner.scan("Server at 127.0.0.1:8080"))
-        
+
         contents = [s.content for s in segments if s.content]
         assert "127.0.0.1" in contents
 
@@ -228,7 +228,7 @@ class TestSemanticSegmentation:
         # If fails: Version numbers fragmented
         scanner = Scanner(semantic_segmentation=True)
         segments = list(scanner.scan("Version v3.14.2 released"))
-        
+
         contents = [s.content for s in segments if s.content]
         assert "v3.14.2" in contents
 
@@ -238,7 +238,7 @@ class TestSemanticSegmentation:
         # If fails: Identifiers fragmented
         scanner = Scanner(semantic_segmentation=True)
         segments = list(scanner.scan("Use proxy_config variable"))
-        
+
         contents = [s.content for s in segments if s.content]
         assert "proxy_config" in contents
 

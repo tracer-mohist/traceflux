@@ -212,7 +212,7 @@ class WeightedPageRank:
         damping: float = 0.85,
         max_iterations: int = 100,
         tolerance: float = 1e-6,
-        min_score: float = 0.001
+        min_score: float = 0.001,
     ):
         """Initialize PageRank calculator.
 
@@ -252,9 +252,7 @@ class WeightedPageRank:
         self.min_score = min_score
 
     def compute(
-        self,
-        graph: "CooccurrenceGraph",
-        initial_scores: Optional[Dict[str, float]] = None
+        self, graph: "CooccurrenceGraph", initial_scores: Optional[Dict[str, float]] = None
     ) -> PageRankResult:
         """Compute PageRank scores using power iteration.
 
@@ -330,12 +328,7 @@ class WeightedPageRank:
         n = len(nodes)
 
         if n == 0:
-            return PageRankResult(
-                scores={},
-                iterations=0,
-                converged=True,
-                final_delta=0.0
-            )
+            return PageRankResult(scores={}, iterations=0, converged=True, final_delta=0.0)
 
         # Initialize scores uniformly
         scores: Dict[str, float] = {}
@@ -377,10 +370,7 @@ class WeightedPageRank:
                 neighbors = adj_dict.get(node, {})
                 for neighbor, weight in neighbors.items():
                     if out_weights[neighbor] > 0:
-                        score += (self.damping *
-                                  scores[neighbor] *
-                                  weight /
-                                  out_weights[neighbor])
+                        score += self.damping * scores[neighbor] * weight / out_weights[neighbor]
 
                 new_scores[node] = score
 
@@ -400,16 +390,10 @@ class WeightedPageRank:
             scores = {k: v / total for k, v in scores.items()}
 
         return PageRankResult(
-            scores=scores,
-            iterations=iteration,
-            converged=converged,
-            final_delta=final_delta
+            scores=scores, iterations=iteration, converged=converged, final_delta=final_delta
         )
 
-    def compute_with_filtering(
-        self,
-        graph: "CooccurrenceGraph"
-    ) -> Tuple[Dict[str, float], int]:
+    def compute_with_filtering(self, graph: "CooccurrenceGraph") -> Tuple[Dict[str, float], int]:
         """Compute PageRank and filter out low-importance patterns.
 
         ## Purpose
@@ -469,21 +453,13 @@ class WeightedPageRank:
         scores = result.scores
 
         # Filter low-scoring nodes
-        filtered = {
-            node: score
-            for node, score in scores.items()
-            if score >= self.min_score
-        }
+        filtered = {node: score for node, score in scores.items() if score >= self.min_score}
 
         removed = len(scores) - len(filtered)
 
         return filtered, removed
 
-    def get_top_k(
-        self,
-        scores: Dict[str, float],
-        k: int = 10
-    ) -> List[Tuple[str, float]]:
+    def get_top_k(self, scores: Dict[str, float], k: int = 10) -> List[Tuple[str, float]]:
         """Get top-k patterns by PageRank score.
 
         ## Purpose
@@ -539,11 +515,7 @@ class WeightedPageRank:
         sorted_scores = sorted(scores.items(), key=lambda x: -x[1])
         return sorted_scores[:k]
 
-    def normalize_scores(
-        self,
-        scores: Dict[str, float],
-        method: str = "sum"
-    ) -> Dict[str, float]:
+    def normalize_scores(self, scores: Dict[str, float], method: str = "sum") -> Dict[str, float]:
         """Normalize PageRank scores for different use cases.
 
         ## Normalization Methods
@@ -648,7 +620,7 @@ def compute_pagerank(
     graph: "CooccurrenceGraph",
     damping: float = 0.85,
     max_iterations: int = 100,
-    tolerance: float = 1e-6
+    tolerance: float = 1e-6,
 ) -> Dict[str, float]:
     """Convenience function to compute PageRank scores.
 
@@ -718,10 +690,6 @@ def compute_pagerank(
     - WeightedPageRank.compute_with_filtering: Filter low-scoring patterns
     - WeightedPageRank.get_top_k: Get top-k patterns easily
     """
-    pr = WeightedPageRank(
-        damping=damping,
-        max_iterations=max_iterations,
-        tolerance=tolerance
-    )
+    pr = WeightedPageRank(damping=damping, max_iterations=max_iterations, tolerance=tolerance)
     result = pr.compute(graph)
     return result.scores

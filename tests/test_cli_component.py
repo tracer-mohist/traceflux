@@ -103,7 +103,7 @@ class TestCLISearch:
         # Create a test file
         test_file = tmp_path / "test.txt"
         test_file.write_text("hello world")
-        
+
         result = main(["search", "nonexistent", str(tmp_path)])
         captured = capsys.readouterr()
         assert result == 0
@@ -114,7 +114,7 @@ class TestCLISearch:
         # Create a test file
         test_file = tmp_path / "test.txt"
         test_file.write_text("hello world hello")
-        
+
         result = main(["search", "hello", str(tmp_path)])
         captured = capsys.readouterr()
         assert result == 0
@@ -126,11 +126,11 @@ class TestCLISearch:
         # Create a test file
         test_file = tmp_path / "test.txt"
         test_file.write_text("hello world hello")
-        
+
         result = main(["search", "hello", str(tmp_path), "--json"])
         captured = capsys.readouterr()
         assert result == 0
-        
+
         # Parse JSON output
         output = json.loads(captured.out)
         assert output["query"] == "hello"
@@ -153,15 +153,16 @@ class TestCLIIndex:
         # Create a test file
         test_file = tmp_path / "test.txt"
         test_file.write_text("hello world hello")
-        
+
         output_file = tmp_path / "index.json"
         result = main(["index", str(tmp_path), "-o", str(output_file)])
-        
+
         assert result == 0
         assert output_file.exists()
-        
+
         # Verify index content
         import json
+
         with open(output_file) as f:
             data = json.load(f)
         assert "index" in data
@@ -183,7 +184,7 @@ class TestCLIPatterns:
         # Create a test file with repeated patterns
         test_file = tmp_path / "test.txt"
         test_file.write_text("hello hello world world world")
-        
+
         result = main(["patterns", str(tmp_path), "--min-length", "2"])
         captured = capsys.readouterr()
         assert result == 0
@@ -194,11 +195,11 @@ class TestCLIPatterns:
         # Create a test file
         test_file = tmp_path / "test.txt"
         test_file.write_text("hello hello world")
-        
+
         result = main(["patterns", str(tmp_path), "--json"])
         captured = capsys.readouterr()
         assert result == 0
-        
+
         # Parse JSON output
         output = json.loads(captured.out)
         assert "patterns" in output
@@ -220,7 +221,7 @@ class TestCLIAssociations:
         # Create a test file
         test_file = tmp_path / "test.txt"
         test_file.write_text("hello world")
-        
+
         result = main(["associations", "nonexistent", str(tmp_path)])
         captured = capsys.readouterr()
         assert result == 0
@@ -232,7 +233,7 @@ class TestCLIAssociations:
         # Need repeated patterns for pattern detection to work
         test_file = tmp_path / "test.txt"
         test_file.write_text("hello world hello there hello again")
-        
+
         result = main(["associations", "hello", str(tmp_path)])
         captured = capsys.readouterr()
         assert result == 0
@@ -245,11 +246,11 @@ class TestCLIAssociations:
         # Create a test file with repeated patterns
         test_file = tmp_path / "test.txt"
         test_file.write_text("hello world hello there hello again")
-        
+
         result = main(["associations", "hello", str(tmp_path), "--json"])
         captured = capsys.readouterr()
         assert result == 0
-        
+
         # Output may be empty associations or JSON error message
         # Just verify it runs without crashing
         if captured.out.strip():

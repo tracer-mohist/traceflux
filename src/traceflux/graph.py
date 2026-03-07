@@ -70,11 +70,7 @@ class CooccurrenceGraph:
         self._adj[pattern1][pattern2] += weight
         self._adj[pattern2][pattern1] += weight
 
-    def add_document_cooccurrences(
-        self,
-        patterns: List[str],
-        window_size: int = 2
-    ) -> None:
+    def add_document_cooccurrences(self, patterns: List[str], window_size: int = 2) -> None:
         """Add co-occurrences from a document's pattern sequence.
 
         Patterns within window_size of each other are considered
@@ -215,12 +211,7 @@ class CooccurrenceGraph:
 
         if n == 0:
             return GraphStats(
-                node_count=0,
-                edge_count=0,
-                avg_degree=0.0,
-                max_degree=0,
-                min_degree=0,
-                density=0.0
+                node_count=0, edge_count=0, avg_degree=0.0, max_degree=0, min_degree=0, density=0.0
             )
 
         degrees = [self.degree(node) for node in self._adj.keys()]
@@ -239,7 +230,7 @@ class CooccurrenceGraph:
             avg_degree=avg_degree,
             max_degree=max_degree,
             min_degree=min_degree,
-            density=density
+            density=density,
         )
 
     def remove_low_weight_edges(self, min_weight: int) -> int:
@@ -260,10 +251,7 @@ class CooccurrenceGraph:
                     removed += 1
 
         # Clean up empty nodes
-        self._adj = defaultdict(
-            lambda: defaultdict(int),
-            {k: v for k, v in self._adj.items() if v}
-        )
+        self._adj = defaultdict(lambda: defaultdict(int), {k: v for k, v in self._adj.items() if v})
 
         # Update edge count
         self._edge_count = len(self.edges())
@@ -279,10 +267,7 @@ class CooccurrenceGraph:
         return {node: dict(neighbors) for node, neighbors in self._adj.items()}
 
     @classmethod
-    def from_adjacency_dict(
-        cls,
-        adj_dict: Dict[str, Dict[str, int]]
-    ) -> "CooccurrenceGraph":
+    def from_adjacency_dict(cls, adj_dict: Dict[str, Dict[str, int]]) -> "CooccurrenceGraph":
         """Create graph from adjacency dictionary.
 
         Args:
