@@ -1,5 +1,6 @@
 """Patterns Command - List discovered patterns in text files."""
 
+import json
 import sys
 
 from traceflux import PatternDetector, Scanner
@@ -65,7 +66,7 @@ def cmd_patterns(args) -> int:
             "patterns": [{"pattern": p, "frequency": f} for p, f in sorted_patterns[: args.limit]],
             "total_patterns": len(all_patterns),
         }
-        fmt.print(output)
+        print(json.dumps(output))
     else:
         fmt.print(f"Top {min(args.limit, len(sorted_patterns))} patterns:")
         fmt.print()

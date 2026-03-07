@@ -4,6 +4,7 @@ Search works like grep: finds query in text directly.
 Does NOT rely on pre-detected patterns (that's what 'patterns' command is for).
 """
 
+import json
 import sys
 from typing import List, Tuple
 
@@ -85,7 +86,7 @@ def cmd_search(args) -> int:
             ],
             "total_matches": sum(len(pos) for _, pos in results),
         }
-        fmt.print(output)
+        print(json.dumps(output))
     else:
         fmt.success(f"Found '{query}' in {len(results)} file(s)")
         fmt.print()
