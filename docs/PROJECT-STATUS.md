@@ -237,13 +237,11 @@ Based on "Limited Testing Principles" (`/share/testing/design/limited-testing-bo
 
 ### Test Structure
 
-```
-tests/
-├── test_*_unit.py         # Unit tests (6 files)
-├── test_*_component.py    # Component tests (1 file)
-├── test_*_integration.py  # Integration tests (2 files)
-└── test_*_e2e.py          # E2E tests (1 file, 12 tests)
-```
+- `tests/`
+  - `test_*_unit.py` - Unit tests (6 files)
+  - `test_*_component.py` - Component tests (1 file)
+  - `test_*_integration.py` - Integration tests (2 files)
+  - `test_*_e2e.py` - E2E tests (1 file, 12 tests)
 
 ### E2E Test Coverage (12 tests, within 5-15 limit)
 
