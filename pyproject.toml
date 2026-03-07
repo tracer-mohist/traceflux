@@ -7,7 +7,8 @@ readme = "README.md"
 license = "MIT"
 requires-python = ">=3.10"
 authors = [
-  { name = "Tracer", email = "tracer.mohist@outlook.com" }
+  { name = "Tracer" }
+  # Email omitted for privacy - use GitHub noreply for commits
 ]
 keywords = [
   "search",
