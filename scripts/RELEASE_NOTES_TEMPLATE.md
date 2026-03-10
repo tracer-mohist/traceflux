@@ -1,3 +1,4 @@
+<!-- scripts/RELEASE_NOTES_TEMPLATE.md -->
 # Release Notes Template
 
 **Version**: v{VERSION}  
