@@ -1,4 +1,6 @@
-# Changelog
+# CHANGELOG
+
+<!-- version list -->
 
 All notable changes to traceflux will be documented in this file.
 
