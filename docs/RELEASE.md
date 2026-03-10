@@ -1,3 +1,4 @@
+<!-- docs/RELEASE.md -->
 # Release Guide
 
 **Philosophy**: Simple, Practical, Elegant

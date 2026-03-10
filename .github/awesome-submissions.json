@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "createdAt": "2026-03-07T20:30:00+08:00",
+  "lastUpdated": "2026-03-07T20:30:00+08:00",
+  
+  "searchProgress": {
+    "vinta/awesome-python": {
+      "searchedAt": "2026-03-07T20:30:00+08:00",
+      "found": true,
+      "category": "Text Processing",
+      "hasContributing": true,
+      "notes": "Most popular Python list, high bar"
+    },
+    "frutik/awesome-search": {
+      "searchedAt": "2026-03-07T20:30:00+08:00",
+      "found": true,
+      "category": "Search Tools",
+      "hasContributing": false,
+      "notes": "Direct category match, check submission method"
+    },
+    "awesomelistsio/awesome-nlp": {
+      "searchedAt": "2026-03-07T20:30:00+08:00",
+      "found": true,
+      "category": "NLP Tools",
+      "hasContributing": false,
+      "notes": "NLP/text analysis category"
+    }
+  },
+  
+  "submissions": [],
+  
+  "blacklist": [],
+  
+  "stats": {
+    "totalSearched": 3,
+    "totalSubmitted": 0,
+    "accepted": 0,
+    "rejected": 0,
+    "pending": 0,
+    "withdrawn": 0
+  },
+  
+  "rateLimit": {
+    "maxPerWeek": 2,
+    "minDaysBetween": 7,
+    "lastSubmission": null
+  }
+}

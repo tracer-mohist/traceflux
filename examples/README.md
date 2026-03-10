@@ -1,3 +1,4 @@
+<!-- examples/README.md -->
 # traceflux Examples
 
 Practical usage examples for real-world scenarios.

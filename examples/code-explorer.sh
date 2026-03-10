@@ -1,4 +1,5 @@
 #!/bin/bash
+# examples/code-explorer.sh
 # code-explorer.sh — Code Discovery Workflow
 #
 # Complete code exploration workflow:

@@ -1,3 +1,4 @@
+# src/traceflux/__init__.py
 """traceflux - Lightweight text search engine with associative discovery."""
 
 from traceflux.__version__ import __version__, __version_info__

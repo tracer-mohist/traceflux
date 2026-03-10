@@ -1,3 +1,4 @@
+# src/traceflux/cli/commands/associations.py
 """Associations Command - Find related terms using graph traversal."""
 
 import sys

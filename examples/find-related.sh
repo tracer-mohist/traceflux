@@ -1,4 +1,5 @@
 #!/bin/bash
+# examples/find-related.sh
 # find-related.sh — Find Related Files
 #
 # Find files related to a concept via associations.

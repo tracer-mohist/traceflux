@@ -1,3 +1,4 @@
+# src/traceflux/cli/helpers/__init__.py
 """CLI helpers - Path scanning and suggestion utilities.
 
 Shared helper functions used by multiple CLI commands.

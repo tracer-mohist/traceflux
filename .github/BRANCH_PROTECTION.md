@@ -1,3 +1,4 @@
+<!-- .github/BRANCH_PROTECTION.md -->
 # Branch Protection & PR Workflow
 
 **Purpose**: Ensure code quality and maintain Conventional Commits compliance for automated versioning.

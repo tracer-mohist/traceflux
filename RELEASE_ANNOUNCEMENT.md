@@ -1,3 +1,4 @@
+<!-- RELEASE_ANNOUNCEMENT.md -->
 # 🎉 traceflux v1.0.0 Released!
 
 **Date**: 2026-03-07  

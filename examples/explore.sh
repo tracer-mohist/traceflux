@@ -1,4 +1,5 @@
 #!/bin/bash
+# examples/explore.sh
 # explore.sh — Iterative Exploration
 #
 # Explore a codebase by following associations.

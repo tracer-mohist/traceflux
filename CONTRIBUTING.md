@@ -1,3 +1,4 @@
+<!-- CONTRIBUTING.md -->
 # Contributing to traceflux
 
 **Thank you for your interest in contributing!**
@@ -40,31 +41,63 @@ git checkout -b issue/42-your-feature-name
 
 ---
 
-## Commit Convention
+## Commit Message Convention
 
-We use **Conventional Commits** for standardized version management.
+We follow [Conventional Commits v1.0.0](https://www.conventionalcommits.org/en/v1.0.0/).
+
+**Full Guide**: See [.github/COMMIT_CONVENTION.md](.github/COMMIT_CONVENTION.md)
+
+### Quick Reference
+
+| Type | When to Use | Example |
+|------|-------------|---------|
+| `feat(scope)` | New **product** feature | `feat(cli): add search command` |
+| `fix(scope)` | **Product** bug fix | `fix(scanner): handle empty input` |
+| `chore(scope)` | Development tools, scripts | `chore(scripts): add release.sh` |
+| `style` | Formatting, linting | `style: fix flake8 errors` |
+| `refactor(scope)` | Code restructuring | `refactor(scanner): simplify logic` |
+| `docs(scope)` | Documentation | `docs(readme): update installation` |
+| `ci` | CI/CD configuration | `ci: add GitHub Actions workflow` |
+| `test(scope)` | Test files | `test: add unit tests for scanner` |
 
 ### Format
 
 ```
-<type>: <description>
+<type>(<scope>): <description>
 
 [optional body]
 
-[optional footer]
+[optional footer(s)]
 ```
 
-### Types
+**Rules**:
+- ✅ Type: lowercase (`feat`, `fix`, `chore`, ...)
+- ✅ Scope: lowercase, optional (`cli`, `scripts`, `tests`, ...)
+- ✅ Description: imperative mood ("add" not "added")
+- ✅ Body: wrap at 72 characters
+- ✅ Footer: `BREAKING CHANGE:`, `Closes #123`, etc.
 
-| Type | Description | Version Impact |
-|------|-------------|----------------|
-| `feat:` | New feature | Minor (1.1.0) |
-| `fix:` | Bug fix | Patch (1.0.1) |
-| `docs:` | Documentation only | None |
-| `style:` | Code style (formatting) | None |
-| `refactor:` | Code refactoring | None |
-| `test:` | Add or update tests | None |
-| `chore:` | Maintenance tasks | None |
+### Examples
+
+```bash
+# Good
+git commit -m "feat(cli): add search command"
+git commit -m "chore(scripts): add release.sh"
+git commit -m "style: fix flake8 errors"
+
+# Bad (don't do this)
+git commit -m "feat(scripts): add tool"  # Scripts are chore, not feat
+git commit -m "fix: lint errors"         # Lint is style, not fix
+git commit -m "Updated file"             # No type, no scope
+```
+
+### Common Mistakes
+
+| Wrong | Correct | Why |
+|-------|---------|-----|
+| `feat(scripts): ...` | `chore(scripts): ...` | Scripts are dev tools |
+| `fix: lint` | `style: lint` | Lint is style, not bug |
+| `refactor(scripts): ...` | `chore(scripts): ...` | Scripts refactor is chore |
 
 ### Breaking Changes
 

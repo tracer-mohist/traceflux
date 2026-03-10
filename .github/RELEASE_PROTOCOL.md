@@ -1,3 +1,4 @@
+<!-- .github/RELEASE_PROTOCOL.md -->
 # Release Protocol
 
 **Philosophy**: Simple, Practical, Elegant

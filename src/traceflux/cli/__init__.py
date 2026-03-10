@@ -1,3 +1,4 @@
+# src/traceflux/cli/__init__.py
 """CLI package - Command-line interface for traceflux."""
 
 from .main import main, setup_parser

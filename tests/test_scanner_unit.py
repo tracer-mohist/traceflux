@@ -1,4 +1,4 @@
-# tests/test_scanner.py
+# tests/test_scanner_unit.py
 """Scanner Unit Tests.
 
 Tests for PNI (Punctuation Namespace Index) scanner.

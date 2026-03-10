@@ -1,3 +1,4 @@
+<!-- docs/OUTPUT-FORMAT.md -->
 # traceflux Output Format
 
 **Principle**: ASCII-only, log-friendly, pipe-safe output.

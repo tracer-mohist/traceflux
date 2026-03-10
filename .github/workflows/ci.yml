@@ -1,4 +1,4 @@
-# CI/CD Pipeline for traceflux
+# .github/workflows/ci.yml
 #
 # Philosophy: Simple, Practical, Elegant
 # - Single Python version (cost control)

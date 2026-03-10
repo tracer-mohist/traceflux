@@ -1,4 +1,5 @@
 #!/bin/bash
+# examples/pipe-search.sh
 # pipe-search.sh — Search Piped Content
 #
 # Search content from stdin and show associations.

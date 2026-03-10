@@ -1,4 +1,4 @@
-# tests/test_graph.py
+# tests/test_graph_unit.py
 """Tests for Co-occurrence Graph."""
 
 import pytest

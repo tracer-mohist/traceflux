@@ -1,3 +1,4 @@
+<!-- CHANGELOG.md -->
 # Changelog
 
 All notable changes to traceflux will be documented in this file.

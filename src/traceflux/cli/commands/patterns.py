@@ -1,3 +1,4 @@
+# src/traceflux/cli/commands/patterns.py
 """Patterns Command - List discovered patterns in text files."""
 
 import json

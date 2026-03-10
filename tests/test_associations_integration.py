@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# tests/test_associations_integration.py
 """Integration tests for association engine."""
 
 import pytest
