@@ -1,15 +1,13 @@
 # .github/workflows/test.yml
 #
-# Test and lint on pull requests and pushes to main
-# Uses PDM for dependency management (consistent with local dev)
+# Test and lint on pull requests only
+# Push to main triggers CD workflow (which includes testing)
 #
 
 name: Test
 
 on:
   pull_request:
-    branches: [main]
-  push:
     branches: [main]
 
 permissions:
@@ -18,6 +16,9 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
     steps:
       - uses: actions/checkout@v4
 
@@ -31,6 +32,9 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
     steps:
       - uses: actions/checkout@v4
 

@@ -29,11 +29,21 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Reset branch to workflow sha
+        run: |
+          git reset --hard ${{ github.sha }}
+
       - uses: pdm-project/setup-pdm@v4
         with:
           python-version: '3.12'
 
       - run: pdm install --dev
+
+      - run: pdm run pytest -v
+
+      - run: pdm run black --check src/ tests/
+      - run: pdm run isort --check-only src/ tests/
+      - run: pdm run flake8 --max-line-length=100 --ignore=E501,W503,F401,F841 src/ tests/
 
       - name: Semantic Version Release
         id: release
