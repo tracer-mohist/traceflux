@@ -1,72 +1,90 @@
 # Release Protocol
 
-**Philosophy**: Simple, Practical, Elegant
+Purpose: Automated release process with python-semantic-release.
 
-This document defines the release process for traceflux. It serves as the single source of truth for all release-related activities.
-
----
-
-## 1. Version Format
-
-Semantic Versioning: `MAJOR.MINOR.PATCH`
-
-| Component | When to Increment | Example |
-|-----------|------------------|---------|
-| **MAJOR** | Breaking changes | 1.0.0 → 2.0.0 |
-| **MINOR** | New features (backward compatible) | 1.0.0 → 1.1.0 |
-| **PATCH** | Bug fixes (backward compatible) | 1.0.0 → 1.0.1 |
-
-**Pre-release**: `1.0.1-beta`, `1.0.1-rc.1`
+Philosophy: Simple, Practical, Elegant
 
 ---
 
-## 2. Release Process
+## Version Format
 
-### Manual Release (Current)
+Semantic Versioning: MAJOR.MINOR.PATCH
 
+- MAJOR: Breaking changes (1.0.0 -> 2.0.0)
+- MINOR: New features, backward compatible (1.0.0 -> 1.1.0)
+- PATCH: Bug fixes, backward compatible (1.0.0 -> 1.0.1)
+
+Pre-release: 1.0.1-beta, 1.0.1-rc.1
+
+---
+
+## Automated Release Process
+
+### Contributor Workflow
+
+1. Write code
+2. Commit with Conventional Commits (feat, fix, chore, etc.)
+3. Open pull request
+4. Merge to main
+
+### CI/CD Automation
+
+On push to main, GitHub Actions:
+1. Runs tests (pytest)
+2. Runs lint (black, isort, flake8)
+3. Calculates version from commit messages
+4. Updates pyproject.toml
+5. Creates git tag
+6. Generates CHANGELOG
+7. Creates GitHub Release
+
+### Manual Confirmation (Current)
+
+Configuration: upload_to_release = false
+
+After automated version calculation:
 ```bash
-# 1. Run release script
-./scripts/release.sh 1.0.1
-
-# 2. Review changes
+# Review calculated version
 git show
 
-# 3. Push to trigger CI/CD
-git push origin main --tags
-
-# 4. CI/CD automatically:
-#    - Runs tests
-#    - Runs linting
-#    - Creates GitHub Release
+# Confirm and publish
+pdm run semantic-release publish
+git push --follow-tags
 ```
 
-### Script Responsibilities
+This provides a safety valve while automation is new.
 
-`scripts/release.sh` handles:
-- ✅ Version validation (SemVer format)
-- ✅ Update `pyproject.toml`
-- ✅ Run tests (must pass)
-- ✅ Create git commit
-- ✅ Create git tag
-
-### CI/CD Responsibilities
-
-GitHub Actions handles:
-- ✅ Run tests (Python 3.12)
-- ✅ Run linting (black, isort, flake8)
-- ✅ Create GitHub Release (on tag)
-- ✅ Generate release notes
+Future: Enable auto-publish when confident.
 
 ---
 
-## 3. Single Source of Truth
+## Conventional Commits
 
-**Version is maintained in**: `pyproject.toml` only
+Version calculation depends on commit types:
 
-`src/traceflux/__version__.py` reads from package metadata at runtime — no manual sync needed.
+- feat: MINOR bump (1.0.0 -> 1.1.0)
+- fix: PATCH bump (1.0.0 -> 1.0.1)
+- chore, docs, style, test, refactor: No version bump
+
+REFERENCE: .github/COMMIT_CONVENTION.md
+
+Example:
+```bash
+git commit -m "feat(cli): add search command"
+git commit -m "fix(scanner): handle empty input"
+git commit -m "chore(scripts): add release.sh"
+```
+
+---
+
+## Single Source of Truth
+
+Version is maintained in: pyproject.toml only
+
+src/traceflux/__version__.py reads from package metadata at runtime.
 
 ```python
-# __version__.py
+# src/traceflux/__version__.py
 import importlib.metadata
 
 try:
@@ -77,65 +95,73 @@ except importlib.metadata.PackageNotFoundError:
 
 ---
 
-## 4. Code Quality Standards
+## CI/CD Workflows
+
+### pr-check.yml
+
+Trigger: Pull request to main
+
+Jobs:
+- commitlint: Validates commit message format
+
+### test.yml
+
+Trigger: Pull request or push to main
+
+Jobs:
+- test: Pytest with PDM
+- lint: Black, isort, flake8 with PDM
+
+### cd.yml
+
+Trigger: Push to main
+
+Jobs:
+- release: python-semantic-release automation
+
+---
+
+## Code Quality Standards
 
 ### Pre-commit Hooks
 
-Enabled via: `git config core.hooksPath .githooks`
+Enabled via: git config core.hooksPath .githooks
 
-Checks performed:
-1. Python syntax validation
-2. Code formatting (black)
-3. Import order (isort)
-4. Linting (flake8)
+Checks:
+- Python syntax validation
+- Code formatting (black)
+- Import order (isort)
+- Linting (flake8)
 
 ### CI/CD Checks
 
 All PRs and pushes must pass:
-- ✅ `pytest -v` (all tests)
-- ✅ `black --check` (formatting)
-- ✅ `isort --check-only` (imports)
-- ✅ `flake8` (linting)
+- pytest -v (all tests)
+- black --check (formatting)
+- isort --check-only (imports)
+- flake8 (linting)
 
 ---
 
-## 5. Branch Protection
+## Branch Protection
 
 ### main Branch
 
-- ✅ Require pull request reviews
-- ✅ Require status checks (CI/CD)
-- ✅ Require branches to be up to date
-- ❌ No force pushes
-- ❌ No direct commits
+- Require pull request reviews
+- Require status checks (CI/CD)
+- Require branches to be up to date
+- No force pushes
+- No direct commits
 
 ### Feature Branches
 
 - Short-lived (days, not weeks)
-- Named: `feature/description` or `fix/description`
+- Named: issue/number-description or feature/description
 - Must pass CI before merge
 
 ---
 
-## 6. Pull Request Guidelines
-
-### Before Submitting
-
-- [ ] Tests pass locally
-- [ ] Code formatted (`black`, `isort`)
-- [ ] Linting passes (`flake8`)
-- [ ] Documentation updated (if needed)
-
-### Review Process
-
-1. CI/CD must pass
-2. At least 1 maintainer approval
-3. Address review feedback
-4. Squash merge (keep history clean)
-
----
-
-## 7. Emergency Procedures
+## Emergency Procedures
 
 ### Hotfix Release
 
@@ -144,12 +170,14 @@ All PRs and pushes must pass:
 git checkout v1.0.0
 git checkout -b hotfix/critical-bug
 
-# 2. Fix, test, commit
+# 2. Fix, test, commit with "fix" type
+git commit -m "fix: critical bug description"
 
-# 3. Release with patch version
-./scripts/release.sh 1.0.1
-git push origin main --tags
+# 3. Push to trigger CI/CD
+git push origin main
 ```
+
+CI/CD will auto-calculate version (1.0.0 -> 1.0.1) and create release.
 
 ### Rollback
 
@@ -161,82 +189,22 @@ git push origin :refs/tags/v1.0.1
 # 2. Revert commit
 git revert HEAD
 
-# 3. Create new release
-./scripts/release.sh 1.0.2
+# 3. Push to trigger new release
+git push origin main
 ```
 
 ---
 
-## 8. Automation Roadmap
+## Related Files
 
-### Current (Manual + Script)
-
-- ✅ Version update scripted
-- ✅ Tests automated
-- ✅ Git operations scripted
-- ✅ CI/CD automated
-- ⚠️ Human decides version number
-
-### Future (If Needed)
-
-When release frequency > 2x/month, consider:
-- Auto-calculate version from commit messages
-- Auto-generate CHANGELOG
-- Keep manual approval step
-
-**Tool options** (evaluate when needed):
-- release-please
-- python-semantic-release
-- Custom script enhancements
+- .github/workflows/pr-check.yml — PR validation
+- .github/workflows/test.yml — Test and lint
+- .github/workflows/cd.yml — Release automation
+- pyproject.toml — Version source of truth
+- .github/COMMIT_CONVENTION.md — Commit message guide
+- CONTRIBUTING.md — Contributor guidelines
 
 ---
 
-## 9. Related Files
-
-| File | Purpose |
-|------|---------|
-| `scripts/release.sh` | Release automation script |
-| `.githooks/pre-commit` | Pre-commit code quality checks |
-| `.github/workflows/ci.yml` | CI/CD pipeline definition |
-| `pyproject.toml` | Version source of truth |
-| `src/traceflux/__version__.py` | Runtime version reading |
-| `docs/RELEASE.md` | User-facing release guide |
-
----
-
-## 10. Decision Records
-
-### Why Manual Version Decision?
-
-**Date**: 2026-03-07
-
-**Why**: Early-stage project, release frequency low (< 2x/month)
-
-**Alternatives considered**:
-- release-please (rejected: over-engineering for current needs)
-- semantic-release (rejected: too complex, black-box)
-
-**Assumptions**:
-- Release frequency will remain low
-- Human judgment valuable for version numbers
-- Can automate later when needed
-
-**Review trigger**: Release frequency > 2x/month
-
-### Why Single Python Version in CI?
-
-**Date**: 2026-03-07
-
-**Why**: Cost control (75% CI/CD cost reduction)
-
-**Trade-off**: Less test coverage vs. faster feedback
-
-**Assumptions**:
-- Python 3.12 representative for compatibility
-- Can add versions when users demand
-
----
-
-**Last Updated**: 2026-03-07  
-**Version**: 1.0.0  
-**Status**: Active
+Last Updated: 2026-03-10
+Status: Automated with manual confirmation

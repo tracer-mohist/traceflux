@@ -14,13 +14,12 @@
     - [x] Local testing complete (.github/PHASE2-TEST-REPORT.md)
     - [ ] Update RELEASE_PROTOCOL.md with CI integration
     - [ ] Create commit examples
-  - [ ] **Step 3: CI/CD Migration** (Next)
-    - [ ] Create .github/workflows/pr-check.yml (commitlint)
-    - [ ] Create .github/workflows/test.yml (pytest + lint with PDM)
-    - [ ] Create .github/workflows/cd.yml (python-semantic-release)
-    - [ ] Delete old .github/workflows/ci.yml
-    - [ ] Test on branch first
-    - [ ] Merge to main
+  - [x] **Step 3: CI/CD Migration** ✅
+    - [x] Create .github/workflows/pr-check.yml (commitlint)
+    - [x] Create .github/workflows/test.yml (pytest + lint with PDM)
+    - [x] Create .github/workflows/cd.yml (python-semantic-release)
+    - [x] Delete old .github/workflows/ci.yml
+    - [x] Create .commitlintrc.json (Conventional Commits config)
   - [ ] **Step 4: Evaluation**
     - [ ] Collect contributor feedback
     - [ ] Assess maintainer experience
