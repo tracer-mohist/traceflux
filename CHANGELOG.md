@@ -2,73 +2,51 @@
 
 <!-- version list -->
 
-All notable changes to traceflux will be documented in this file.
+## v1.2.0 (2026-03-10)
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+### Chores
 
-## [Unreleased]
+- Complete Phase 8 infrastructure setup
+- Update todo.md, remove intermediate TODO file
 
-### Added
-- Automated release script (`scripts/release.sh`)
-- Git hooks for pre-commit code quality checks
-- GitHub Actions CI/CD pipeline
-- Pull request template
+### Continuous Integration
 
-### Changed
-- Updated `pyproject.toml` with code quality tool configurations
+- Add new workflow files (pr-check, test, cd)
+- Delete old ci.yml (replaced by pr-check, test, cd)
 
-### Fixed
-- (None yet)
+### Documentation
 
----
+- Add branch protection analysis
+- Add GitHub branch protection research
+- Add Phase 8 status report
+- Documentation cleanup and restructuring
+- Reduce README to 80 lines, extract details to docs/
+- Update RELEASE_PROTOCOL.md for automated workflow
+- **release**: Update guide for semantic-release workflow
 
-## [1.0.0] - 2026-03-07
+### Features
 
-### Added
+- **release**: Automate versioning with pdm + semantic-release
+
+## v1.1.0 (2026-03-07)
+
+### Features
+
 - Core search functionality
 - Associative keyword extraction
 - PageRank-based suggestion engine
 - UNIX pipe support (stdin/stdout)
-- Comprehensive test suite (174+ tests)
-- Documentation (README, PHILOSOPHY, examples)
 
-### Changed
-- (Initial release)
+### Documentation
 
-### Fixed
-- (Initial release)
+- Comprehensive documentation (README, PHILOSOPHY, examples)
 
----
+### Testing
 
-## Version Numbering
+- Test suite (174+ tests)
 
-**Format**: `MAJOR.MINOR.PATCH`
+## v1.0.0 (2026-03-07)
 
-- **MAJOR**: Breaking changes (incompatible API modifications)
-- **MINOR**: New features (backward-compatible functionality)
-- **PATCH**: Bug fixes (backward-compatible issue resolution)
+### Added
 
-**Pre-release**: `MAJOR.MINOR.PATCH-prerelease` (e.g., `1.0.1-beta`)
-
----
-
-## Release Process
-
-1. Run `./scripts/release.sh <version>`
-2. Review changes: `git show`
-3. Push: `git push origin main --tags`
-4. CI/CD automatically:
-   - Runs tests on multiple Python versions
-   - Performs linting and code quality checks
-   - Builds distribution packages
-   - Creates GitHub Release
-   - Publishes to PyPI
-
----
-
-## Links
-
-- [GitHub Releases](https://github.com/tracer-mohist/traceflux/releases)
-- [PyPI Package](https://pypi.org/project/traceflux/)
-- [Contributing Guide](CONTRIBUTING.md)
+- Initial release
