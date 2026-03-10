@@ -1,4 +1,5 @@
 #!/bin/bash
+# scripts/release.sh
 # release.sh - Create a new release for traceflux
 #
 # Philosophy: Simple, Practical, Elegant
