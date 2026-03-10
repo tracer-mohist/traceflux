@@ -1,4 +1,5 @@
 #!/bin/bash
+# examples/doc-navigator.sh
 # doc-navigator.sh — Documentation Navigation
 #
 # Navigate documentation by associations.

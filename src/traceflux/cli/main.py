@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# src/traceflux/cli/main.py
 """traceflux CLI - Main entry point and argument parsing."""
 
 import argparse

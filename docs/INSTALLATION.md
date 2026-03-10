@@ -1,3 +1,4 @@
+<!-- docs/INSTALLATION.md -->
 # traceflux Installation Guide
 
 **Last Updated**: 2026-03-07  

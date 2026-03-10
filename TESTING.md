@@ -1,3 +1,4 @@
+<!-- TESTING.md -->
 # traceflux Testing Philosophy
 
 > **Tests consolidate confidence, but real usage validates value.**

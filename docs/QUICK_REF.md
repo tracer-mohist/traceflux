@@ -1,3 +1,4 @@
+<!-- docs/QUICK_REF.md -->
 # Quick Reference
 
 **Common commands and workflows for traceflux development.**

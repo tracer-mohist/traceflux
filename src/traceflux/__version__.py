@@ -1,3 +1,4 @@
+# src/traceflux/__version__.py
 """traceflux version information.
 
 Single source of truth: pyproject.toml

@@ -1,4 +1,5 @@
 #!/bin/bash
+# examples/analyze-diff.sh
 # analyze-diff.sh — Analyze Git Diff
 #
 # Analyze what concepts changed in a git diff.

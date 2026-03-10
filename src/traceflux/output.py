@@ -1,3 +1,4 @@
+# src/traceflux/output.py
 """Output formatting for traceflux.
 
 ASCII-only labels with consistent formatting.

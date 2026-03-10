@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# tests/test_pipeline_integration.py
 """Pipeline Integration Tests.
 
 Test full data flow: scanner → patterns → index → graph → pagerank → associations.

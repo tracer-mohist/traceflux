@@ -1,3 +1,4 @@
+<!-- SECURITY.md -->
 # Security Policy
 
 **Effective Date**: 2026-03-07  

@@ -1,3 +1,4 @@
+# src/traceflux/cli/commands/search.py
 """Search Command - Find patterns in text files.
 
 Search works like grep: finds query in text directly.

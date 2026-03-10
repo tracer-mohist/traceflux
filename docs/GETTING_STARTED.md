@@ -1,3 +1,4 @@
+<!-- docs/GETTING_STARTED.md -->
 # Getting Started as a Contributor
 
 **Welcome!** This guide helps you get started with traceflux development.
