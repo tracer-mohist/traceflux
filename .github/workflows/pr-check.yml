@@ -1,0 +1,27 @@
+# .github/workflows/pr-check.yml
+#
+# Fast validation on pull requests
+# Checks commit message format (Conventional Commits)
+#
+
+name: PR Checks
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  commitlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: wagoid/commitlint-github-action@v6
+        with:
+          configFile: .commitlintrc.json

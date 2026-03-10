@@ -1,0 +1,45 @@
+# .github/workflows/test.yml
+#
+# Test and lint on pull requests and pushes to main
+# Uses PDM for dependency management (consistent with local dev)
+#
+
+name: Test
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pdm-project/setup-pdm@v4
+        with:
+          python-version: '3.12'
+
+      - run: pdm install --dev
+
+      - run: pdm run pytest -v
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pdm-project/setup-pdm@v4
+        with:
+          python-version: '3.12'
+
+      - run: pdm install --dev
+
+      - run: pdm run black --check src/ tests/
+      - run: pdm run isort --check-only src/ tests/
+      - run: pdm run flake8 --max-line-length=100 --ignore=E501,W503,F401,F841 src/ tests/

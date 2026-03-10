@@ -1,0 +1,63 @@
+# .github/workflows/cd.yml
+#
+# Continuous Delivery with python-semantic-release
+# Triggers on push to main
+# Auto-calculates version, creates tag, publishes GitHub Release
+#
+
+name: CD
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-release-${{ github.ref_name }}
+      cancel-in-progress: false
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pdm-project/setup-pdm@v4
+        with:
+          python-version: '3.12'
+
+      - run: pdm install --dev
+
+      - name: Semantic Version Release
+        id: release
+        uses: python-semantic-release/python-semantic-release@v10.5.3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          git_committer_name: github-actions
+          git_committer_email: actions@users.noreply.github.com
+          build: false
+
+      - name: Upload Distribution Artifacts
+        uses: actions/upload-artifact@v4
+        if: steps.release.outputs.released == 'true'
+        with:
+          name: distribution-artifacts
+          path: dist
+          if-no-files-found: ignore
+
+      - name: Publish to GitHub Release
+        uses: python-semantic-release/publish-action@v10.5.3
+        if: steps.release.outputs.released == 'true'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ steps.release.outputs.tag }}
+
+    outputs:
+      released: ${{ steps.release.outputs.released || 'false' }}
