@@ -47,3 +47,8 @@ htmlcov/
 # Misc
 .DS_Store
 Thumbs.db
+
+# Apiscope
+.traceflux_index.json
+.apiscope/
+
