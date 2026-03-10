@@ -1,4 +1,4 @@
-# tests/test_patterns.py
+# tests/test_patterns_unit.py
 """Tests for LZ77-style pattern detection."""
 
 import pytest

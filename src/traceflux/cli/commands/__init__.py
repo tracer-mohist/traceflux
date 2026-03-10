@@ -1,3 +1,4 @@
+# src/traceflux/cli/commands/__init__.py
 """CLI Commands - Individual command implementations.
 
 Each module implements a single traceflux command:

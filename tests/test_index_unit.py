@@ -1,4 +1,4 @@
-# tests/test_index.py
+# tests/test_index_unit.py
 """Tests for Pattern Index."""
 
 import json

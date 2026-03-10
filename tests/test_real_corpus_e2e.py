@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# tests/test_real_corpus_e2e.py
 """E2E Tests: Real Corpus Validation.
 
 Tests traceflux against real-world files to ensure it works in practice.

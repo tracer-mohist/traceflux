@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# tests/test_cli_component.py
 """Unit tests for traceflux CLI."""
 
 import json

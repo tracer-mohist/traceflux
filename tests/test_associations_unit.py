@@ -1,4 +1,4 @@
-# tests/test_associations.py
+# tests/test_associations_unit.py
 """Tests for Associative Search."""
 
 import pytest

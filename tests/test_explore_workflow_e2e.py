@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# tests/test_explore_workflow_e2e.py
 """E2E Tests: User Workflows.
 
 Tests complete user workflows that directly validate traceflux value proposition.

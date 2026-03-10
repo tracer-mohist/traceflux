@@ -1,3 +1,4 @@
+# src/traceflux/cli/commands/index.py
 """Index Command - Build persistent index for directories."""
 
 import sys

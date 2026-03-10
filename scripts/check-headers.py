@@ -27,6 +27,11 @@ IGNORE_LIST = {
     ".pytest_cache",
     ".mypy_cache",
     ".ruff_cache",
+    # traceflux specific
+    "test_corpus",
+    "drafts",
+    "design",
+    "research",
 }
 
 # Extension to Comment Style Mapping

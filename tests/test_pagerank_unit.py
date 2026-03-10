@@ -1,4 +1,4 @@
-# tests/test_pagerank.py
+# tests/test_pagerank_unit.py
 """Tests for Weighted PageRank."""
 
 import pytest
