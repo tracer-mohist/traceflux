@@ -52,3 +52,14 @@ Thumbs.db
 .traceflux_index.json
 .apiscope/
 
+
+# Unrelated tooling
+scripts/check-awesome-status.py
+.github/awesome-submissions.json
+test_corpus/
+
+# Promotion documents
+docs/AWESOME-PROMOTION-DESIGN.md
+docs/OPENCLAW-AWESOME-TASK.md
+docs/PROMOTION-*.md
+
