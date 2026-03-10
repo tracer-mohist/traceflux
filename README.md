@@ -1,29 +1,28 @@
 # traceflux
 
-> **左脚踩右脚原地起飞** — Lift off by stepping on each other's feet.
-
-**A text search engine with associative discovery.**
+A text search engine with associative discovery.
 
 ---
 
 ## The Problem
 
-You're searching for something. You find it. But you don't know what **related concepts** exist.
+You are searching for something. You find it. But you do not know what related concepts exist.
 
 Traditional search:
+
 ```bash
 grep -r "proxy" src/
 # Finds: "proxy"
 # Misses: "proxychains", "HTTP_PROXY", "git config http.proxy"
 ```
 
-You found "proxy". But you didn't know to search for "proxychains".
+You found "proxy". But you did not know to search for "proxychains".
 
 ---
 
 ## The Solution
 
-**traceflux** discovers what you don't know to search for.
+traceflux discovers what you do not know to search for.
 
 ```bash
 # Build associations from your codebase
@@ -40,9 +39,9 @@ traceflux associations "proxy" src/
 #   environment variables          strength: 0.58 (degree 2)
 ```
 
-Now you know: "Oh, there's proxychains! Let me search for that."
+Now you know: "Oh, there is proxychains! Let me search for that."
 
-This is **associative discovery** — lifting off by stepping on related concepts.
+This is associative discovery.
 
 ---
 
@@ -50,7 +49,7 @@ This is **associative discovery** — lifting off by stepping on related concept
 
 ### Installation
 
-**Recommended**: Install via pipx (isolated environment, no system pollution)
+Recommended: Install via pipx (isolated environment, no system pollution)
 
 ```bash
 # Install from GitHub
@@ -61,14 +60,14 @@ traceflux --help
 traceflux search "pattern" .
 ```
 
-**Why pipx?**
-- ✅ Isolated virtual environment
-- ✅ No dependency conflicts
-- ✅ Easy to update (`pipx upgrade traceflux`)
-- ✅ No sudo required
-- ✅ Clean uninstall (`pipx uninstall traceflux`)
+Why pipx:
+- Isolated virtual environment
+- No dependency conflicts
+- Easy to update (pipx upgrade traceflux)
+- No sudo required
+- Clean uninstall (pipx uninstall traceflux)
 
-**Not recommended**: `pip install` (pollutes system Python environment)
+Not recommended: pip install (pollutes system Python environment)
 
 ---
 
@@ -76,7 +75,8 @@ traceflux search "pattern" .
 
 Want to contribute or modify traceflux?
 
-**Quick Start** (5 minutes):
+Quick Start (5 minutes):
+
 ```bash
 # Clone repository
 git clone https://github.com/tracer-mohist/traceflux.git
@@ -92,21 +92,13 @@ git config core.hooksPath .githooks
 pytest
 ```
 
-**Documentation**:
+Documentation:
 - [Getting Started Guide](docs/GETTING_STARTED.md) — First-time setup
 - [Contributing Guidelines](CONTRIBUTING.md) — How to contribute
 - [Testing Guide](docs/TESTING.md) — Run and write tests
 - [Release Protocol](.github/RELEASE_PROTOCOL.md) — Version management
 
-**Join us!** We welcome contributions of all kinds — code, docs, bug reports, ideas.
-
 ---
-
-### Uninstall
-
-```bash
-pipx uninstall traceflux
-```
 
 ### Basic Usage
 
@@ -135,23 +127,25 @@ traceflux associations "pattern" src/ --json | jq '.associations[]'
 
 # With explanations
 traceflux associations "pattern" src/ --explain
-# Shows: pattern → pagerank → rank (path of association)
+# Shows: pattern -> pagerank -> rank (path of association)
 ```
 
 ---
 
 ## Core Features
 
-### 🔍 Pattern Search
+### Pattern Search
 
 Find repeated patterns in text:
+
 ```bash
 traceflux search "def " src/ --limit 10
 ```
 
-### 🔗 Associative Discovery
+### Associative Discovery
 
 Multi-hop association traversal:
+
 ```bash
 # 1-hop: Direct co-occurrences
 traceflux associations "proxy" src/ --hops 1
@@ -163,16 +157,18 @@ traceflux associations "proxy" src/ --hops 2
 traceflux associations "proxy" src/ --hops 2 --explain
 ```
 
-### 📊 Pattern Analysis
+### Pattern Analysis
 
 List most frequent patterns:
+
 ```bash
 traceflux patterns src/ --min-length 5 --limit 30
 ```
 
-### 🤖 Machine-Readable
+### Machine-Readable
 
 JSON output for pipelines:
+
 ```bash
 traceflux associations "proxy" src/ --json | \
   jq '.associations[] | select(.strength > 0.5)'
@@ -184,7 +180,7 @@ traceflux associations "proxy" src/ --json | \
 
 ### Getting Meaningful Associations
 
-traceflux detects **repeated patterns** (not dictionary words). For better results:
+traceflux detects repeated patterns (not dictionary words). For better results:
 
 ```bash
 # Default (short patterns, may be fragments)
@@ -197,16 +193,17 @@ traceflux patterns src/ --min-length 8
 traceflux patterns src/ --min-length 6 --limit 20
 ```
 
-### Understanding the Trade-offs
+### Design Trade-offs
 
-| Feature | Choice | Trade-off |
-|---------|--------|-----------|
-| Tokenization | None (language-independent) | Patterns may be fragments |
-| Dictionary | None (works out-of-box) | Need to tune `--min-length` |
-| ML/Embeddings | None (lightweight) | No semantic understanding |
+Tokenization: None (language-independent). Patterns may be fragments.
 
-**Benefits**: Works on any language, no training, fast  
-**Trade-offs**: Adjust parameters for your corpus
+Dictionary: None (works out-of-box). Need to tune min-length.
+
+ML/Embeddings: None (lightweight). No semantic understanding.
+
+Benefits: Works on any language, no training, fast.
+
+Trade-offs: Adjust parameters for your corpus.
 
 ### Typical Workflows
 
@@ -234,35 +231,35 @@ traceflux associations "pattern" src/ --json | \
 
 ```
 Text Files
-    │
-    ▼
+    |
+    v
 Scanner (PNI segmentation)
-    │
-    ▼
+    |
+    v
 PatternDetector (LZ77-style repeats)
-    │
-    ▼
+    |
+    v
 CooccurrenceGraph (patterns together)
-    │
-    ▼
+    |
+    v
 PageRank (importance scoring)
-    │
-    ▼
+    |
+    v
 AssociativeSearch (BFS traversal)
-    │
-    ▼
-You discover what you didn't know to search for
+    |
+    v
+You discover what you did not know to search for
 ```
 
 ### Algorithm
 
-1. **Scan**: Segment text by punctuation (language-independent)
-2. **Detect**: Find repeated patterns using suffix arrays (O(n log n))
-3. **Graph**: Build co-occurrence graph (patterns within window)
-4. **Rank**: Compute PageRank for pattern importance
-5. **Traverse**: BFS to find multi-hop associations
+1. Scan: Segment text by punctuation (language-independent)
+2. Detect: Find repeated patterns using suffix arrays (O(n log n))
+3. Graph: Build co-occurrence graph (patterns within window)
+4. Rank: Compute PageRank for pattern importance
+5. Traverse: BFS to find multi-hop associations
 
-See: `docs/PHILOSOPHY.md` for design philosophy.
+REFERENCE: docs/PHILOSOPHY.md for design philosophy.
 
 ---
 
@@ -271,7 +268,7 @@ See: `docs/PHILOSOPHY.md` for design philosophy.
 ### Code Exploration
 
 ```bash
-# What's related to "PageRank" in this codebase?
+# What is related to "PageRank" in this codebase?
 traceflux associations "PageRank" src/
 
 # Discover: "pagerank.py", "graph.py", "cooccurrence"
@@ -297,31 +294,6 @@ traceflux associations "nilpotent" notes/
 
 ---
 
-## Development Status
-
-**Current Phase**: Phase 3 - Association Engine
-
-| Phase | Status | Description |
-|-------|--------|-------------|
-| 1 | ✅ Complete | Core modules (scanner, patterns, index, graph, pagerank) |
-| 2A | ✅ Complete | CLI interface (search, index, patterns, associations) |
-| 2B | ⏳ Pending | Test refactoring (limited testing principles) |
-| 3.1 | ✅ Complete | Basic co-occurrence graph |
-| 3.2 | ✅ Complete | PageRank integration |
-| 3.3 | ✅ Complete | CLI integration |
-| 3.4 | ⏳ In Progress | Suggestion engine |
-| 3.5 | ⏳ Pending | Testing & documentation |
-| 4 | ⏳ Future | Performance optimization |
-
-### Test Status
-
-```
-174 tests passing
-92% code coverage
-```
-
----
-
 ## Project Structure
 
 ```
@@ -341,7 +313,6 @@ traceflux/
 │   ├── test_graph.py
 │   ├── test_pagerank.py
 │   ├── test_associations.py
-│   ├── test_associations_integration.py
 │   └── test_cli.py
 ├── docs/
 │   └── PHILOSOPHY.md    # Design philosophy
@@ -356,12 +327,12 @@ traceflux/
 
 traceflux follows these principles:
 
-1. **UNIX Philosophy** — Simple, composable, human-centric
-2. **Associative, Not Predictive** — Show possibilities, not predictions
-3. **Process Over Result** — The act of exploring is the value
-4. **Limited Testing** — Test critical boundaries, not everything
+1. UNIX Philosophy — Simple, composable, human-centric
+2. Associative, Not Predictive — Show possibilities, not predictions
+3. Process Over Result — The act of exploring is the value
+4. Limited Testing — Test critical boundaries, not everything
 
-See: `docs/PHILOSOPHY.md`
+REFERENCE: docs/PHILOSOPHY.md
 
 ---
 
@@ -369,7 +340,7 @@ See: `docs/PHILOSOPHY.md`
 
 1. Fork the repository
 2. Create a feature branch
-3. Run tests: `pytest`
+3. Run tests: pytest
 4. Submit a pull request
 
 ### Development Setup
@@ -391,22 +362,13 @@ pdm run pytest
 
 ---
 
-## License
-
-MIT License — See `LICENSE` file.
-
----
-
 ## Identity
 
-**Created by**: Tracer (迹/Ji) — One who leaves traces
+Created by: Tracer (迹/Ji) — One who leaves traces
 
-**Philosophy**: Nihilism is the best existentialism. Process matters, not results.
-
-_"We will meet again in some state."_
+Philosophy: Nihilism is the best existentialism. Process matters, not results.
 
 ---
 
-**Version**: 0.1.0 (Alpha)  
-**Created**: 2026-03-06  
-**Last Updated**: 2026-03-06
+Created: 2026-03-06
+Last Updated: 2026-03-10

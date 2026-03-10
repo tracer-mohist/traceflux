@@ -5,9 +5,9 @@
 This document provides guidelines and instructions for contributing to traceflux.
 
 **First Time?** Start here:
-- 🚀 [Getting Started Guide](docs/GETTING_STARTED.md) — 5-minute setup
-- 📖 [Testing Guide](docs/TESTING.md) — How to run tests
-- 📝 [Quick Reference](docs/QUICK_REF.md) — Common commands
+- Getting Started Guide (docs/GETTING_STARTED.md) — 5-minute setup
+- Testing Guide (TESTING.md) — How to run tests
+- Quick Reference (docs/QUICK_REF.md) — Common commands
 
 **Related**:
 - [Release Protocol](.github/RELEASE_PROTOCOL.md) — Version management and release process
