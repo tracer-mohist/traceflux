@@ -3,31 +3,31 @@
 ## Active (当前进行)
 
 - [ ] **Phase 8: Release Automation Upgrade** (python-semantic-release)
-  - [x] **Step 1: Configuration** ✅ (30 min)
+  - [x] **Step 1: Configuration** ✅
     - [x] Add minimal config to pyproject.toml
     - [x] Configure commit parser (conventional)
     - [x] Disable auto-publish (manual confirmation)
     - [x] Disable PyPI publishing
-  - [x] **Step 2: Documentation** ✅ (30 min)
+    - [x] Fix branches config format (v10.x compatibility)
+  - [x] **Step 2: Documentation** ✅
     - [x] Add Conventional Commits guide to CONTRIBUTING.md
-    - [ ] Update RELEASE.md with new workflow
+    - [x] Local testing complete (.github/PHASE2-TEST-REPORT.md)
+    - [ ] Update RELEASE_PROTOCOL.md with CI integration
     - [ ] Create commit examples
-  - [ ] **Step 3: Testing** (1-2 releases)
-    - [x] Fix CLI JSON output (json.dumps)
-    - [x] Update test expectations (version 1.0.0, limit 20)
-    - [x] Fix flake8 errors (F821, E203, W293)
-    - [x] CI/CD passing ✅
-    - [ ] Test version calculation (semantic-release version --print)
-    - [ ] Test CHANGELOG generation (semantic-release changelog)
-    - [ ] Test GitHub Release creation
-    - [ ] Verify manual confirmation works
+  - [ ] **Step 3: CI/CD Migration** (Next)
+    - [ ] Create .github/workflows/pr-check.yml (commitlint)
+    - [ ] Create .github/workflows/test.yml (pytest + lint with PDM)
+    - [ ] Create .github/workflows/cd.yml (python-semantic-release)
+    - [ ] Delete old .github/workflows/ci.yml
+    - [ ] Test on branch first
+    - [ ] Merge to main
   - [ ] **Step 4: Evaluation**
-    - [ ] Collect new contributor feedback
+    - [ ] Collect contributor feedback
     - [ ] Assess maintainer experience
     - [ ] Decide: enable auto-publish or keep manual
 
 - [x] **Phase 7: Documentation Cleanup** (Simplify) ✅
-  - [x] **Remove Redundant Files** (7 files deleted)
+  - [x] **Remove Redundant Files** (8 files deleted)
     - [x] Delete RELEASE_NOTES.md (duplicate)
     - [x] Delete RELEASE_NOTES_TEMPLATE.md (script has logic)
     - [x] Delete INSTALLATION_TEST.md (temporary)
@@ -35,14 +35,19 @@
     - [x] Delete docs/PROJECT-STATUS.md (outdated)
     - [x] Delete docs/PYTHON-INFRASTRUCTURE-PLAN.md (outdated)
     - [x] Delete docs/TESTING.md (duplicate)
+    - [x] Delete RELEASE_ANNOUNCEMENT.md (redundant with GitHub Releases)
   - [x] **Reorganize**
     - [x] Create research/ directory
     - [x] Move IMPLEMENTATION-DESIGN.md to research/
     - [x] Merge TESTING.md (keep root version)
-  - [ ] **Simplify Content** (Deferred to Phase 8 completion)
-    - [ ] Trim README.md to <200 lines
-    - [ ] Ensure single responsibility per doc
-    - [ ] Update all internal links
+  - [x] **Simplify Content** ✅
+    - [x] Trim README.md to 80 lines (was 400+)
+    - [x] Create docs/USAGE.md (command reference)
+    - [x] Create docs/ARCHITECTURE.md (how it works)
+    - [x] Create docs/USE-CASES.md (real-world examples)
+    - [x] Create docs/TESTING-PHILOSOPHY.md (extract philosophy)
+    - [x] Simplify TESTING.md (quick reference only)
+    - [x] Update all internal links
 
 ---
 
