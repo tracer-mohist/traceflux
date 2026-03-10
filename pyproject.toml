@@ -32,8 +32,9 @@ dependencies = []
 
 [project.optional-dependencies]
 dev = [
-  "pytest>=7.0",
-  "pytest-cov>=4.0",
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "pre-commit>=4.5.1",
 ]
 
 [project.scripts]
@@ -78,7 +79,6 @@ omit = ["*/tests/*", "*/__init__.py"]
 
 # =============================================================================
 # Release Automation (python-semantic-release)
-# Minimal config for Phase 8
 # =============================================================================
 
 [tool.semantic_release]
@@ -86,19 +86,35 @@ omit = ["*/tests/*", "*/__init__.py"]
 version_toml = ["pyproject.toml:project.version"]
 
 # Commit parser (Conventional Commits)
-commit_parser = "conventional"  # Updated from 'angular' (deprecated in v11)
+commit_parser = "conventional"
 
 # Changelog
 changelog_file = "CHANGELOG.md"
 changelog_sections = ["feature", "fix", "breaking", "deprecation", "documentation", "performance", "refactor"]
 
-# Publish settings (manual confirmation for now)
-upload_to_release = false  # Manual: run `semantic-release publish` after review
-upload_to_pypi = false     # Not using PyPI yet
+# Publish settings
+upload_to_release = true  # Auto-publish to GitHub Release
+upload_to_pypi = false    # Not using PyPI
 
-# Branch configuration
-branch = "main"
+# Tag format
 tag_format = "v{version}"
 
 # Logging
 logging_use_named_masks = true
+
+[tool.semantic_release.branches.main]
+match = "(main|master)"
+prerelease = false
+
+[tool.semantic_release.commit_author]
+env = "GIT_COMMIT_AUTHOR"
+default = "github-actions[bot] <actions@github.com>"
+
+[tool.semantic_release.commit_parser_options]
+minor_tags = ["feat"]
+patch_tags = ["fix", "perf"]
+other_allowed_tags = ["build", "chore", "ci", "docs", "style", "refactor", "test"]
+allowed_tags = ["feat", "fix", "perf", "build", "chore", "ci", "docs", "style", "refactor", "test"]
+default_bump_level = 0
+parse_squash_commits = true
+ignore_merge_commits = true

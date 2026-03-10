@@ -4,6 +4,8 @@ Purpose: Automated release process with python-semantic-release.
 
 Philosophy: Simple, Practical, Elegant
 
+Last Updated: 2026-03-10
+
 ---
 
 ## Version Format
@@ -11,8 +13,8 @@ Philosophy: Simple, Practical, Elegant
 Semantic Versioning: MAJOR.MINOR.PATCH
 
 - MAJOR: Breaking changes (1.0.0 -> 2.0.0)
-- MINOR: New features, backward compatible (1.0.0 -> 1.1.0)
 - PATCH: Bug fixes, backward compatible (1.0.0 -> 1.0.1)
+- MINOR: New features, backward compatible (1.0.0 -> 1.1.0)
 
 Pre-release: 1.0.1-beta, 1.0.1-rc.1
 
@@ -20,41 +22,25 @@ Pre-release: 1.0.1-beta, 1.0.1-rc.1
 
 ## Automated Release Process
 
-### Contributor Workflow
+### Workflow
 
-1. Write code
+1. Developer writes code
 2. Commit with Conventional Commits (feat, fix, chore, etc.)
 3. Open pull request
 4. Merge to main
+5. CI/CD automatically:
+   - Runs tests (pytest)
+   - Runs lint (black, isort, flake8)
+   - Calculates version from commit messages
+   - Updates pyproject.toml
+   - Creates git tag
+   - Generates CHANGELOG
+   - Builds package
+   - Creates GitHub Release with artifacts
 
-### CI/CD Automation
+### No Manual Steps
 
-On push to main, GitHub Actions:
-1. Runs tests (pytest)
-2. Runs lint (black, isort, flake8)
-3. Calculates version from commit messages
-4. Updates pyproject.toml
-5. Creates git tag
-6. Generates CHANGELOG
-7. Creates GitHub Release
-
-### Manual Confirmation (Current)
-
-Configuration: upload_to_release = false
-
-After automated version calculation:
-```bash
-# Review calculated version
-git show
-
-# Confirm and publish
-pdm run semantic-release publish
-git push --follow-tags
-```
-
-This provides a safety valve while automation is new.
-
-Future: Enable auto-publish when confident.
+Release is fully automated. No manual confirmation needed.
 
 ---
 
@@ -62,18 +48,46 @@ Future: Enable auto-publish when confident.
 
 Version calculation depends on commit types:
 
-- feat: MINOR bump (1.0.0 -> 1.1.0)
-- fix: PATCH bump (1.0.0 -> 1.0.1)
-- chore, docs, style, test, refactor: No version bump
+| Type | Version Bump | Example |
+|------|-------------|---------|
+| feat | MINOR (1.0.0 -> 1.1.0) | feat(cli): add search command |
+| fix | PATCH (1.0.0 -> 1.0.1) | fix(scanner): handle empty input |
+| perf | PATCH | perf(index): improve search speed |
+| chore, docs, style, test, refactor, build, ci | No bump | chore: update config |
 
-REFERENCE: .github/COMMIT_CONVENTION.md
+REFERENCE: .github/COMMIT_CONVENTION.md for full guide.
 
-Example:
-```bash
-git commit -m "feat(cli): add search command"
-git commit -m "fix(scanner): handle empty input"
-git commit -m "chore(scripts): add release.sh"
-```
+---
+
+## CI/CD Workflows
+
+### pr-check.yml
+
+Trigger: Pull request
+
+Jobs:
+- commitlint: Validates commit message format
+
+### test.yml
+
+Trigger: Pull request or push to main
+
+Jobs:
+- test: Pytest with PDM
+- lint: Black, isort, flake8 with PDM
+
+### cd.yml
+
+Trigger: Push to main
+
+Jobs:
+- release: python-semantic-release automation
+  - Calculate version
+  - Update pyproject.toml
+  - Create git tag
+  - Build package (pdm build)
+  - Upload artifacts to GitHub Release
+  - Create GitHub Release
 
 ---
 
@@ -95,43 +109,22 @@ except importlib.metadata.PackageNotFoundError:
 
 ---
 
-## CI/CD Workflows
-
-### pr-check.yml
-
-Trigger: Pull request to main
-
-Jobs:
-- commitlint: Validates commit message format
-
-### test.yml
-
-Trigger: Pull request or push to main
-
-Jobs:
-- test: Pytest with PDM
-- lint: Black, isort, flake8 with PDM
-
-### cd.yml
-
-Trigger: Push to main
-
-Jobs:
-- release: python-semantic-release automation
-
----
-
 ## Code Quality Standards
 
 ### Pre-commit Hooks
 
-Enabled via: git config core.hooksPath .githooks
+Enabled via pre-commit framework.
 
-Checks:
-- Python syntax validation
-- Code formatting (black)
-- Import order (isort)
-- Linting (flake8)
+Hooks run automatically before commit:
+- trailing-whitespace
+- end-of-file-fixer
+- check-yaml
+- check-json
+- black (format check)
+- isort (import order)
+- flake8 (linting)
+
+Install: `pdm run pre-commit install`
 
 ### CI/CD Checks
 
@@ -140,6 +133,7 @@ All PRs and pushes must pass:
 - black --check (formatting)
 - isort --check-only (imports)
 - flake8 (linting)
+- commitlint (commit message format)
 
 ---
 
@@ -197,14 +191,14 @@ git push origin main
 
 ## Related Files
 
-- .github/workflows/pr-check.yml — PR validation
-- .github/workflows/test.yml — Test and lint
-- .github/workflows/cd.yml — Release automation
-- pyproject.toml — Version source of truth
-- .github/COMMIT_CONVENTION.md — Commit message guide
-- CONTRIBUTING.md — Contributor guidelines
+- .github/workflows/pr-check.yml - PR validation
+- .github/workflows/test.yml - Test and lint
+- .github/workflows/cd.yml - Release automation
+- pyproject.toml - Version source of truth
+- .github/COMMIT_CONVENTION.md - Commit message guide
+- CONTRIBUTING.md - Contributor guidelines
+- .pre-commit-config.yaml - Pre-commit hooks config
 
 ---
 
-Last Updated: 2026-03-10
-Status: Automated with manual confirmation
+Status: Automated (no manual confirmation)

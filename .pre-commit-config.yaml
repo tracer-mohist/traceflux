@@ -1,0 +1,51 @@
+# .pre-commit-config.yaml
+#
+# Pre-commit hooks configuration
+# See: https://pre-commit.com for more information
+#
+
+# Default language version
+default_language_version:
+  python: python3.12
+
+# Fail if config has errors
+default_stages: [pre-commit]
+
+repos:
+  # Core pre-commit hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+        args: [--unsafe]
+      - id: check-json
+      - id: check-added-large-files
+        args: [--maxkb=1000]
+
+  # Black - Code formatting
+  - repo: https://github.com/psf/black
+    rev: 25.1.0
+    hooks:
+      - id: black
+        args: [--check, --diff]
+        language_version: python3.12
+
+  # isort - Import sorting
+  - repo: https://github.com/pycqa/isort
+    rev: 6.0.1
+    hooks:
+      - id: isort
+        args: [--check-only, --diff]
+        name: isort (python)
+
+  # flake8 - Linting
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.2.0
+    hooks:
+      - id: flake8
+        args:
+          - --max-line-length=100
+          - --ignore=E501,W503,F401,F841
+        additional_dependencies: []
