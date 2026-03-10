@@ -24,41 +24,54 @@ Semantic Versioning: `MAJOR.MINOR.PATCH`
 
 ---
 
-## Release Process
+## Release Process (Automated with semantic-release)
 
-### 1. Run Release Script
+### 1. Calculate Next Version
 
 ```bash
-./scripts/release.sh 1.0.1
+# Preview version bump based on commit messages
+semantic-release version --print
 ```
 
-This will:
-1. Update `pyproject.toml`
-2. Run tests (must pass)
-3. Create commit and tag
+This analyzes commits since last tag and suggests:
+- `patch` for `fix:` commits
+- `minor` for `feat:` commits
+- `major` for `feat!:` or `BREAKING CHANGE`
 
-### 2. Review
+### 2. Generate Changelog (Preview)
 
 ```bash
+# Preview changelog
+semantic-release changelog --print
+```
+
+### 3. Create Release (Manual Confirmation)
+
+```bash
+# Run release (updates version, creates tag, generates changelog)
+semantic-release version
+
+# Review changes
 git show
-```
 
-### 3. Push
-
-```bash
+# Push to trigger GitHub Release
 git push origin main --tags
 ```
 
-### 4. CI/CD Creates Release
+### 4. Publish to GitHub Release
 
-GitHub Actions will:
-1. Run tests
-2. Run linting
-3. Create GitHub Release with auto-generated notes
+```bash
+# After push, create GitHub Release with notes
+semantic-release publish
+```
+
+**NOTE**: Current config has `upload_to_release = false` for manual control.
 
 ---
 
 ## Manual Release (Fallback)
+
+If semantic-release is unavailable:
 
 ```bash
 # 1. Update pyproject.toml
@@ -72,6 +85,21 @@ git tag -a "v1.0.1" -m "Release v1.0.1"
 # 3. Push
 git push origin main --tags
 ```
+
+---
+
+## Commit Message Convention
+
+Releases are driven by Conventional Commits:
+
+| Type | Example | SemVer Impact |
+|------|---------|---------------|
+| `feat` | `feat(cli): add search command` | MINOR |
+| `fix` | `fix(scanner): handle empty input` | PATCH |
+| `feat!` | `feat(api)!: change output format` | MAJOR |
+| Others | `chore`, `docs`, `style`, `test` | None |
+
+**Full guide**: See `.github/COMMIT_CONVENTION.md`
 
 ---
 
@@ -91,17 +119,36 @@ git push origin main --tags
 
 ### Tests Fail
 
-Fix the issue, re-run script.
+Fix the issue, re-run `semantic-release version`.
 
 ### Tag Exists
 
 ```bash
 git tag -d v1.0.1
 git push origin :refs/tags/v1.0.1
-./scripts/release.sh 1.0.1
+semantic-release version
+```
+
+### Preview Without Changes
+
+```bash
+# Dry-run mode (no file modifications)
+semantic-release version --dry-run
 ```
 
 ---
 
-**Last Updated**: 2026-03-07  
-**Version**: 1.0.0
+## Related Files
+
+| File | Purpose |
+|------|---------|
+| `pyproject.toml` | semantic-release config + version |
+| `.github/COMMIT_CONVENTION.md` | Commit message guide |
+| `.github/RELEASE_PROTOCOL.md` | Detailed release protocol |
+| `CHANGELOG.md` | Auto-generated changelog |
+
+---
+
+**Last Updated**: 2026-03-10  
+**Version**: 1.0.0  
+**Tool**: python-semantic-release
