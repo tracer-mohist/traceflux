@@ -41,11 +41,15 @@ dev = [
 traceflux = "traceflux.cli:main"
 
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
 
-[tool.setuptools.packages.find]
-where = ["src"]
+[tool.pdm]
+# PDM configuration
+# Virtual environment in .venv (project-local)
+venv.in_project = true
+
+# Dev dependencies handled via [project.optional-dependencies]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -101,6 +105,16 @@ tag_format = "v{version}"
 
 # Logging
 logging_use_named_masks = true
+
+# Automated hooks (run before version bump)
+# These ensure quality gates before release
+build_command = """
+    pdm install --dev && \
+    pdm run pytest -v && \
+    pdm run black --check src/ tests/ && \
+    pdm run isort --check-only src/ tests/ && \
+    pdm run flake8 src/ tests/
+"""
 
 [tool.semantic_release.branches.main]
 match = "(main|master)"

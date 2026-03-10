@@ -24,67 +24,82 @@ Semantic Versioning: `MAJOR.MINOR.PATCH`
 
 ---
 
-## Release Process (Automated with semantic-release)
+## Release Process (Fully Automated)
 
-### 1. Calculate Next Version
+### Single Command Release
 
 ```bash
-# Preview version bump based on commit messages
-semantic-release version --print
+# Run release - everything is automated
+pdm run semantic-release version
 ```
 
-This analyzes commits since last tag and suggests:
-- `patch` for `fix:` commits
-- `minor` for `feat:` commits
-- `major` for `feat!:` or `BREAKING CHANGE`
+This automatically:
+1. **Validates** - Runs tests, lint, format checks (via `build_command`)
+2. **Calculates** - Determines version bump from commit messages
+3. **Updates** - Bumps version in `pyproject.toml`
+4. **Generates** - Creates changelog entries
+5. **Commits** - Creates release commit
+6. **Tags** - Creates git tag
 
-### 2. Generate Changelog (Preview)
-
-```bash
-# Preview changelog
-semantic-release changelog --print
-```
-
-### 3. Create Release (Manual Confirmation)
+### 2. Push to Publish
 
 ```bash
-# Run release (updates version, creates tag, generates changelog)
-semantic-release version
-
-# Review changes
-git show
-
-# Push to trigger GitHub Release
+# Push triggers GitHub Release creation
 git push origin main --tags
 ```
 
-### 4. Publish to GitHub Release
-
-```bash
-# After push, create GitHub Release with notes
-semantic-release publish
-```
-
-**NOTE**: Current config has `upload_to_release = false` for manual control.
+CI/CD will automatically create GitHub Release with changelog.
 
 ---
 
-## Manual Release (Fallback)
+## Manual Override (If Needed)
 
-If semantic-release is unavailable:
+### Preview Version Bump
 
 ```bash
-# 1. Update pyproject.toml
-sed -i 's/^version = ".*"/version = "1.0.1"/' pyproject.toml
-
-# 2. Commit and tag
-git add pyproject.toml
-git commit -m "Release v1.0.1"
-git tag -a "v1.0.1" -m "Release v1.0.1"
-
-# 3. Push
-git push origin main --tags
+# See what version would be released
+pdm run semantic-release version --print
 ```
+
+### Preview Changelog
+
+```bash
+# See changelog entries
+pdm run semantic-release changelog --print
+```
+
+### Dry Run
+
+```bash
+# Test release without modifications
+pdm run semantic-release version --dry-run
+```
+
+---
+
+## Project Management with PDM
+
+All project commands use `pdm run`:
+
+```bash
+# Install dependencies
+pdm install
+
+# Run tests
+pdm run pytest -v
+
+# Format code
+pdm run black src/ tests/
+pdm run isort src/ tests/
+
+# Lint
+pdm run flake8 src/ tests/
+
+# Run application
+pdm run traceflux search "pattern" .
+```
+
+**Why PDM**: Manages virtual environment, dependencies, and command execution in one tool.
 
 ---
 
@@ -117,23 +132,28 @@ Releases are driven by Conventional Commits:
 
 ## Troubleshooting
 
-### Tests Fail
+### Build Command Fails (Tests/Lint)
 
-Fix the issue, re-run `semantic-release version`.
+Fix the reported issues, then re-run:
+```bash
+pdm run semantic-release version
+```
 
-### Tag Exists
+### Tag Already Exists
 
 ```bash
 git tag -d v1.0.1
 git push origin :refs/tags/v1.0.1
-semantic-release version
+pdm run semantic-release version
 ```
 
-### Preview Without Changes
+### Force Specific Version Bump
 
 ```bash
-# Dry-run mode (no file modifications)
-semantic-release version --dry-run
+# Force major/minor/patch bump
+pdm run semantic-release version --bump major
+pdm run semantic-release version --bump minor
+pdm run semantic-release version --bump patch
 ```
 
 ---
