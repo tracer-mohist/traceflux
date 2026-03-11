@@ -1,33 +1,33 @@
 # Research Index
 
-**Purpose**: Organized research notes for traceflux development.
+PURPOSE: Organized research notes for traceflux development.
 
-**Structure**: By topic, not just date.
+STRUCTURE: By topic, not just date.
 
 ---
 
 ## Categories
 
-### 01-foundations/ — Mathematical & Theoretical Foundations
+### 01-foundations/ -- Mathematical & Theoretical Foundations
 
 Core mathematical principles underlying traceflux.
 
-- `character-level-analysis.md` — Character sequences, n-grams, set theory, graph theory
+- `character-level-analysis.md` - Character sequences, n-grams, set theory, graph theory
 - (Future) Information theory, formal language theory
 
-### 02-associations/ — Association Discovery
+### 02-associations/ -- Association Discovery
 
 How to find and present associations.
 
-- `six-degrees-theory.md` — Small-world networks, multi-hop associations
+- `six-degrees-theory.md` - Small-world networks, multi-hop associations
 - (Future) Co-occurrence algorithms, graph traversal
 
-### 03-philosophy/ — Design Philosophy & Principles
+### 03-philosophy/ -- Design Philosophy & Principles
 
 Why we design this way, not that way.
 
-- `search-vs-judgment.md` — Search provides associations, user provides judgment
-- `multi-hop-noise.md` — Embracing "noise" as feature, not bug
+- `search-vs-judgment.md` - Search provides associations, user provides judgment
+- `multi-hop-noise.md` - Embracing "noise" as feature, not bug
 - (Future) User experience principles, ethical considerations
 
 ---
@@ -45,8 +45,8 @@ Why we design this way, not that way.
 
 ## Filing New Research
 
-**Template**:
-```
+TEMPLATE:
+```text
 research/
 ├── 01-foundations/     # Math, theory, algorithms
 ├── 02-associations/    # Discovery methods
@@ -54,10 +54,10 @@ research/
 └── README.md           # This index
 ```
 
-**Naming**: `YYYY-MM-DD_topic.md`
+NAMING: `YYYY-MM-DD_topic.md`
 
 ---
 
-**Related**:
-- `../design/` — Stable design documents
-- `../drafts/` — Work-in-progress
+RELATED:
+- `../design/` - Stable design documents
+- `../drafts/` - Work-in-progress
