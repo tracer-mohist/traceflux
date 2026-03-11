@@ -37,7 +37,7 @@ jobs:
         with:
           python-version: '3.12'
 
-      - run: pdm install --dev
+      - run: pdm install --with dev
 
       - run: pdm run pytest -v
 
