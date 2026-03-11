@@ -1,6 +1,6 @@
 # Release Guide
 
-**Philosophy**: Simple, Practical, Elegant
+PHILOSOPHY: Simple, Practical, Elegant
 
 ---
 
@@ -8,19 +8,19 @@
 
 Semantic Versioning: `MAJOR.MINOR.PATCH`
 
-- **MAJOR**: Breaking changes
-- **MINOR**: New features (backward compatible)
-- **PATCH**: Bug fixes (backward compatible)
+- MAJOR: Breaking changes
+- MINOR: New features (backward compatible)
+- PATCH: Bug fixes (backward compatible)
 
-**Pre-release**: `1.0.1-beta`
+Pre-release: `1.0.1-beta`
 
 ---
 
 ## Single Source of Truth
 
-**Only `pyproject.toml` maintains the version.**
+Only `pyproject.toml` maintains the version.
 
-`__version__.py` reads from package metadata at runtime — no manual sync needed.
+`__version__.py` reads from package metadata at runtime -- no manual sync needed.
 
 ---
 
@@ -34,12 +34,12 @@ pdm run semantic-release version
 ```
 
 This automatically:
-1. **Validates** - Runs tests, lint, format checks (via `build_command`)
-2. **Calculates** - Determines version bump from commit messages
-3. **Updates** - Bumps version in `pyproject.toml`
-4. **Generates** - Creates changelog entries
-5. **Commits** - Creates release commit
-6. **Tags** - Creates git tag
+1. Validates - Runs tests, lint, format checks (via `build_command`)
+2. Calculates - Determines version bump from commit messages
+3. UPDATES - Bumps version in `pyproject.toml`
+4. Generates - Creates changelog entries
+5. Commits - Creates release commit
+6. Tags - Creates git tag
 
 ### 2. Push to Publish
 
@@ -99,7 +99,7 @@ pdm run flake8 src/ tests/
 pdm run traceflux search "pattern" .
 ```
 
-**Why PDM**: Manages virtual environment, dependencies, and command execution in one tool.
+Why PDM: Manages virtual environment, dependencies, and command execution in one tool.
 
 ---
 
@@ -114,7 +114,7 @@ Releases are driven by Conventional Commits:
 | `feat!` | `feat(api)!: change output format` | MAJOR |
 | Others | `chore`, `docs`, `style`, `test` | None |
 
-**Full guide**: See `.github/COMMIT_CONVENTION.md`
+Full guide: See `.github/COMMIT_CONVENTION.md`
 
 ---
 
@@ -126,7 +126,7 @@ Releases are driven by Conventional Commits:
 | Push to main | test, lint |
 | Tag v* | test, lint, release |
 
-**Cost**: ~5 minutes per run (single Python version)
+Cost: ~5 minutes per run (single Python version)
 
 ---
 
@@ -169,6 +169,6 @@ pdm run semantic-release version --bump patch
 
 ---
 
-**Last Updated**: 2026-03-10  
-**Version**: 1.0.0  
-**Tool**: python-semantic-release
+LAST UPDATED: 2026-03-10
+VERSION: 1.0.0
+Tool: python-semantic-release

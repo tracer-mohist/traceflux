@@ -166,9 +166,9 @@ Lesson: Algorithms must respect real-world semantics.
 
 ## Related Documents
 
-- CONTRIBUTING.md — How to contribute (includes test guidelines)
-- docs/PHILOSOPHY.md — Design philosophy
-- docs/TESTING.md — Running tests (quick reference)
+- CONTRIBUTING.md -- How to contribute (includes test guidelines)
+- docs/PHILOSOPHY.md -- Design philosophy
+- docs/TESTING.md -- Running tests (quick reference)
 
 ---
 

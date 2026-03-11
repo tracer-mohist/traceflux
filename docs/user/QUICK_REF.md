@@ -1,6 +1,6 @@
 # Quick Reference
 
-**Common commands and workflows for traceflux development.**
+Common commands and workflows for traceflux development.
 
 ---
 

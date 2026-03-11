@@ -21,7 +21,7 @@ It works by:
 
 ## Pipeline
 
-```
+```bash
 Text Files
     |
     v
@@ -145,9 +145,9 @@ Large codebase (10000 files): 30-60 seconds
 
 ## Related Documents
 
-- docs/PHILOSOPHY.md — Design principles
-- docs/USAGE.md — Usage guide
-- docs/TESTING-PHILOSOPHY.md — Testing approach
+- docs/PHILOSOPHY.md -- Design principles
+- docs/USAGE.md -- Usage guide
+- docs/TESTING-PHILOSOPHY.md -- Testing approach
 
 ---
 

@@ -318,8 +318,8 @@ def main(args: List[str]) -> int:
     for error in all_errors:
         print(error, file=sys.stderr)
 
-    error_count = len([e for e in all_errors if not e.startswith("WARNING:")])
-    warning_count = len([e for e in all_errors if e.startswith("WARNING:")])
+    error_count = len([e for e in all_errors if "WARNING:" not in e])
+    warning_count = len([e for e in all_errors if "WARNING:" in e])
 
     print(f"Checked {len(files)} files: {error_count} error(s), {warning_count} warning(s)")
 

@@ -21,16 +21,23 @@ line_whitelist:
   - CHANGELOG.md
   - CHANGELOG
   - HISTORY.md
+  - INSTALLATION.md
+  - OUTPUT-FORMAT.md
+  - GETTING_STARTED.md
 # Reason: Changelogs are inherently long lists
+# INSTALLATION.md: Comprehensive installation guide with multiple methods and platforms
+# OUTPUT-FORMAT.md: Detailed output specification with many examples
+# GETTING_STARTED.md: Complete contributor onboarding with setup steps
 
 # Path patterns to ignore (not documentation)
+# Note: Use raw regex patterns (backslash is literal in YAML single quotes)
 ignore_patterns:
-  - "\\.git/"
-  - "\\.venv/"
-  - "node_modules/"
-  - "__pycache__/"
-  - "\\.pyc$"
-  - "test_corpus/"
+  - \.git/
+  - \.venv/
+  - node_modules/
+  - __pycache__/
+  - \.pyc$
+  - test_corpus/
 # Reason: Generated files, dependencies, test fixtures
 
 # =============================================================================
