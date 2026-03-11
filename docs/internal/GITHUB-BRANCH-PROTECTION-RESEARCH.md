@@ -1,7 +1,13 @@
 # GitHub Branch Protection Research
 
-Date: 2026-03-10
-Repository: tracer-mohist/traceflux
+**Purpose**: GitHub API reference and technical details for maintainers.
+
+**For contributor rules**: See BRANCH_PROTECTION.md
+
+---
+
+**Date**: 2026-03-10
+**Repository**: tracer-mohist/traceflux
 
 ---
 

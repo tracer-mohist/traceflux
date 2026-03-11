@@ -6,10 +6,13 @@
 
 # Default language version
 default_language_version:
-  python: python3.12
+  python: python3
 
 # Fail if config has errors
 default_stages: [pre-commit]
+
+# Exclude test corpus (intentionally has diverse formatting for testing)
+exclude: ^test_corpus/
 
 repos:
   # Core pre-commit hooks
@@ -30,7 +33,6 @@ repos:
     hooks:
       - id: black
         args: [--check, --diff]
-        language_version: python3.12
 
   # isort - Import sorting
   - repo: https://github.com/pycqa/isort

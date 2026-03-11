@@ -19,22 +19,18 @@ cd traceflux
 ### 2. Install for Development
 
 ```bash
-# Create virtual environment (recommended)
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-
-# Install with dev dependencies
-pip install -e ".[dev]"
+# Install with dev dependencies (pdm manages venv automatically)
+pdm install
 
 # Verify installation
-traceflux --help
+pdm run traceflux --help
 ```
 
 ### 3. Enable Git Hooks
 
 ```bash
 # Enable pre-commit hooks (runs quality checks before commit)
-git config core.hooksPath .githooks
+pdm run pre-commit install
 
 # Test hooks
 echo "# Test" > test.py
@@ -47,13 +43,13 @@ git commit -m "Test commit"
 
 ```bash
 # Run all tests
-pytest
+pdm run pytest
 
 # Run with coverage
-pytest --cov=src/traceflux --cov-report=term-missing
+pdm run pytest --cov=src/traceflux --cov-report=term-missing
 
 # Run specific test
-pytest tests/test_scanner_unit.py -v
+pdm run pytest tests/test_scanner_unit.py -v
 ```
 
 ---
@@ -86,12 +82,12 @@ git checkout -b fix/bug-description
 # Edit code
 # Add tests (important!)
 # Run tests locally
-pytest
+pdm run pytest
 
 # Check code quality
-black src/ tests/
-isort src/ tests/
-flake8 src/ tests/
+pdm run black src/ tests/
+pdm run isort src/ tests/
+pdm run flake8 src/ tests/
 ```
 
 ### Step 4: Commit
@@ -146,7 +142,7 @@ def test_your_feature():
 
 Run tests before committing:
 ```bash
-pytest tests/test_your_feature.py -v
+pdm run pytest tests/test_your_feature.py -v
 ```
 
 ### Documentation
@@ -179,7 +175,7 @@ git checkout -b feature/new-feature
 # Edit tests/test_your_module.py
 
 # 4. Run tests
-pytest
+pdm run pytest
 
 # 5. Commit and push
 git add .
@@ -200,7 +196,7 @@ git checkout -b fix/bug-description
 # Make sure bug doesn't come back
 
 # 4. Run all tests
-pytest
+pdm run pytest
 
 # 5. Commit and push
 git add .
@@ -254,7 +250,7 @@ git commit
 **Solution**:
 ```bash
 # Run failing test with verbose output
-pytest tests/test_failing.py -v
+pdm run pytest tests/test_failing.py -v
 
 # Read error message
 # Fix the issue
@@ -290,13 +286,10 @@ traceflux/
 │   ├── test_search.py
 │   └── test_associations.py
 ├── docs/                   # Documentation
-│   ├── GETTING_STARTED.md  # This file
-│   ├── INSTALLATION.md
-│   └── TESTING.md
+│   ├── user/               # User guides
+│   ├── contributor/        # Contributor guides (this file)
+│   └── internal/           # Internal documentation
 ├── scripts/                # Utility scripts
-│   └── release.sh          # Release automation
-├── .githooks/              # Git hooks
-│   └── pre-commit          # Pre-commit checks
 ├── .github/                # GitHub configuration
 │   ├── workflows/          # CI/CD
 │   ├── RELEASE_PROTOCOL.md # Release process
@@ -310,9 +303,9 @@ traceflux/
 
 ### Documentation
 
-- [Installation Guide](INSTALLATION.md)
-- [Testing Guide](TESTING.md)
-- [Quick Reference](QUICK_REF.md)
+- [Installation Guide](user/INSTALLATION.md)
+- [Usage Guide](user/USAGE.md)
+- [Testing Philosophy](TESTING-PHILOSOPHY.md)
 - [Release Protocol](../.github/RELEASE_PROTOCOL.md)
 
 ### Tools

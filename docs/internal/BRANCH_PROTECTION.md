@@ -1,6 +1,8 @@
 # Branch Protection & PR Workflow
 
-**Purpose**: Ensure code quality and maintain Conventional Commits compliance for automated versioning.
+**Purpose**: Branch protection rules for contributors and maintainers.
+
+**For API reference and technical details**: See GITHUB-BRANCH-PROTECTION-RESEARCH.md
 
 ---
 
