@@ -51,3 +51,13 @@ repos:
           - --max-line-length=100
           - --ignore=E501,W503,F401,F841
         additional_dependencies: []
+
+  # Local: Documentation quality checker
+  - repo: local
+    hooks:
+      - id: check-docs-quality
+        name: Check documentation quality
+        entry: python scripts/check-docs-quality.py
+        language: system
+        files: \.md$
+        pass_filenames: true
