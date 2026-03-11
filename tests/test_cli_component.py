@@ -24,7 +24,9 @@ class TestCLIParser:
         with pytest.raises(SystemExit):
             main(["--version"])
         captured = capsys.readouterr()
-        assert "1.0.0" in captured.out
+        # Version is auto-managed by semantic-release, just verify format
+        assert "traceflux" in captured.out
+        assert any(c.isdigit() for c in captured.out)  # Contains version number
 
     def test_search_command_basic(self):
         """Search command parses arguments correctly."""
