@@ -11,6 +11,7 @@
 ## For Contributors
 
 - Getting Started → contributor/GETTING_STARTED.md
+- Python Environment → contributor/PYTHON-ENV.md
 - Testing Philosophy → contributor/TESTING-PHILOSOPHY.md
 - Release Process → contributor/RELEASE.md
 
