@@ -26,53 +26,41 @@ Only `pyproject.toml` maintains the version.
 
 ## Release Process (Fully Automated)
 
-### Single Command Release
+NOTE: Normal workflow: Just push to main. That's it.
+
+### Automated Release on Push
+
+When you push to `main`, GitHub Actions automatically:
+- Validates: Runs tests, lint, format checks
+- Calculates: Determines version bump from commit messages
+- Updates: Bumps version in `pyproject.toml`
+- Generates: Creates changelog entries
+- Commits: Creates release commit
+- Tags: Creates git tag
+- Publishes: Creates GitHub Release
+
+NOTE: No manual steps required.
 
 ```bash
-# Run release - everything is automated
-pdm run semantic-release version
+# Your workflow:
+git commit -m "feat: add new feature"
+git push origin main
+# Done. CI/CD handles the rest.
 ```text
 
-This automatically:
-1. Validates - Runs tests, lint, format checks (via `build_command`)
-2. Calculates - Determines version bump from commit messages
-3. UPDATES - Bumps version in `pyproject.toml`
-4. Generates - Creates changelog entries
-5. Commits - Creates release commit
-6. Tags - Creates git tag
+### Manual Release (Advanced / Emergency Only)
 
-### 2. Push to Publish
+For troubleshooting or special cases, you can run locally:
 
 ```bash
-# Push triggers GitHub Release creation
-git push origin main --tags
-```text
-
-CI/CD will automatically create GitHub Release with changelog.
-
----
-
-## Manual Override (If Needed)
-
-### Preview Version Bump
-
-```bash
-# See what version would be released
+# Preview what version would be released
 pdm run semantic-release version --print
-```text
 
-### Preview Changelog
-
-```bash
-# See changelog entries
-pdm run semantic-release changelog --print
-```text
-
-### Dry Run
-
-```bash
-# Test release without modifications
+# Dry run (no modifications)
 pdm run semantic-release version --dry-run
+
+# Force release (bypasses automatic calculation)
+pdm run semantic-release version --bump major
 ```text
 
 ---
@@ -123,10 +111,11 @@ Full guide: See `.github/COMMIT_CONVENTION.md`
 | Trigger | Jobs |
 |---------|------|
 | PR to main | test, lint |
-| Push to main | test, lint |
-| Tag v* | test, lint, release |
+| Push to main | test, lint, release (auto) |
 
 Cost: ~5 minutes per run (single Python version)
+
+Note: Release job runs on every push to main but only creates a release if commit messages warrant a version bump.
 
 ---
 
@@ -147,15 +136,6 @@ git push origin :refs/tags/v1.0.1
 pdm run semantic-release version
 ```text
 
-### Force Specific Version Bump
-
-```bash
-# Force major/minor/patch bump
-pdm run semantic-release version --bump major
-pdm run semantic-release version --bump minor
-pdm run semantic-release version --bump patch
-```text
-
 ---
 
 ## Related Files
@@ -169,6 +149,6 @@ pdm run semantic-release version --bump patch
 
 ---
 
-LAST UPDATED: 2026-03-10
+LAST UPDATED: 2026-03-11
 VERSION: 1.0.0
 Tool: python-semantic-release
