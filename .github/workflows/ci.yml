@@ -1,7 +1,8 @@
-# .github/workflows/test.yml
+# .github/workflows/ci.yml
 #
-# CI for pull requests and push to main
-# Runs test, lint, commit message, and docs checks in parallel
+# Continuous Integration
+# Runs on PR and push to main
+# Validates: test, lint, commit message, documentation
 #
 
 name: CI

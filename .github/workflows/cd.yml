@@ -1,8 +1,8 @@
 # .github/workflows/cd.yml
 #
-# Continuous Delivery with python-semantic-release
-# Triggers on push to main (after CI passes)
-# Assumes PR CI already validated the code
+# Continuous Delivery
+# Triggers on push to main
+# Publishes release if semantic-release detects changes
 #
 
 name: CD
