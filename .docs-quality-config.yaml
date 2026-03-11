@@ -38,6 +38,8 @@ ignore_patterns:
   - __pycache__/
   - \.pyc$
   - test_corpus/
+  - \.pytest_cache/
+  - \.github/
 # Reason: Generated files, dependencies, test fixtures
 
 # =============================================================================
