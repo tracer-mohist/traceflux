@@ -177,16 +177,16 @@ LZW compression uses this principle.
 def extract_ngrams(text, n):
     """
     Extract all n-grams from text.
-    
+
     Args:
         text: Input string
         n: N-gram size
-    
+
     Returns: List of n-grams
     """
     if len(text) < n:
         return [text] if text else []
-    
+
     return [text[i:i+n] for i in range(len(text) - n + 1)]
 
 # Example
@@ -201,18 +201,18 @@ print(extract_ngrams(text, 3))  # ["hel", "ell", "llo"]
 def ngram_similarity(text1, text2, n=2):
     """
     Calculate n-gram similarity between two texts.
-    
+
     Returns: Similarity score (0.0 to 1.0)
     """
     ngrams1 = set(extract_ngrams(text1, n))
     ngrams2 = set(extract_ngrams(text2, n))
-    
+
     if not ngrams1 or not ngrams2:
         return 0.0
-    
+
     intersection = ngrams1 & ngrams2
     union = ngrams1 | ngrams2
-    
+
     return len(intersection) / len(union)
 
 # Example
@@ -230,26 +230,26 @@ class NgramIndex:
         self.n = n
         self.frequency = defaultdict(int)
         self.positions = defaultdict(list)
-    
+
     def add_text(self, text, doc_id):
         """Add text to index."""
         for i, ngram in enumerate(extract_ngrams(text, self.n)):
             self.frequency[ngram] += 1
             self.positions[ngram].append((doc_id, i))
-    
+
     def get_similar(self, query, top_k=10):
         """Get documents similar to query."""
         query_ngrams = set(extract_ngrams(query, self.n))
-        
+
         scores = defaultdict(float)
         for ngram in query_ngrams:
             for doc_id, pos in self.positions[ngram]:
                 scores[doc_id] += 1
-        
+
         # Normalize by query length
         for doc_id in scores:
             scores[doc_id] /= len(query_ngrams)
-        
+
         # Return top-k
         return sorted(scores.items(), key=lambda x: -x[1])[:top_k]
 ```
@@ -288,5 +288,5 @@ Rule: Larger N = exponentially more entries
 
 ---
 
-**Last Updated**: 2026-03-11  
+**Last Updated**: 2026-03-11
 **Source Files**: `2026-03-06_ngram-explained*.md`

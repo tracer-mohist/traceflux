@@ -132,20 +132,20 @@ def find_associations_organized(graph, start_word, max_degrees=4):
     results = defaultdict(list)
     visited = {start_word}
     queue = deque([(start_word, 0, [start_word])])
-    
+
     while queue:
         word, degree, path = queue.popleft()
-        
+
         if degree >= max_degrees:
             continue
-        
+
         for neighbor, weight in graph[word].items():
             if neighbor not in visited:
                 visited.add(neighbor)
                 new_path = path + [neighbor]
                 results[degree + 1].append((neighbor, new_path, weight))
                 queue.append((neighbor, degree + 1, new_path))
-    
+
     return results
 
 # Output:
@@ -222,5 +222,5 @@ Trust user's judgment!
 
 ---
 
-**Last Updated**: 2026-03-11  
+**Last Updated**: 2026-03-11
 **Source Files**: `2026-03-06_multi-hop-noise*.md`

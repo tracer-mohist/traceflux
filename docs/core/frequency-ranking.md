@@ -228,7 +228,7 @@ class FrequencyIndex:
     def __init__(self, min_support=2):
         self.min_support = min_support
         self.frequency = defaultdict(int)
-    
+
     def add_text(self, text):
         """Add text to frequency index."""
         # Count all substrings (or use n-grams)
@@ -236,7 +236,7 @@ class FrequencyIndex:
             for j in range(i + 1, min(i + 10, len(text) + 1)):
                 pattern = text[i:j]
                 self.frequency[pattern] += 1
-    
+
     def get_frequent(self):
         """Get patterns meeting minimum support."""
         return {
@@ -251,20 +251,20 @@ class FrequencyIndex:
 def compute_pagerank(cooccurrence_graph, damping=0.85, iterations=20):
     """
     Compute PageRank on co-occurrence graph.
-    
+
     Args:
         cooccurrence_graph: dict {pattern: {neighbor: weight}}
         damping: damping factor
         iterations: number of iterations
-    
+
     Returns: dict {pattern: pagerank_score}
     """
     nodes = list(cooccurrence_graph.keys())
     N = len(nodes)
-    
+
     # Initialize
     pr = {node: 1.0 / N for node in nodes}
-    
+
     # Iterate
     for _ in range(iterations):
         new_pr = {}
@@ -276,7 +276,7 @@ def compute_pagerank(cooccurrence_graph, damping=0.85, iterations=20):
             )
             new_pr[node] = (1 - damping) / N + damping * rank_sum
         pr = new_pr
-    
+
     return pr
 ```
 
@@ -290,5 +290,5 @@ def compute_pagerank(cooccurrence_graph, damping=0.85, iterations=20):
 
 ---
 
-**Last Updated**: 2026-03-11  
+**Last Updated**: 2026-03-11
 **Source Files**: `2026-03-06_frequency-lz-pagerank*.md`

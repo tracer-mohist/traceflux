@@ -132,13 +132,13 @@ PUNCTUATION_LEVELS = {
 def build_punctuation_tree(text, level=0, pre=START, post=END):
     """
     Build Punctuation Context Tree recursively.
-    
+
     Args:
         text: Text to segment
         level: Current punctuation level (0 = sentence)
         pre: Pre-punctuation (or START)
         post: Post-punctuation (or END)
-    
+
     Returns: Tree node
     """
     node = {
@@ -149,31 +149,31 @@ def build_punctuation_tree(text, level=0, pre=START, post=END):
         'level': level,
         'children': []
     }
-    
+
     # Get punctuation for this level
     punct_set = PUNCTUATION_LEVELS.get(level, set())
-    
+
     if not punct_set or level > 3:
         # Leaf node
         return node
-    
+
     # Find split points
     split_positions = []
     for i, char in enumerate(text):
         if char in punct_set:
             split_positions.append(i)
-    
+
     if not split_positions:
         # No splits at this level
         return node
-    
+
     # Split and recurse
     segments = split_by_positions(text, split_positions)
-    
+
     for i, segment in enumerate(segments):
         child_pre = post if i == 0 else split_positions[i-1]
         child_post = split_positions[i] if i < len(split_positions) else post
-        
+
         child_node = build_punctuation_tree(
             segment,
             level + 1,
@@ -181,7 +181,7 @@ def build_punctuation_tree(text, level=0, pre=START, post=END):
             child_post
         )
         node['children'].append(child_node)
-    
+
     return node
 ```
 
@@ -296,13 +296,13 @@ def bfs_traverse(root, callback):
 def find_pattern(node, target_type_hash):
     """Find all nodes with matching type hash."""
     matches = []
-    
+
     if node['type_hash'] == target_type_hash:
         matches.append(node)
-    
+
     for child in node['children']:
         matches.extend(find_pattern(child, target_type_hash))
-    
+
     return matches
 ```
 
@@ -342,5 +342,5 @@ Optimization:
 
 ---
 
-**Last Updated**: 2026-03-11  
+**Last Updated**: 2026-03-11
 **Source Files**: `2026-03-06_punctuation-context-tree*.md`, `2026-03-06_punctuation-namespace-index*.md`

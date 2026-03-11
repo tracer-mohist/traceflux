@@ -1,5 +1,46 @@
 # traceflux Documentation
 
+## Core Concepts
+
+Foundational concepts for understanding TraceFlux.
+
+- README -> core/README.md
+- Text Segmentation -> core/text-segmentation.md
+- N-gram Analysis -> core/ngram-analysis.md
+- Frequency Ranking -> core/frequency-ranking.md
+- Mathematical Model -> core/mathematical-model.md
+
+## Algorithms
+
+Implementation details and technical specifications.
+
+- README -> algorithms/README.md
+- Autocomplete Engine -> algorithms/autocomplete.md
+- Divergent Search -> algorithms/divergent-search.md
+- Punctuation Context Tree -> algorithms/punctuation-context-tree.md
+
+## Theory
+
+Theoretical foundations and philosophical background.
+
+- README -> theory/README.md
+- Search vs Judgment -> theory/search-vs-judgment.md
+- Multi-Hop Noise -> theory/multi-hop-noise.md
+
+## Associations
+
+Association discovery and multi-hop connections.
+
+- README -> associations/README.md
+- Six Degrees -> associations/six-degrees.md
+
+## Design
+
+System architecture and flowcharts.
+
+- README -> design/README.md
+- Search Flowchart -> design/search-flowchart.md
+
 ## For Users
 
 - Installation -> user/INSTALLATION.md
@@ -25,4 +66,4 @@
 
 ---
 
-NOTE: This documentation structure follows layered architecture (user/contributor/internal) to separate concerns and improve navigation.
+NOTE: Documentation restructured 2026-03-11. Core concepts, algorithms, theory, and associations separated from research/ fragments into organized directories.
