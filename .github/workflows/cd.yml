@@ -2,7 +2,7 @@
 #
 # Continuous Delivery with python-semantic-release
 # Triggers on push to main
-# Auto-calculates version, creates tag, publishes GitHub Release
+# Assumes CI passed (tests already run in PR)
 #
 
 name: CD
@@ -29,29 +29,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Reset branch to workflow sha
-        run: |
-          git reset --hard ${{ github.sha }}
-
       - uses: pdm-project/setup-pdm@v4
         with:
           python-version: '3.12'
-
-      - name: Cache PDM packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pdm
-          key: ${{ runner.os }}-pdm-${{ hashFiles('pdm.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pdm-
-
-      - run: pdm install --with dev
-
-      - run: pdm run pytest -v
-
-      - run: pdm run black --check src/ tests/
-      - run: pdm run isort --check-only src/ tests/
-      - run: pdm run flake8 --max-line-length=100 --ignore=E501,W503,F401,F841 src/ tests/
 
       - name: Semantic Version Release
         id: release

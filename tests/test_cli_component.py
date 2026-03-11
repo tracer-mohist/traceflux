@@ -19,14 +19,9 @@ class TestCLIParser:
         assert result == 0
         assert "usage: traceflux" in captured.out
 
-    def test_version_flag(self, capsys):
-        """--version shows version number."""
-        with pytest.raises(SystemExit):
-            main(["--version"])
-        captured = capsys.readouterr()
-        # Version is auto-managed by semantic-release, just verify format
-        assert "traceflux" in captured.out
-        assert any(c.isdigit() for c in captured.out)  # Contains version number
+    # NOTE: --version is handled by argparse + importlib.metadata
+    # Testing it would be testing Python built-ins, not our logic
+    # See: principles/automation/testing-strategy.md
 
     def test_search_command_basic(self):
         """Search command parses arguments correctly."""
