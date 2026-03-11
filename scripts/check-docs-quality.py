@@ -2,16 +2,16 @@
 """
 Documentation Quality Checker for traceflux
 
-Enforces documentation standards:
+Enforces documentation standards per issue #40:
 - File length < 256 lines (whitelist: CHANGELOG.md)
-- ASCII printable only (with CJK support)
-- No emoji
+- ASCII printable only (0x20-0x7E) with exemptions for quotes/code
+- No emoji (except in quotes/code)
 - Code blocks must have type
 - One code block per heading scope (warning)
 
 Usage:
     python scripts/check-docs-quality.py [files...]
-    python scripts/check-docs-quality.py --all
+    python scripts/check-docs-quality.py
 
 Exit codes:
     0 - All checks passed
@@ -21,11 +21,10 @@ Configuration:
     .docs-quality-config.yaml (optional)
 """
 
-import os
 import re
 import sys
 from pathlib import Path
-from typing import List, Optional, Tuple
+from typing import List, Optional, Set, Tuple
 
 try:
     import yaml
@@ -34,7 +33,7 @@ try:
 except ImportError:
     YAML_AVAILABLE = False
 
-# Default configuration
+# Configuration
 MAX_LINES = 256
 DEFAULT_LINE_WHITELIST = {"CHANGELOG.md", "CHANGELOG", "HISTORY.md"}
 DEFAULT_IGNORE_PATTERNS = [
@@ -46,7 +45,11 @@ DEFAULT_IGNORE_PATTERNS = [
     r"test_corpus/",
 ]
 
-# Emoji ranges to block
+# ASCII printable range per issue #40
+ASCII_MIN = 0x20
+ASCII_MAX = 0x7E
+
+# Emoji ranges to block (outside of quotes/code)
 EMOJI_RANGES = [
     (0x1F300, 0x1F5FF),  # misc symbols & pictographs
     (0x1F600, 0x1F64F),  # emoticons
@@ -56,22 +59,6 @@ EMOJI_RANGES = [
     (0xFE00, 0xFE0F),  # variation selectors
     (0x1F900, 0x1F9FF),  # supplemental symbols & pictographs
     (0x1F1E6, 0x1F1FF),  # flags
-]
-
-# Allowed non-ASCII ranges (CJK, common punctuation, box drawing, math, etc.)
-ALLOWED_NON_ASCII = [
-    (0x4E00, 0x9FFF),  # CJK Unified Ideographs
-    (0x3400, 0x4DBF),  # CJK Extension A
-    (0x3000, 0x303F),  # CJK Symbols & Punctuation
-    (0xFF00, 0xFFEF),  # Halfwidth & Fullwidth Forms
-    (0x3040, 0x309F),  # Hiragana
-    (0x30A0, 0x30FF),  # Katakana
-    (0x2500, 0x257F),  # Box Drawing (├ ─ │ └ etc.)
-    (0x2190, 0x21FF),  # Arrows (→ ← ↑ ↓ etc.)
-    (0x2010, 0x202F),  # General Punctuation (— – etc.)
-    (0x00A0, 0x00FF),  # Latin-1 Supplement
-    (0x2200, 0x22FF),  # Mathematical Operators
-    (0x0370, 0x03FF),  # Greek and Coptic
 ]
 
 
@@ -92,7 +79,6 @@ def load_config() -> dict:
             "ignore_patterns": config.get("ignore_patterns", DEFAULT_IGNORE_PATTERNS),
         }
     except Exception:
-        # Fall back to defaults on error
         return {
             "line_whitelist": DEFAULT_LINE_WHITELIST,
             "ignore_patterns": DEFAULT_IGNORE_PATTERNS,
@@ -102,11 +88,6 @@ def load_config() -> dict:
 def is_emoji(code: int) -> bool:
     """Check if a character code is emoji."""
     return any(lo <= code <= hi for lo, hi in EMOJI_RANGES)
-
-
-def is_allowed_non_ascii(code: int) -> bool:
-    """Check if a non-ASCII character is allowed."""
-    return any(lo <= code <= hi for lo, hi in ALLOWED_NON_ASCII)
 
 
 def should_ignore(path: str, ignore_patterns: List[str]) -> bool:
@@ -127,14 +108,13 @@ def collect_md_files(paths: List[str], ignore_patterns: List[str]) -> List[Path]
         elif p.is_dir():
             for f in p.rglob("*.md"):
                 f_str = str(f)
-                # Normalize path separators for regex matching
                 f_normalized = f_str.replace("\\", "/")
                 if not should_ignore(f_normalized, ignore_patterns):
                     files.append(f)
     return files
 
 
-def check_file_length(content: str, filepath: Path, line_whitelist: set) -> Optional[str]:
+def check_file_length(content: str, filepath: Path, line_whitelist: Set[str]) -> Optional[str]:
     """Check if file exceeds maximum line count."""
     if filepath.name in line_whitelist:
         return None
@@ -145,87 +125,111 @@ def check_file_length(content: str, filepath: Path, line_whitelist: set) -> Opti
     return None
 
 
-def check_code_block_type(
-    line: str, in_code_block: bool, code_block_start: int
-) -> Tuple[bool, int, Optional[str]]:
-    """Check if code block has type annotation."""
+def check_code_block_type(line: str) -> Optional[str]:
+    """Check if opening code block has type annotation."""
     if line.strip().startswith("```"):
-        if not in_code_block:
-            # Opening code block
-            code_type = line.strip()[3:].strip()
-            if not code_type:
-                return True, 0, "Code block without type annotation"
-            return True, 0, None
-        else:
-            # Closing code block
-            return False, 0, None
-    return in_code_block, code_block_start, None
+        code_type = line.strip()[3:].strip()
+        if not code_type:
+            return "Code block without type annotation"
+    return None
 
 
-def check_line_content(
-    line: str, filepath: Path, line_num: int, in_code_block: bool, in_quote: bool
-) -> Optional[str]:
-    """Check a single line for emoji and invalid characters."""
-    # Skip blockquotes
-    if in_quote:
-        return None
+def check_line_ascii_and_emoji(
+    line: str,
+    filepath: Path,
+    line_num: int,
+    in_code_block: bool,
+    in_inline_code: bool,
+    in_blockquote: bool,
+) -> List[str]:
+    """
+    Check a line for ASCII and emoji violations per issue #40.
 
-    # Skip code blocks (content can have anything)
-    if in_code_block:
-        return None
+    Rules:
+    - ASCII printable only (0x20-0x7E) in normal text
+    - No emoji in normal text
+    - Exemptions: blockquotes (>), code blocks (```), inline code (`)
 
-    for ch in line:
+    Returns list of error messages (empty if no errors)
+    """
+    errors = []
+
+    # Exempt: inside code blocks or blockquotes
+    if in_code_block or in_blockquote:
+        return errors
+
+    # Check each character
+    i = 0
+    in_inline = in_inline_code
+    while i < len(line):
+        ch = line[i]
         code = ord(ch)
 
-        # ASCII printable: OK
-        if 32 <= code <= 126:
+        # Track inline code state
+        if ch == "`":
+            # Count backticks
+            backtick_count = 1
+            j = i + 1
+            while j < len(line) and line[j] == "`":
+                backtick_count += 1
+                j += 1
+
+            # Toggle inline code if odd number of backticks
+            if backtick_count % 2 == 1:
+                in_inline = not in_inline
+
+            i = j
             continue
 
-        # Common whitespace: OK
+        # Skip if inside inline code
+        if in_inline:
+            i += 1
+            continue
+
+        # Check ASCII printable
+        if ASCII_MIN <= code <= ASCII_MAX:
+            i += 1
+            continue
+
+        # Common whitespace (tab, newline, CR)
         if code in (9, 10, 13):
+            i += 1
             continue
 
-        # Allowed non-ASCII: OK
-        if is_allowed_non_ascii(code):
-            continue
-
-        # Emoji: NOT OK
+        # Check if emoji
         if is_emoji(code):
-            return f"{filepath}:{line_num}: Emoji not allowed (U+{code:04X})"
+            errors.append(f"{filepath}:{line_num}: Emoji not allowed (U+{code:04X})")
+        else:
+            # Non-ASCII, non-emoji character
+            errors.append(f"{filepath}:{line_num}: Non-ASCII character not allowed (U+{code:04X})")
 
-        # Other non-ASCII: NOT OK
-        return f"{filepath}:{line_num}: Non-ASCII character not allowed (U+{code:04X})"
+        i += 1
 
-    return None
+    return errors
 
 
 def check_markdown_emphasis(
     line: str, filepath: Path, line_num: int, in_code_block: bool
 ) -> Optional[str]:
-    """Check for markdown emphasis syntax (**text**) - suggest LABEL: content instead."""
+    """Check for markdown emphasis syntax (**text**) - suggest LABEL: content."""
     if in_code_block:
         return None
 
-    # Skip blockquotes (may contain examples)
+    # Skip blockquotes
     if line.strip().startswith(">"):
         return None
 
-    # Check for **text** pattern (bold) or *text* (italic)
-    # But allow ** at start of line for list items or as separator
-    import re
-
-    # Pattern: **word** or **phrase** (not at line start as list marker)
-    # Exclude: ** at very start of line (could be list or separator)
+    # Check for **text** pattern
     if re.search(r"(?<!\*)\*\*[^*]+\*\*(?!\*)", line):
-        # Check if it's not a list item marker or horizontal rule
         stripped = line.strip()
-        if not stripped.startswith("** ") or len(stripped) > 3:
+        # Allow ** at start if it's a list marker or separator
+        if not (stripped.startswith("** ") and len(stripped) <= 4):
             return f"{filepath}:{line_num}: Markdown emphasis (**) not allowed. Use 'LABEL: content' format instead"
 
     return None
 
 
-def check_file(filepath: Path, line_whitelist: set, ignore_patterns: List[str]) -> List[str]:
+def check_file(filepath: Path, line_whitelist: Set[str], ignore_patterns: List[str]) -> List[str]:
     """Check a single markdown file."""
     errors = []
     warnings = []
@@ -244,17 +248,20 @@ def check_file(filepath: Path, line_whitelist: set, ignore_patterns: List[str]) 
     lines = content.split("\n")
     in_code_block = False
     code_blocks_in_scope = 0
-    current_heading = None
 
     for line_num, line in enumerate(lines, 1):
         # Track heading scope
         if line.startswith("#"):
-            current_heading = line
             code_blocks_in_scope = 0
 
         # Track code blocks
         if line.strip().startswith("```"):
             if not in_code_block:
+                # Opening code block - check for type
+                type_error = check_code_block_type(line)
+                if type_error:
+                    errors.append(f"{filepath}:{line_num}: {type_error}")
+
                 code_blocks_in_scope += 1
                 if code_blocks_in_scope > 1:
                     warnings.append(
@@ -263,22 +270,22 @@ def check_file(filepath: Path, line_whitelist: set, ignore_patterns: List[str]) 
             in_code_block = not in_code_block
             continue
 
-        # Check code block type (only on opening)
-        if not in_code_block and line.strip().startswith("```"):
-            _, _, error = check_code_block_type(line, False, 0)
-            if error:
-                errors.append(f"{filepath}:{line_num}: {error}")
+        # Check inline code state
+        in_inline_code = "`" in line
 
-        # Check line content (emoji, non-ASCII)
-        in_quote = line.strip().startswith(">")
-        error = check_line_content(line, filepath, line_num, in_code_block, in_quote)
-        if error:
-            errors.append(error)
+        # Check blockquote state
+        in_blockquote = line.strip().startswith(">")
 
-        # Check markdown emphasis (**text**)
-        error = check_markdown_emphasis(line, filepath, line_num, in_code_block)
-        if error:
-            errors.append(error)
+        # Check ASCII and emoji
+        line_errors = check_line_ascii_and_emoji(
+            line, filepath, line_num, in_code_block, in_inline_code, in_blockquote
+        )
+        errors.extend(line_errors)
+
+        # Check markdown emphasis
+        emphasis_error = check_markdown_emphasis(line, filepath, line_num, in_code_block)
+        if emphasis_error:
+            errors.append(emphasis_error)
 
     return errors + warnings
 
