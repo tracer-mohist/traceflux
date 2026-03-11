@@ -22,11 +22,11 @@
 - Documentation cleanup and restructuring
 - Reduce README to 80 lines, extract details to docs/
 - Update RELEASE_PROTOCOL.md for automated workflow
-- **release**: Update guide for semantic-release workflow
+- release: Update guide for semantic-release workflow
 
 ### Features
 
-- **release**: Automate versioning with pdm + semantic-release
+- release: Automate versioning with pdm + semantic-release
 
 ## v1.1.0 (2026-03-07)
 

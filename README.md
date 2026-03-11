@@ -52,13 +52,13 @@ traceflux associations "proxy" src/ --json | jq '.associations[]'
 
 ## Documentation
 
-- Getting Started (docs/GETTING_STARTED.md) — 5-minute setup
-- Usage Guide (docs/USAGE.md) — Commands and options
-- Architecture (docs/ARCHITECTURE.md) — How it works
-- Use Cases (docs/USE-CASES.md) — Real-world examples
-- Philosophy (docs/PHILOSOPHY.md) — Design principles
-- Contributing (CONTRIBUTING.md) — How to contribute
-- Testing (TESTING.md) — Run and write tests
+- Getting Started (docs/GETTING_STARTED.md) - 5-minute setup
+- Usage Guide (docs/USAGE.md) - Commands and options
+- Architecture (docs/ARCHITECTURE.md) - How it works
+- Use Cases (docs/USE-CASES.md) - Real-world examples
+- Philosophy (docs/PHILOSOPHY.md) - Design principles
+- Contributing (CONTRIBUTING.md) - How to contribute
+- Testing (TESTING.md) - Run and write tests
 
 ---
 
