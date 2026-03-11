@@ -199,6 +199,32 @@ def check_line_content(
     return None
 
 
+def check_markdown_emphasis(
+    line: str, filepath: Path, line_num: int, in_code_block: bool
+) -> Optional[str]:
+    """Check for markdown emphasis syntax (**text**) - suggest LABEL: content instead."""
+    if in_code_block:
+        return None
+
+    # Skip blockquotes (may contain examples)
+    if line.strip().startswith(">"):
+        return None
+
+    # Check for **text** pattern (bold) or *text* (italic)
+    # But allow ** at start of line for list items or as separator
+    import re
+
+    # Pattern: **word** or **phrase** (not at line start as list marker)
+    # Exclude: ** at very start of line (could be list or separator)
+    if re.search(r"(?<!\*)\*\*[^*]+\*\*(?!\*)", line):
+        # Check if it's not a list item marker or horizontal rule
+        stripped = line.strip()
+        if not stripped.startswith("** ") or len(stripped) > 3:
+            return f"{filepath}:{line_num}: Markdown emphasis (**) not allowed. Use 'LABEL: content' format instead"
+
+    return None
+
+
 def check_file(filepath: Path, line_whitelist: set, ignore_patterns: List[str]) -> List[str]:
     """Check a single markdown file."""
     errors = []
@@ -214,7 +240,7 @@ def check_file(filepath: Path, line_whitelist: set, ignore_patterns: List[str]) 
     if error:
         errors.append(error)
 
-    # Check 2-4: Line-by-line checks
+    # Check 2-5: Line-by-line checks
     lines = content.split("\n")
     in_code_block = False
     code_blocks_in_scope = 0
@@ -243,9 +269,14 @@ def check_file(filepath: Path, line_whitelist: set, ignore_patterns: List[str]) 
             if error:
                 errors.append(f"{filepath}:{line_num}: {error}")
 
-        # Check line content
+        # Check line content (emoji, non-ASCII)
         in_quote = line.strip().startswith(">")
         error = check_line_content(line, filepath, line_num, in_code_block, in_quote)
+        if error:
+            errors.append(error)
+
+        # Check markdown emphasis (**text**)
+        error = check_markdown_emphasis(line, filepath, line_num, in_code_block)
         if error:
             errors.append(error)
 
