@@ -1,16 +1,16 @@
 # Python Environment Configuration
 
-**Purpose**: Document Python version and package management for traceflux.
+PURPOSE: Document Python version and package management for traceflux.
 
 ---
 
 ## Python Version
 
-**Required**: Python 3.10+
+Required: Python 3.10+
 
-**Recommended**: Python 3.12 or 3.13
+RECOMMENDED: Python 3.12 or 3.13
 
-**Configuration**: `.python-version` file specifies the Python version for this project.
+CONFIGURATION: `.python-version` file specifies the Python version for this project.
 
 ```bash
 # Check current Python version
@@ -24,9 +24,9 @@ cat .python-version
 
 ## Package Management
 
-**Tool**: PDM (Python Dependency Manager)
+Tool: PDM (Python Dependency Manager)
 
-**Why PDM**:
+Why PDM:
 - Modern Python package management
 - PEP 582 support (optional)
 - Lock file for reproducible installs
@@ -54,7 +54,7 @@ pdm run traceflux --help
 
 ### Running Commands
 
-**Always use `pdm run`** for project commands:
+Always use `pdm run` for project commands:
 
 ```bash
 # Run traceflux
@@ -71,7 +71,7 @@ pdm run black src/
 pdm run flake8 src/
 ```
 
-**Why `pdm run`?**
+Why `pdm run`?
 - Uses project's virtual environment
 - Ensures consistent dependency versions
 - Avoids polluting global Python environment
@@ -80,9 +80,9 @@ pdm run flake8 src/
 
 ## Virtual Environment
 
-**Location**: `.venv/` (project-local)
+Location: `.venv/` (project-local)
 
-**Management**: PDM automatically manages the virtual environment.
+Management: PDM automatically manages the virtual environment.
 
 ```bash
 # Show Python interpreter path
@@ -104,13 +104,13 @@ traceflux --help
 pytest
 ```
 
-**Note**: Activation is optional. Using `pdm run` is recommended for clarity.
+NOTE: Activation is optional. Using `pdm run` is recommended for clarity.
 
 ---
 
 ## Pre-commit Hooks
 
-**Setup**:
+SETUP:
 
 ```bash
 # Install pre-commit hooks (one-time)
@@ -120,7 +120,7 @@ pdm run pre-commit install
 ls -la .git/hooks/pre-commit
 ```
 
-**Run manually**:
+Run manually:
 
 ```bash
 # Run all hooks
@@ -130,7 +130,7 @@ pdm run pre-commit run --all-files
 pdm run pre-commit run black
 ```
 
-**Configuration**: `.pre-commit-config.yaml`
+CONFIGURATION: `.pre-commit-config.yaml`
 
 ---
 
@@ -138,9 +138,9 @@ pdm run pre-commit run black
 
 ### Python Version Mismatch
 
-**Problem**: `RuntimeError: failed to find interpreter for python3.X`
+PROBLEM: `RuntimeError: failed to find interpreter for python3.X`
 
-**Solution**:
+SOLUTION:
 ```bash
 # Check available Python versions
 python3 --version
@@ -156,9 +156,9 @@ pdm install
 
 ### Pre-commit Hook Failures
 
-**Problem**: Pre-commit hooks fail with interpreter errors.
+PROBLEM: Pre-commit hooks fail with interpreter errors.
 
-**Solution**:
+SOLUTION:
 ```bash
 # Clear pre-commit cache
 rm -rf ~/.cache/pre-commit
@@ -169,9 +169,9 @@ pdm run pre-commit install --force
 
 ### Dependency Conflicts
 
-**Problem**: `ResolutionImpossible` or version conflicts.
+PROBLEM: `ResolutionImpossible` or version conflicts.
 
-**Solution**:
+SOLUTION:
 ```bash
 # Clear lock file and reinstall
 rm pdm.lock
@@ -185,7 +185,7 @@ pdm update package-name
 
 ## For Contributors
 
-**Quick Start**:
+QUICK START:
 
 ```bash
 # 1. Clone repository
@@ -203,7 +203,7 @@ pdm run traceflux --help
 pdm run pytest
 ```
 
-**Development Workflow**:
+Development Workflow:
 
 ```bash
 # Make changes
@@ -235,5 +235,5 @@ git push
 
 ---
 
-**Last Updated**: 2026-03-11
-**Status**: Active
+LAST UPDATED: 2026-03-11
+STATUS: Active

@@ -1,6 +1,6 @@
 # traceflux Output Format
 
-**Principle**: ASCII-only, log-friendly, pipe-safe output.
+Principle: ASCII-only, log-friendly, pipe-safe output.
 
 No colors, no emoji, no ANSI codes. All output is plain text suitable for logging and piping.
 
@@ -8,10 +8,10 @@ No colors, no emoji, no ANSI codes. All output is plain text suitable for loggin
 
 ## Label Format
 
-**Format**: `LABEL: message`
+Format: `LABEL: message`
 
-- **LABEL**: Uppercase English word
-- **message**: Lowercase content (recommended)
+- LABEL: Uppercase English word
+- message: Lowercase content (recommended)
 
 ### Standard Labels
 
@@ -143,7 +143,7 @@ $ traceflux associations "proxy" src/ --json | jq '.associations[]'
 }
 ```
 
-**JSON output is always plain ASCII** - safe for parsing and piping.
+JSON output is always plain ASCII - safe for parsing and piping.
 
 ---
 
@@ -171,25 +171,25 @@ FORCE_COLOR=1 traceflux search "proxy" src/
 
 ### Why No Colors?
 
-1. **Log-friendly** - No ANSI escape codes in logs
-2. **Pipe-safe** - Clean output when piped to other tools
-3. **Encoding-safe** - No UTF-8/ASCII compatibility issues
-4. **Searchable** - Easy to grep for `ERROR:`, `WARNING:`, etc.
-5. **Accessible** - Screen readers handle plain text better
+1. Log-friendly - No ANSI escape codes in logs
+2. Pipe-safe - Clean output when piped to other tools
+3. Encoding-safe - No UTF-8/ASCII compatibility issues
+4. Searchable - Easy to grep for `ERROR:`, `WARNING:`, etc.
+5. Accessible - Screen readers handle plain text better
 
 ### Why Uppercase Labels?
 
-1. **Visibility** - Stands out in output
-2. **Consistency** - All labels follow same format
-3. **Searchability** - Easy to grep: `grep "ERROR:" logfile.txt`
-4. **Convention** - Follows UNIX tool traditions (make, gcc, etc.)
+1. Visibility - Stands out in output
+2. Consistency - All labels follow same format
+3. Searchability - Easy to grep: `grep "ERROR:" logfile.txt`
+4. Convention - Follows UNIX tool traditions (make, gcc, etc.)
 
 ### Why ASCII Only?
 
-1. **Compatibility** - Works on all terminals and systems
-2. **Encoding** - No UTF-8 issues in logs or pipes
-3. **Simplicity** - No font or rendering dependencies
-4. **Tradition** - UNIX tools use ASCII
+1. Compatibility - Works on all terminals and systems
+2. Encoding - No UTF-8 issues in logs or pipes
+3. Simplicity - No font or rendering dependencies
+4. Tradition - UNIX tools use ASCII
 
 ---
 
@@ -213,8 +213,8 @@ If you're used to tools with emoji:
 
 ```bash
 # Old (emoji):
-# ✅ Found 'proxy' in 2 file(s)
-# ⚠️  Could not read file.txt
+#  Found 'proxy' in 2 file(s)
+#   Could not read file.txt
 
 # New (plain):
 SUCCESS: Found 'proxy' in 2 file(s)
@@ -227,7 +227,7 @@ WARNING: Could not read file.txt
 
 ### Parsing Output
 
-**Use JSON for parsing**:
+Use JSON for parsing:
 
 ```bash
 # Good: Parse JSON
@@ -239,7 +239,7 @@ traceflux associations "proxy" src/ | grep -oP '^\s+\K\S+'
 
 ### Filtering Output
 
-**Grep for labels**:
+Grep for labels:
 
 ```bash
 # Find all errors
@@ -254,7 +254,7 @@ traceflux search "pattern" src/ 2>&1 | grep "^SUCCESS:"
 
 ### Logging
 
-**Redirect both streams**:
+Redirect both streams:
 
 ```bash
 # Capture everything
@@ -274,5 +274,5 @@ traceflux search "pattern" src/ > output.log 2> errors.log
 
 ---
 
-**Last Updated**: 2026-03-07  
-**Status**: Implemented in v0.1.0
+LAST UPDATED: 2026-03-07
+STATUS: Implemented in v0.1.0

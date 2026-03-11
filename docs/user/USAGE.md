@@ -117,7 +117,7 @@ traceflux index src/ -o index.json
 
 ### Human-Readable (Default)
 
-```
+```python
 Associations for 'proxy' (hops=2):
   proxychains              strength: 0.85 (degree 1)
   HTTP_PROXY               strength: 0.72 (degree 1)
@@ -145,7 +145,7 @@ traceflux associations "proxy" src/ --json
 traceflux associations "proxy" src/ --explain
 ```
 
-```
+```html
 proxy -> pagerank -> rank
   proxy co-occurs with pagerank (strength: 0.90)
   pagerank co-occurs with rank (strength: 0.85)
@@ -224,9 +224,9 @@ traceflux associations "proxy" src/ --json | jq '.associations[]'
 
 ## Related Documents
 
-- README.md — Quick start
-- docs/PHILOSOPHY.md — Design principles
-- docs/GETTING_STARTED.md — First-time setup
+- README.md -- Quick start
+- docs/PHILOSOPHY.md -- Design principles
+- docs/GETTING_STARTED.md -- First-time setup
 
 ---
 

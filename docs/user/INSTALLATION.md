@@ -1,13 +1,13 @@
 # traceflux Installation Guide
 
-**Last Updated**: 2026-03-07  
-**Version**: v1.0 (Ready)
+LAST UPDATED: 2026-03-07
+VERSION: v1.0 (Ready)
 
 ---
 
 ## Quick Start
 
-**Recommended**: Install via pipx from GitHub
+RECOMMENDED: Install via pipx from GitHub
 
 ```bash
 pipx install git+https://github.com/tracer-mohist/traceflux.git
@@ -20,7 +20,7 @@ traceflux --help
 
 ### Method 1: pipx from GitHub (Recommended)
 
-**Best for**: Most users, simple installation, automatic updates
+BEST FOR: Most users, simple installation, automatic updates
 
 ```bash
 # Install latest development version
@@ -37,18 +37,18 @@ traceflux --help
 traceflux search "pattern" .
 ```
 
-**Pros**:
-- ✅ No PyPI registration required
-- ✅ Instant access to latest features
-- ✅ Easy to update (`pipx upgrade traceflux`)
-- ✅ Isolated environment (no dependency conflicts)
-- ✅ No sudo required
+PROS:
+-  No PyPI registration required
+-  Instant access to latest features
+-  Easy to update (`pipx upgrade traceflux`)
+-  Isolated environment (no dependency conflicts)
+-  No sudo required
 
-**Cons**:
-- ⚠️ Installation command is longer
-- ⚠️ Requires git to be installed
+CONS:
+-  Installation command is longer
+-  Requires git to be installed
 
-**Requirements**:
+REQUIREMENTS:
 - Python 3.10+
 - pipx (`pip install pipx` or `pipx install pipx`)
 - git
@@ -57,7 +57,7 @@ traceflux search "pattern" .
 
 ### Method 2: pip from GitHub
 
-**Best for**: System-wide installation, custom environments
+BEST FOR: System-wide installation, custom environments
 
 ```bash
 # Install to current Python environment
@@ -70,20 +70,20 @@ python3.11 -m pip install git+https://github.com/tracer-mohist/traceflux.git
 pip install -e git+https://github.com/tracer-mohist/traceflux.git#egg=traceflux
 ```
 
-**Pros**:
-- ✅ Works with any Python environment
-- ✅ No additional tools needed (just pip)
-- ✅ Flexible installation options
+PROS:
+-  Works with any Python environment
+-  No additional tools needed (just pip)
+-  Flexible installation options
 
-**Cons**:
-- ⚠️ May conflict with system packages
-- ⚠️ Requires proper Python environment setup
+CONS:
+-  May conflict with system packages
+-  Requires proper Python environment setup
 
 ---
 
 ### Method 3: Install from Source
 
-**Best for**: Developers, offline installation, customization
+BEST FOR: Developers, offline installation, customization
 
 ```bash
 # Clone repository
@@ -101,20 +101,20 @@ pipx install pdm
 pdm install
 ```
 
-**Pros**:
-- ✅ Full control over installation
-- ✅ Can modify source code
-- ✅ Works offline after cloning
+PROS:
+-  Full control over installation
+-  Can modify source code
+-  Works offline after cloning
 
-**Cons**:
-- ⚠️ Requires git clone
-- ⚠️ More steps than other methods
+CONS:
+-  Requires git clone
+-  More steps than other methods
 
 ---
 
 ### Method 4: Run Directly (Development)
 
-**Best for**: Testing, development, no installation needed
+BEST FOR: Testing, development, no installation needed
 
 ```bash
 # Clone repository
@@ -131,14 +131,14 @@ pip install -e .
 traceflux --help
 ```
 
-**Pros**:
-- ✅ No installation required
-- ✅ Quick testing
-- ✅ Easy debugging
+PROS:
+-  No installation required
+-  Quick testing
+-  Easy debugging
 
-**Cons**:
-- ⚠️ Need to specify full path or activate venv
-- ⚠️ Not convenient for regular use
+CONS:
+-  Need to specify full path or activate venv
+-  Not convenient for regular use
 
 ---
 
@@ -199,7 +199,7 @@ traceflux associations "hello" test.txt --hops 1
 ```
 
 Expected output:
-```
+```bash
 SUCCESS: Found 'hello' in 1 file(s)
 
   test.txt
@@ -268,7 +268,7 @@ rm -rf ~/.cache/pip/wheels/traceflux*
 
 ### Issue: `pipx: command not found`
 
-**Solution**:
+SOLUTION:
 ```bash
 # Install pipx
 python3 -m pip install --user pipx
@@ -280,14 +280,14 @@ source ~/.bashrc  # or ~/.zshrc
 
 ### Issue: `permission denied` during installation
 
-**Solution**:
+SOLUTION:
 - Don't use `sudo` with pipx
 - Use `--user` flag with pip: `pip install --user ...`
 - Use virtual environment
 
 ### Issue: Python version too old
 
-**Solution**:
+SOLUTION:
 traceflux requires Python 3.10+. Check version:
 ```bash
 python --version
@@ -299,7 +299,7 @@ If older than 3.10:
 
 ### Issue: Installation hangs or fails
 
-**Solution**:
+SOLUTION:
 ```bash
 # Try with verbose output
 pipx install -v git+https://github.com/tracer-mohist/traceflux.git
@@ -315,22 +315,22 @@ pipx install git+https://github.com/tracer-mohist/traceflux.git
 
 ## Why GitHub Installation Instead of PyPI?
 
-**Short answer**: Simpler, faster, no extra authentication needed.
+SHORT ANSWER: Simpler, faster, no extra authentication needed.
 
-**Long answer**:
+LONG ANSWER:
 
 | Aspect | GitHub Installation | PyPI Publication |
 |--------|--------------------|------------------|
-| **Setup** | None (just git) | PyPI account + API token |
-| **Publication** | `git push` | Complex upload process |
-| **Updates** | Instant | Requires PyPI upload |
-| **Version Control** | Tags/branches | Semantic versioning required |
-| **Authentication** | None (public repo) | API token management |
-| **Best For** | Early stage, personal projects | Mature projects, wide distribution |
+| SETUP | None (just git) | PyPI account + API token |
+| PUBLICATION | `git push` | Complex upload process |
+| UPDATES | Instant | Requires PyPI upload |
+| VERSION CONTROL | Tags/branches | Semantic versioning required |
+| AUTHENTICATION | None (public repo) | API token management |
+| BEST FOR | Early stage, personal projects | Mature projects, wide distribution |
 
-**Current Decision**: GitHub installation is sufficient for traceflux v1.0.
+CURRENT DECISION: GitHub installation is sufficient for traceflux v1.0.
 
-**Future**: May publish to PyPI if user base grows and demand increases.
+FUTURE: May publish to PyPI if user base grows and demand increases.
 
 ---
 
@@ -343,6 +343,6 @@ pipx install git+https://github.com/tracer-mohist/traceflux.git
 
 ---
 
-**Support**: Open an issue on [GitHub](https://github.com/tracer-mohist/traceflux/issues)
+SUPPORT: Open an issue on [GitHub](https://github.com/tracer-mohist/traceflux/issues)
 
-**License**: MIT
+LICENSE: MIT

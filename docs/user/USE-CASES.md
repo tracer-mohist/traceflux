@@ -32,7 +32,7 @@ traceflux associations "graph" src/ --hops 2
 
 ### Result
 
-You discover: pagerank.py, graph.py, cooccurrence.py — the core modules.
+You discover: pagerank.py, graph.py, cooccurrence.py -- the core modules.
 
 ---
 
@@ -147,9 +147,9 @@ You discover: common testing patterns, class structure, method naming convention
 
 ## Related Documents
 
-- docs/USAGE.md — Command reference
-- docs/GETTING_STARTED.md — Quick start
-- README.md — Project overview
+- docs/USAGE.md -- Command reference
+- docs/GETTING_STARTED.md -- Quick start
+- README.md -- Project overview
 
 ---
 

@@ -1,21 +1,21 @@
 # GitHub Branch Protection Research
 
-**Purpose**: GitHub API reference and technical details for maintainers.
+PURPOSE: GitHub API reference and technical details for maintainers.
 
-**For contributor rules**: See BRANCH_PROTECTION.md
+For contributor rules: See BRANCH_PROTECTION.md
 
 ---
 
-**Date**: 2026-03-10
-**Repository**: tracer-mohist/traceflux
+Date: 2026-03-10
+Repository: tracer-mohist/traceflux
 
 ---
 
 ## Question
 
-**Is main branch protection effective for repo owner?**
+Is main branch protection effective for repo owner?
 
-**Answer: YES** - When `enforce_admins: true`, protection applies to everyone including owner.
+Answer: YES - When `enforce_admins: true`, protection applies to everyone including owner.
 
 ---
 
@@ -41,19 +41,19 @@ gh api /repos/tracer-mohist/traceflux/branches/main/protection
 
 ### GitHub's Design Philosophy
 
-1. **Prevent Accidents**
+1. Prevent Accidents
    - Even owners make mistakes
    - Protection prevents accidental breaks
 
-2. **Audit Trail**
+2. Audit Trail
    - All changes via PR
    - Creates clear history
 
-3. **CI Enforcement**
+3. CI Enforcement
    - Tests must pass before merge
    - Protects code quality
 
-4. **Team Consistency**
+4. Team Consistency
    - Same rules for everyone
    - No special privileges
 
@@ -76,7 +76,7 @@ gh api -X PUT /repos/tracer-mohist/traceflux/branches/main/protection \
   -F required_pull_request_reviews='{"required_approving_review_count":1}'
 ```
 
-**Risk**: Temporarily removes all protection
+RISK: Temporarily removes all protection
 
 ---
 
@@ -89,7 +89,7 @@ gh api -X PUT /repos/tracer-mohist/traceflux/branches/main/protection \
   -F allow_force_pushes=true
 ```
 
-**Risk**: Reduces protection level permanently
+RISK: Reduces protection level permanently
 
 ---
 
@@ -105,19 +105,19 @@ gh pr create --title "Phase 8: Infrastructure" --body "See status report"
 gh pr merge --merge
 ```
 
-**Benefit**: Follows best practices, tests CI/CD
+Benefit: Follows best practices, tests CI/CD
 
 ---
 
 ## GitHub API Endpoints
 
 ### Get Protection
-```
+```javascript
 GET /repos/{owner}/{repo}/branches/{branch}/protection
 ```
 
 ### Update Protection
-```
+```javascript
 PUT /repos/{owner}/{repo}/branches/{branch}/protection
 ```
 
@@ -130,7 +130,7 @@ Parameters:
 - etc.
 
 ### Delete Protection
-```
+```javascript
 DELETE /repos/{owner}/{repo}/branches/{branch}/protection
 ```
 
@@ -138,14 +138,14 @@ DELETE /repos/{owner}/{repo}/branches/{branch}/protection
 
 ## Recommendation
 
-**Use PR Workflow (Option 3)**
+Use PR Workflow (Option 3)
 
 Why:
-1. ✅ Follows best practices
-2. ✅ Tests CI/CD workflows
-3. ✅ Creates audit trail
-4. ✅ No security risk
-5. ✅ Proper Git workflow
+1.  Follows best practices
+2.  Tests CI/CD workflows
+3.  Creates audit trail
+4.  No security risk
+5.  Proper Git workflow
 
 ---
 
