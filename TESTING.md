@@ -41,7 +41,7 @@ pdm run pytest --cov=src/traceflux
 
 ### File Naming
 
-```
+```text
 tests/
 ├── test_scanner_unit.py          # Unit tests for scanner.py
 ├── test_graph_unit.py            # Unit tests for graph.py
@@ -52,9 +52,9 @@ tests/
 
 ### Naming Pattern
 
-- test_*_unit.py — Unit tests
-- test_*_integration.py — Integration tests
-- test_*_e2e.py — E2E tests
+- test_*_unit.py - Unit tests
+- test_*_integration.py - Integration tests
+- test_*_e2e.py - E2E tests
 
 ---
 
@@ -110,9 +110,9 @@ All tests must pass before merge.
 
 ## Related Documents
 
-- docs/TESTING-PHILOSOPHY.md — Core testing principles
-- CONTRIBUTING.md — How to contribute
-- docs/PHILOSOPHY.md — Design philosophy
+- docs/TESTING-PHILOSOPHY.md - Core testing principles
+- CONTRIBUTING.md - How to contribute
+- docs/PHILOSOPHY.md - Design philosophy
 
 ---
 
