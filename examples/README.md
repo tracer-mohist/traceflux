@@ -4,7 +4,7 @@ Practical usage examples for real-world scenarios.
 
 traceflux works like `grep` or `rg`:
 - Search files/directories directly
-- **Or** read from stdin (pipe input)
+- OPTION: read from stdin (pipe input)
 - Output can be piped to other tools
 
 ---
@@ -64,157 +64,72 @@ traceflux associations "pattern" src/ --json | \
 
 ## Example Scripts
 
-### explore.sh — Iterative Exploration
+### explore.sh -- Iterative Exploration
 
 Explore a codebase by following associations:
 
 ```bash
 #!/bin/bash
-# Usage: ./explore.sh <start_term> <path>
-
-TERM=$1
-PATH=$2
-
-echo "Starting exploration from: $TERM"
-echo "=============================="
-
+TERM=$1; PATH=$2
 for i in {1..3}; do
-    echo ""
-    echo "=== Hop $i ==="
-    
-    # Get top association
-    NEXT=$(traceflux associations "$TERM" $PATH --json | \
-             jq -r '.associations[0].term')
-    
-    echo "Discovered: $NEXT"
-    
-    # Search for it
+    NEXT=$(traceflux associations "$TERM" $PATH --json | jq -r '.associations[0].term')
+    echo "=== Hop $i: $NEXT ==="
     traceflux search "$NEXT" $PATH --limit 5
-    
-    # Move to next term
     TERM=$NEXT
 done
 ```
 
-**Usage:**
-```bash
-./explore.sh "proxy" src/
-```
+USAGE: `./explore.sh "proxy" src/`
 
 ---
 
-### find-related.sh — Find Related Files
+### find-related.sh -- Find Related Files
 
 Find files related to a concept:
 
 ```bash
 #!/bin/bash
-# Usage: ./find-related.sh <term> <path>
-
-TERM=$1
-PATH=$2
-
-# Get associations
-ASSOCS=$(traceflux associations "$TERM" $PATH --json | \
-           jq -r '.associations[:10][].term')
-
-# Search for each association
-for assoc in $ASSOCS; do
-    FILES=$(traceflux search "$assoc" $PATH --json | \
-              jq -r '.results[].file' | sort -u)
-    
-    if [ -n "$FILES" ]; then
-        echo "=== $assoc ==="
-        echo "$FILES"
-        echo ""
-    fi
+TERM=$1; PATH=$2
+for assoc in $(traceflux associations "$TERM" $PATH --json | jq -r '.associations[:10][].term'); do
+    FILES=$(traceflux search "$assoc" $PATH --json | jq -r '.results[].file' | sort -u)
+    [ -n "$FILES" ] && echo "=== $assoc ===" && echo "$FILES"
 done
 ```
 
-**Usage:**
-```bash
-./find-related.sh "PageRank" src/
-```
+USAGE: `./find-related.sh "PageRank" src/`
 
 ---
 
-### code-explorer.sh — Code Discovery Workflow
+### code-explorer.sh -- Code Discovery Workflow
 
 Complete code exploration workflow:
 
 ```bash
 #!/bin/bash
-# Usage: ./code-explorer.sh <concept> <codebase_path>
-
-CONCEPT=$1
-CODEBASE=$2
-
-echo "🔍 Exploring: $CONCEPT in $CODEBASE"
-echo ""
-
-# Step 1: Search for the concept
-echo "📍 Step 1: Searching for '$CONCEPT'..."
-traceflux search "$CONCEPT" $CODEBASE --limit 5
-echo ""
-
-# Step 2: Find related terms
-echo "🔗 Step 2: Finding related terms..."
-traceflux associations "$CONCEPT" $CODEBASE --hops 2 --limit 10
-echo ""
-
-# Step 3: List common patterns
-echo "📊 Step 3: Common patterns in codebase..."
-traceflux patterns $CODEBASE --min-length 5 --limit 20
-echo ""
-
-echo "✅ Exploration complete!"
-echo "💡 Tip: Use --json for programmatic access"
+CONCEPT=$1; CODEBASE=$2
+echo "Exploring: $CONCEPT in $CODEBASE"
+echo "Step 1: Searching..." && traceflux search "$CONCEPT" $CODEBASE --limit 5
+echo "Step 2: Related terms..." && traceflux associations "$CONCEPT" $CODEBASE --hops 2 --limit 10
+echo "Step 3: Patterns..." && traceflux patterns $CODEBASE --min-length 5 --limit 20
 ```
 
-**Usage:**
-```bash
-./code-explorer.sh "database" src/
-```
+USAGE: `./code-explorer.sh "database" src/`
 
 ---
 
-### doc-navigator.sh — Documentation Navigation
+### doc-navigator.sh -- Documentation Navigation
 
 Navigate documentation by associations:
 
 ```bash
 #!/bin/bash
-# Usage: ./doc-navigator.sh <topic> <docs_path>
-
-TOPIC=$1
-DOCS=$2
-
-echo "📚 Navigating documentation: $TOPIC"
-echo ""
-
-# Find related topics
+TOPIC=$1; DOCS=$2
 RELATED=$(traceflux associations "$TOPIC" $DOCS --json)
-
 echo "Related topics:"
-echo "$RELATED" | jq -r '.associations[] | "  • \(.term) (strength: \(.strength))"'
-
-# Show which files contain related topics
-echo ""
-echo "Files covering related topics:"
-echo "$RELATED" | jq -r '.associations[:5][].term' | while read term; do
-    FILES=$(traceflux search "$term" $DOCS --json | \
-              jq -r '.results[].file' | head -3)
-    if [ -n "$FILES" ]; then
-        echo "  $term:"
-        echo "$FILES" | sed 's/^/    /'
-    fi
-done
+echo "$RELATED" | jq -r '.associations[] | "  - \(.term) (strength: \(.strength))"'
 ```
 
-**Usage:**
-```bash
-./doc-navigator.sh "authentication" docs/
-```
+USAGE: `./doc-navigator.sh "authentication" docs/`
 
 ---
 
@@ -332,6 +247,6 @@ Have a useful pattern? Share it!
 
 ---
 
-**Remember**: traceflux is for **discovery**, not just search.
+REMEMBER: traceflux is for discovery, not just search.
 
 Let the associations guide you.

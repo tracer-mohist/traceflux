@@ -33,7 +33,7 @@ fi
 for assoc in $ASSOCS; do
     FILES=$($TRACEFLUX search "$assoc" $PATH --json 2>/dev/null | \
               jq -r '.results[].file' 2>/dev/null | sort -u)
-    
+
     if [ -n "$FILES" ]; then
         echo "=== $assoc ==="
         echo "$FILES" | sed 's/^/  /'

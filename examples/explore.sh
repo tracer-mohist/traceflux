@@ -27,21 +27,21 @@ echo "=============================="
 for i in $(seq 1 $HOPS); do
     echo ""
     echo "=== Hop $i ==="
-    
+
     # Get top association
     NEXT=$($TRACEFLUX associations "$TERM" $PATH --json 2>/dev/null | \
              jq -r '.associations[0].term // empty')
-    
+
     if [ -z "$NEXT" ]; then
         echo "No more associations found."
         break
     fi
-    
+
     echo "Discovered: $NEXT"
-    
+
     # Search for it
     $TRACEFLUX search "$NEXT" $PATH --limit 3 2>/dev/null
-    
+
     # Move to next term
     TERM=$NEXT
 done
