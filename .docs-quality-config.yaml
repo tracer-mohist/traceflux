@@ -1,11 +1,19 @@
 # Documentation Quality Checker Configuration
 #
-# Purpose: Configure whitelist and rules for check-docs-quality.py
+# Purpose: Configure whitelist and ignore patterns for check-docs-quality.py
 #
 # Philosophy:
 #   - Whitelist is for exceptions, not the rule
 #   - Keep whitelist minimal to encourage good documentation habits
 #   - Document why each whitelist entry exists
+#
+# Scope:
+#   This configuration is for AUTOMATED checks only.
+#   Style guidelines (Simple English, etc.) are documented but not enforced by tools.
+
+# =============================================================================
+# AUTOMATED RULES (Enforced by check-docs-quality.py)
+# =============================================================================
 
 # File length whitelist
 # Files that can exceed MAX_LINES (256)
@@ -13,10 +21,9 @@ line_whitelist:
   - CHANGELOG.md
   - CHANGELOG
   - HISTORY.md
-
 # Reason: Changelogs are inherently long lists
 
-# Path patterns to ignore
+# Path patterns to ignore (not documentation)
 ignore_patterns:
   - "\\.git/"
   - "\\.venv/"
@@ -24,19 +31,21 @@ ignore_patterns:
   - "__pycache__/"
   - "\\.pyc$"
   - "test_corpus/"
+# Reason: Generated files, dependencies, test fixtures
 
-# Reason: Not documentation (generated, dependencies, tests)
-
-# Simple English configuration
-simple_english:
-  enabled: false  # WARNING: Currently disabled - requires NLP library
-  max_sentence_length: 25
-  check_active_voice: false
-  check_idioms: false
-
-# Reason: NLP libraries add heavy dependencies. Consider future implementation.
-
-# Notes:
-# - Rules 1-5 (file length, ASCII, emoji, code block type, one code block per heading) are always enforced
-# - Rule 6 (Simple English) is optional and currently disabled
-# - Whitelist should be reviewed periodically and reduced when possible
+# =============================================================================
+# STYLE GUIDELINES (Manual review, not automated)
+# =============================================================================
+#
+# The following are writing guidelines for contributors, NOT automated checks:
+#
+# - Write in Simple English (sentences < 25 words, active voice, no idioms)
+# - Use imperative mood in instructions
+# - One concept per section
+# - Explain "why" not just "what"
+#
+# These are enforced through code review, not automated tools.
+# Rationale: NLP-based style checking requires heavy dependencies and has
+# high false positive rates. Human review is more effective for style.
+#
+# =============================================================================
