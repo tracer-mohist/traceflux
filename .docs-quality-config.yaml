@@ -30,17 +30,11 @@ line_whitelist:
 # GETTING_STARTED.md: Complete contributor onboarding with setup steps
 
 # Path patterns to ignore (not documentation)
-# Note: Use raw regex patterns (backslash is literal in YAML single quotes)
+# NOTE: Primary ignore patterns come from .gitignore
+# These are additional patterns specific to docs quality checker
 ignore_patterns:
-  - \.git/
-  - \.venv/
-  - node_modules/
-  - __pycache__/
-  - \.pyc$
   - test_corpus/
-  - \.pytest_cache/
-  - \.github/
-# Reason: Generated files, dependencies, test fixtures
+# Reason: Test fixtures, not documentation
 
 # =============================================================================
 # STYLE GUIDELINES (Manual review, not automated)
