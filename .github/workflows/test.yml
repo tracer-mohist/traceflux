@@ -1,10 +1,10 @@
 # .github/workflows/test.yml
 #
-# Test and lint on pull requests
-# Parallel jobs for faster feedback
+# CI for pull requests
+# Runs test, lint, commit message, and docs checks in parallel
 #
 
-name: Test
+name: CI
 
 on:
   pull_request:
@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: read
 
 jobs:
   test:
@@ -21,9 +22,19 @@ jobs:
       cancel-in-progress: true
     steps:
       - uses: actions/checkout@v4
+
       - uses: pdm-project/setup-pdm@v4
         with:
           python-version: '3.12'
+
+      - name: Cache PDM packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pdm
+          key: ${{ runner.os }}-pdm-${{ hashFiles('pdm.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pdm-
+
       - run: pdm install --with dev
       - run: pdm run pytest -v
 
@@ -34,10 +45,51 @@ jobs:
       cancel-in-progress: true
     steps:
       - uses: actions/checkout@v4
+
       - uses: pdm-project/setup-pdm@v4
         with:
           python-version: '3.12'
+
+      - name: Cache PDM packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pdm
+          key: ${{ runner.os }}-pdm-${{ hashFiles('pdm.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pdm-
+
       - run: pdm install --with dev
       - run: pdm run black --check src/ tests/
       - run: pdm run isort --check-only src/ tests/
       - run: pdm run flake8 --max-line-length=100 --ignore=E501,W503,F401,F841 src/ tests/
+
+  commitlint:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-commitlint
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: wagoid/commitlint-github-action@v6
+        with:
+          configFile: .commitlintrc.json
+
+  docs:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-docs
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run documentation quality checker
+        run: |
+          python scripts/check-docs-quality.py .
