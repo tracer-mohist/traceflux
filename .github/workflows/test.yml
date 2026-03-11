@@ -1,7 +1,7 @@
 # .github/workflows/test.yml
 #
-# Test and lint on pull requests only
-# Push to main triggers CD workflow (which includes testing)
+# Test and lint on pull requests
+# Parallel jobs for faster feedback
 #
 
 name: Test
@@ -17,33 +17,27 @@ jobs:
   test:
     runs-on: ubuntu-latest
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
+      group: ${{ github.workflow }}-${{ github.ref }}-test
       cancel-in-progress: true
     steps:
       - uses: actions/checkout@v4
-
       - uses: pdm-project/setup-pdm@v4
         with:
           python-version: '3.12'
-
       - run: pdm install --with dev
-
       - run: pdm run pytest -v
 
   lint:
     runs-on: ubuntu-latest
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
+      group: ${{ github.workflow }}-${{ github.ref }}-lint
       cancel-in-progress: true
     steps:
       - uses: actions/checkout@v4
-
       - uses: pdm-project/setup-pdm@v4
         with:
           python-version: '3.12'
-
       - run: pdm install --with dev
-
       - run: pdm run black --check src/ tests/
       - run: pdm run isort --check-only src/ tests/
       - run: pdm run flake8 --max-line-length=100 --ignore=E501,W503,F401,F841 src/ tests/
