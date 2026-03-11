@@ -18,7 +18,8 @@ Exit codes:
     1 - Errors found
 
 Configuration:
-    .docs-quality-config.yaml (optional)
+    .gitignore (required) - Project ignore patterns
+    .docs-quality-config.yaml (optional) - Additional config
 """
 
 import re
@@ -33,85 +34,114 @@ try:
 except ImportError:
     YAML_AVAILABLE = False
 
+try:
+    import pathspec
+
+    PATHSPEC_AVAILABLE = True
+except ImportError:
+    PATHSPEC_AVAILABLE = False
+
 # Configuration
 MAX_LINES = 256
 DEFAULT_LINE_WHITELIST = {"CHANGELOG.md", "CHANGELOG", "HISTORY.md"}
-DEFAULT_IGNORE_PATTERNS = [
-    r"\.git/",
-    r"\.venv/",
-    r"node_modules/",
-    r"__pycache__/",
-    r"\.pyc$",
-    r"test_corpus/",
-]
 
-# ASCII printable range per issue #40
-ASCII_MIN = 0x20
-ASCII_MAX = 0x7E
 
-# Emoji ranges to block (outside of quotes/code)
-EMOJI_RANGES = [
-    (0x1F300, 0x1F5FF),  # misc symbols & pictographs
-    (0x1F600, 0x1F64F),  # emoticons
-    (0x1F680, 0x1F6FF),  # transport & map
-    (0x2600, 0x26FF),  # misc symbols
-    (0x2700, 0x27BF),  # dingbats
-    (0xFE00, 0xFE0F),  # variation selectors
-    (0x1F900, 0x1F9FF),  # supplemental symbols & pictographs
-    (0x1F1E6, 0x1F1FF),  # flags
-]
+def load_gitignore_patterns() -> List[str]:
+    """Load patterns from .gitignore file."""
+    gitignore_path = Path(".gitignore")
+    if not gitignore_path.exists():
+        print(
+            "ERROR: .gitignore not found. This is not a normal project structure.",
+            file=sys.stderr,
+        )
+        print(
+            "Please create a .gitignore file or run from project root.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    patterns = []
+    with open(gitignore_path) as f:
+        for line in f:
+            line = line.strip()
+            # Skip empty lines and comments
+            if not line or line.startswith("#"):
+                continue
+            patterns.append(line)
+
+    return patterns
 
 
 def load_config() -> dict:
     """Load configuration from .docs-quality-config.yaml if available."""
     config_path = Path(".docs-quality-config.yaml")
-    if not config_path.exists() or not YAML_AVAILABLE:
-        return {
-            "line_whitelist": DEFAULT_LINE_WHITELIST,
-            "ignore_patterns": DEFAULT_IGNORE_PATTERNS,
-        }
+    line_whitelist = set(DEFAULT_LINE_WHITELIST)
 
-    try:
-        with open(config_path) as f:
-            config = yaml.safe_load(f)
-        return {
-            "line_whitelist": set(config.get("line_whitelist", DEFAULT_LINE_WHITELIST)),
-            "ignore_patterns": config.get("ignore_patterns", DEFAULT_IGNORE_PATTERNS),
-        }
-    except Exception:
-        return {
-            "line_whitelist": DEFAULT_LINE_WHITELIST,
-            "ignore_patterns": DEFAULT_IGNORE_PATTERNS,
-        }
+    if config_path.exists() and YAML_AVAILABLE:
+        try:
+            with open(config_path) as f:
+                config = yaml.safe_load(f)
+            line_whitelist = set(config.get("line_whitelist", DEFAULT_LINE_WHITELIST))
+        except Exception:
+            pass
+
+    return {"line_whitelist": line_whitelist}
 
 
 def is_emoji(code: int) -> bool:
     """Check if a character code is emoji."""
+    EMOJI_RANGES = [
+        (0x1F300, 0x1F5FF),
+        (0x1F600, 0x1F64F),
+        (0x1F680, 0x1F6FF),
+        (0x2600, 0x26FF),
+        (0x2700, 0x27BF),
+        (0xFE00, 0xFE0F),
+        (0x1F900, 0x1F9FF),
+        (0x1F1E6, 0x1F1FF),
+    ]
     return any(lo <= code <= hi for lo, hi in EMOJI_RANGES)
 
 
-def should_ignore(path: str, ignore_patterns: List[str]) -> bool:
-    """Check if a path should be ignored."""
-    return any(re.search(pattern, path) for pattern in ignore_patterns)
-
-
-def collect_md_files(paths: List[str], ignore_patterns: List[str]) -> List[Path]:
-    """Collect markdown files from paths."""
+def collect_md_files(paths: List[str], gitignore_patterns: List[str]) -> List[Path]:
+    """Collect markdown files from paths, respecting .gitignore."""
     files = []
+
+    # Use pathspec if available, otherwise use simple pattern matching
+    if PATHSPEC_AVAILABLE:
+        spec = pathspec.PathSpec.from_lines("gitwildmatch", gitignore_patterns)
+    else:
+        spec = None
+
     for path in paths:
         p = Path(path)
         if not p.exists():
             continue
+
         if p.is_file() and p.suffix == ".md":
-            if not should_ignore(str(p), ignore_patterns):
+            if not is_ignored(str(p), spec, gitignore_patterns):
                 files.append(p)
         elif p.is_dir():
             for f in p.rglob("*.md"):
                 f_str = str(f)
-                f_normalized = f_str.replace("\\", "/")
-                if not should_ignore(f_normalized, ignore_patterns):
+                if not is_ignored(f_str, spec, gitignore_patterns):
                     files.append(f)
+
     return files
+
+
+def is_ignored(path: str, spec: Optional["pathspec.PathSpec"], patterns: List[str]) -> bool:
+    """Check if a path should be ignored."""
+    if spec is not None:
+        return spec.match_file(path)
+
+    # Fallback: simple pattern matching
+    for pattern in patterns:
+        # Convert gitignore pattern to regex
+        regex = pattern.replace(".", r"\.").replace("*", ".*").replace("/", r"\/")
+        if re.search(regex, path):
+            return True
+    return False
 
 
 def check_file_length(content: str, filepath: Path, line_whitelist: Set[str]) -> Optional[str]:
@@ -142,65 +172,44 @@ def check_line_ascii_and_emoji(
     in_inline_code: bool,
     in_blockquote: bool,
 ) -> List[str]:
-    """
-    Check a line for ASCII and emoji violations per issue #40.
-
-    Rules:
-    - ASCII printable only (0x20-0x7E) in normal text
-    - No emoji in normal text
-    - Exemptions: blockquotes (>), code blocks (```), inline code (`)
-
-    Returns list of error messages (empty if no errors)
-    """
+    """Check a line for ASCII and emoji violations per issue #40."""
     errors = []
 
-    # Exempt: inside code blocks or blockquotes
     if in_code_block or in_blockquote:
         return errors
 
-    # Check each character
     i = 0
     in_inline = in_inline_code
     while i < len(line):
         ch = line[i]
         code = ord(ch)
 
-        # Track inline code state
         if ch == "`":
-            # Count backticks
             backtick_count = 1
             j = i + 1
             while j < len(line) and line[j] == "`":
                 backtick_count += 1
                 j += 1
-
-            # Toggle inline code if odd number of backticks
             if backtick_count % 2 == 1:
                 in_inline = not in_inline
-
             i = j
             continue
 
-        # Skip if inside inline code
         if in_inline:
             i += 1
             continue
 
-        # Check ASCII printable
-        if ASCII_MIN <= code <= ASCII_MAX:
+        if 0x20 <= code <= 0x7E:
             i += 1
             continue
 
-        # Common whitespace (tab, newline, CR)
         if code in (9, 10, 13):
             i += 1
             continue
 
-        # Check if emoji
         if is_emoji(code):
             errors.append(f"{filepath}:{line_num}: Emoji not allowed (U+{code:04X})")
         else:
-            # Non-ASCII, non-emoji character
             errors.append(f"{filepath}:{line_num}: Non-ASCII character not allowed (U+{code:04X})")
 
         i += 1
@@ -215,22 +224,19 @@ def check_markdown_emphasis(
     if in_code_block:
         return None
 
-    # Skip blockquotes
     if line.strip().startswith(">"):
         return None
 
-    # Check for **text** pattern
     if re.search(r"(?<!\*)\*\*[^*]+\*\*(?!\*)", line):
         stripped = line.strip()
-        # Allow ** at start if it's a list marker or separator
         if not (stripped.startswith("** ") and len(stripped) <= 4):
             return f"{filepath}:{line_num}: Markdown emphasis (**) not allowed. Use 'LABEL: content' format instead"
 
     return None
 
 
-def check_file(filepath: Path, line_whitelist: Set[str], ignore_patterns: List[str]) -> List[str]:
-    """Check a single markdown file."""
+def check_file(filepath: Path, line_whitelist: Set[str]) -> Tuple[List[str], List[str]]:
+    """Check a single markdown file. Returns (errors, warnings)."""
     errors = []
     warnings = []
 
@@ -239,25 +245,20 @@ def check_file(filepath: Path, line_whitelist: Set[str], ignore_patterns: List[s
     except Exception as e:
         return [f"{filepath}: Failed to read: {e}"]
 
-    # Check 1: File length
     error = check_file_length(content, filepath, line_whitelist)
     if error:
         errors.append(error)
 
-    # Check 2-5: Line-by-line checks
     lines = content.split("\n")
     in_code_block = False
     code_blocks_in_scope = 0
 
     for line_num, line in enumerate(lines, 1):
-        # Track heading scope
         if line.startswith("#"):
             code_blocks_in_scope = 0
 
-        # Track code blocks
         if line.strip().startswith("```"):
             if not in_code_block:
-                # Opening code block - check for type
                 type_error = check_code_block_type(line)
                 if type_error:
                     errors.append(f"{filepath}:{line_num}: {type_error}")
@@ -270,60 +271,53 @@ def check_file(filepath: Path, line_whitelist: Set[str], ignore_patterns: List[s
             in_code_block = not in_code_block
             continue
 
-        # Check inline code state
         in_inline_code = "`" in line
-
-        # Check blockquote state
         in_blockquote = line.strip().startswith(">")
 
-        # Check ASCII and emoji
         line_errors = check_line_ascii_and_emoji(
             line, filepath, line_num, in_code_block, in_inline_code, in_blockquote
         )
         errors.extend(line_errors)
 
-        # Check markdown emphasis
         emphasis_error = check_markdown_emphasis(line, filepath, line_num, in_code_block)
         if emphasis_error:
             errors.append(emphasis_error)
 
-    return errors + warnings
+    return errors, warnings
 
 
 def main(args: List[str]) -> int:
     """Main entry point."""
-    # Load configuration
     config = load_config()
     line_whitelist = config["line_whitelist"]
-    ignore_patterns = config["ignore_patterns"]
 
-    # Collect files
+    gitignore_patterns = load_gitignore_patterns()
+
     if args:
         files = [Path(f) for f in args if f.endswith(".md")]
     else:
-        # Default: check all markdown files in current directory
-        files = collect_md_files(["."], ignore_patterns)
+        files = collect_md_files(["."], gitignore_patterns)
 
     if not files:
         print("No markdown files to check.")
         return 0
 
-    # Check all files
     all_errors = []
+    all_warnings = []
     for filepath in sorted(files):
-        errors = check_file(filepath, line_whitelist, ignore_patterns)
+        errors, warnings = check_file(filepath, line_whitelist)
         all_errors.extend(errors)
+        all_warnings.extend(warnings)
 
-    # Report results
     for error in all_errors:
         print(error, file=sys.stderr)
 
-    error_count = len([e for e in all_errors if "WARNING:" not in e])
-    warning_count = len([e for e in all_errors if "WARNING:" in e])
+    for warning in all_warnings:
+        print(warning, file=sys.stderr)
 
-    print(f"Checked {len(files)} files: {error_count} error(s), {warning_count} warning(s)")
+    print(f"Checked {len(files)} files: {len(all_errors)} error(s), {len(all_warnings)} warning(s)")
 
-    return 1 if error_count > 0 else 0
+    return 1 if len(all_errors) > 0 else 0
 
 
 if __name__ == "__main__":
