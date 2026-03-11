@@ -1,14 +1,14 @@
 # Text Segmentation
 
-**Purpose**: Split text into readable units while preserving meaning.
+Purpose: Split text into readable units while preserving meaning.
 
-**NOTE**: Consolidated from research/01-foundations/ (2026-03-11)
+NOTE: Consolidated from research/01-foundations/ (2026-03-11)
 
 ---
 
 ## Core Principle
 
-**Space is NOT punctuation** — it is part of readable text.
+Space is NOT punctuation - it is part of readable text.
 
 ### Why This Matters
 
@@ -22,7 +22,7 @@ Wrong (space as punctuation):
 Right (space as readable):
   Segments: ["Hello world", "how are you"]
   Preserved: Natural phrases
-```
+```text
 
 ### Phrase Preservation Example
 
@@ -37,7 +37,7 @@ This preserves:
 - Complete sentence
 - Word order
 - Phrase structure ("quick brown fox", "lazy dog")
-```
+```text
 
 ---
 
@@ -45,20 +45,20 @@ This preserves:
 
 ### Punctuation Marks (Split Points)
 
-```
-, . ! ? ; : " ' ( ) [ ] { } < > « » „ " ' ... — – -
-```
+```text
+, . ! ? ; : " ' ( ) [ ] { } < > « » „ " ' ... - - -
+```text
 
 ### NOT Punctuation (Part of Content)
 
-```
+```text
 ' ' (space)
 '\t' (tab)
 '\n' (newline)
 '\r' (carriage return)
-```
+```text
 
-**Rationale**:
+Rationale:
 - Spaces separate words but are part of readable content
 - Removing spaces destroys word boundaries in English
 - Tabs/newlines are formatting, not semantic boundaries
@@ -78,9 +78,9 @@ Split text at punctuation, keeping spaces within segments.
 ### Step 3: Record Context
 
 For each segment, record:
-- **Content**: The readable text (may include spaces)
-- **Pre-punctuation**: Punctuation before segment (or START)
-- **Post-punctuation**: Punctuation after segment (or END)
+- Content: The readable text (may include spaces)
+- Pre-punctuation: Punctuation before segment (or START)
+- Post-punctuation: Punctuation after segment (or END)
 
 ### Example
 
@@ -99,11 +99,11 @@ Segments:
   3. Content: " How are you"
      Pre: "!", Post: "?"
      Type: hash("!?")
-```
+```text
 
 ### Type Identifier
 
-- Format: `(pre_punct, post_punct)` → 2-char string → hash
+- Format: `(pre_punct, post_punct)` -> 2-char string -> hash
 - Example: `hash(",!")` = integer ID
 - Benefit: Groups segments by punctuation context
 
@@ -141,9 +141,9 @@ Segments:
 
 ### Mitigation Strategies
 
-1. **Fallback to character-level**: When no punctuation, use n-gram analysis
-2. **Language detection**: Adapt punctuation rules per language
-3. **Normalization**: Standardize punctuation before segmentation
+1. Fallback to character-level: When no punctuation, use n-gram analysis
+2. Language detection: Adapt punctuation rules per language
+3. Normalization: Standardize punctuation before segmentation
 
 ---
 
@@ -175,7 +175,7 @@ def is_punctuation(char):
         return False
 
     return False
-```
+```text
 
 ### Segmentation Function
 
@@ -204,7 +204,7 @@ def segment_text(text):
         segments.append((current_segment, pre_punct, "END"))
 
     return segments
-```
+```text
 
 ---
 
@@ -216,5 +216,5 @@ def segment_text(text):
 
 ---
 
-**Last Updated**: 2026-03-11
-**Source Files**: `2026-03-06_space-is-readable*.md`, `2026-03-06_punctuation-segmentation*.md`
+Last Updated: 2026-03-11
+Source Files: `2026-03-06_space-is-readable*.md`, `2026-03-06_punctuation-segmentation*.md`

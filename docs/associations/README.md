@@ -1,6 +1,6 @@
 # Associations
 
-**Purpose**: Theory of associations and connections in text analysis.
+Purpose: Theory of associations and connections in text analysis.
 
 ---
 
@@ -14,10 +14,10 @@ How TraceFlux discovers and weights associations between concepts.
 
 ### Six Degrees
 
-- **File**: [six-degrees.md](./six-degrees.md)
-- **Topic**: Six degrees of separation applied to text associations
-- **Algorithm**: Multi-hop traversal with noise filtering
-- **Parts**: 3 (consolidated)
+- File: [six-degrees.md](./six-degrees.md)
+- Topic: Six degrees of separation applied to text associations
+- Algorithm: Multi-hop traversal with noise filtering
+- Parts: 3 (consolidated)
 
 ---
 
@@ -37,4 +37,4 @@ How TraceFlux discovers and weights associations between concepts.
 
 ---
 
-**NOTE**: Consolidated from research/02-associations/ (2026-03-11)
+NOTE: Consolidated from research/02-associations/ (2026-03-11)

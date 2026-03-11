@@ -45,7 +45,7 @@ traceflux search "pattern" src/ | grep -v test | head -20
 # Use index as input to other processes
 traceflux index src/ -o index.json
 cat index.json | jq '.patterns | keys'
-```
+```text
 
 ### 2. Human-Centric Output
 
@@ -56,7 +56,7 @@ Associations for 'pattern' (hops=2):
   pagerank                       strength: 0.300 (degree 1)
   detector                       strength: 0.298 (degree 1)
   suffix                         strength: 0.295 (degree 1)
-```
+```text
 
 Add `--json` for machine consumption.
 
@@ -117,7 +117,7 @@ PageRank -> Scores (pattern importance)
 AssociativeSearch -> Associations (ranked, multi-hop)
   ↓
 CLI -> Human-readable output
-```
+```text
 
 ---
 
@@ -142,7 +142,7 @@ grep -r "def main" src/
 
 # Use traceflux for discovery
 traceflux associations "main" src/
-```
+```text
 
 ###  Not a Knowledge Graph
 
@@ -194,14 +194,14 @@ Related: proxychains (0.85), git config (0.72), environment (0.65)
 Related: socks (0.91), tunnel (0.78), ssh -D (0.65)
 
 >>>
-```
+```text
 
 ### Phase 6: Corpus Comparison
 
 ```bash
 # What's unique to codebase A vs B?
 traceflux compare repo-a/ repo-b/
-```
+```text
 
 ---
 

@@ -17,7 +17,7 @@ git config core.hooksPath .githooks
 
 # Install code quality tools
 pip install black flake8 isort mypy
-```
+```text
 
 ---
 
@@ -37,7 +37,7 @@ isort src/ tests/
 # Check code quality
 black --check src/ tests/
 flake8 --max-line-length=100 --ignore=E501,W503 src/ tests/
-```
+```text
 
 ---
 
@@ -60,7 +60,7 @@ git push origin main --tags
 # - Run tests
 # - Check code quality
 # - Create GitHub Release
-```
+```text
 
 ---
 
@@ -79,7 +79,7 @@ git push origin feature/my-feature
 
 # 4. Open PR on GitHub
 # Use the PR template
-```
+```text
 
 ---
 
@@ -95,7 +95,7 @@ isort src/ tests/
 # Re-commit
 git add .
 git commit
-```
+```text
 
 ### Tests fail
 
@@ -105,7 +105,7 @@ pytest tests/test_file.py::test_function -v
 
 # Run all tests
 pytest -v
-```
+```text
 
 ### Version mismatch
 
@@ -116,7 +116,7 @@ grep '^__version__ = ' src/traceflux/__version__.py
 
 # Re-run release script
 ./scripts/release.sh <version>
-```
+```text
 
 ---
 
