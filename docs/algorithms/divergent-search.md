@@ -154,31 +154,31 @@ Example:
 def divergent_search(query, graph, top_k=10, diversity=0.5):
     """
     Get diverse associations for query.
-    
+
     Args:
         query: User's input
         graph: Association graph {node: {neighbor: weight}}
         top_k: Number of results
         diversity: 0.0 = pure frequency, 1.0 = pure diversity
-    
+
     Returns: List of (association, score) tuples
     """
     # Get direct neighbors
     neighbors = graph.get(query, {})
-    
+
     if not neighbors:
         return []
-    
+
     # Score by frequency
     freq_scores = {
         node: weight / max(neighbors.values())
         for node, weight in neighbors.items()
     }
-    
+
     # Score by diversity (dissimilarity to already-selected)
     selected = []
     diversity_scores = {}
-    
+
     for node in neighbors:
         if not selected:
             diversity_scores[node] = 1.0
@@ -189,17 +189,17 @@ def divergent_search(query, graph, top_k=10, diversity=0.5):
                 for s in selected
             ) / len(selected)
             diversity_scores[node] = 1.0 - avg_sim
-    
+
     # Combine scores
     final_scores = {
-        node: (1 - diversity) * freq_scores[node] + 
+        node: (1 - diversity) * freq_scores[node] +
               diversity * diversity_scores[node]
         for node in neighbors
     }
-    
+
     # Sort and return top-k
     results = sorted(final_scores.items(), key=lambda x: -x[1])[:top_k]
-    
+
     return results
 ```
 
@@ -311,5 +311,5 @@ System never predicts — always shows possibilities!
 
 ---
 
-**Last Updated**: 2026-03-11  
+**Last Updated**: 2026-03-11
 **Source Files**: `2026-03-06_divergent-associations*.md`

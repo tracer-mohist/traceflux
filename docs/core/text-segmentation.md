@@ -155,25 +155,25 @@ Segments:
 def is_punctuation(char):
     """
     Check if character is a punctuation mark (split point).
-    
+
     Returns True for: , . ! ? ; : " ' () [] {} etc.
     Returns False for: space, tab, newline, letters, digits, etc.
     """
     import unicodedata
     category = unicodedata.category(char)
-    
+
     # P categories are punctuation
     if category.startswith('P'):
         return True
-    
+
     # Some symbols act as punctuation
     if char in '...†‡-‰⁄⁊⁏⁐⁑⁓⁔⁕⁖⁗⁘⁙⁚⁛⁜⁝⁞':
         return True
-    
+
     # Explicitly exclude whitespace
     if char in ' \t\n\r':
         return False
-    
+
     return False
 ```
 
@@ -183,13 +183,13 @@ def is_punctuation(char):
 def segment_text(text):
     """
     Segment text by punctuation.
-    
+
     Returns: List of (content, pre_punct, post_punct) tuples
     """
     segments = []
     current_segment = ""
     pre_punct = "START"
-    
+
     for i, char in enumerate(text):
         if is_punctuation(char):
             if current_segment:
@@ -198,11 +198,11 @@ def segment_text(text):
             pre_punct = char
         else:
             current_segment += char
-    
+
     # Handle final segment
     if current_segment:
         segments.append((current_segment, pre_punct, "END"))
-    
+
     return segments
 ```
 
@@ -216,5 +216,5 @@ def segment_text(text):
 
 ---
 
-**Last Updated**: 2026-03-11  
+**Last Updated**: 2026-03-11
 **Source Files**: `2026-03-06_space-is-readable*.md`, `2026-03-06_punctuation-segmentation*.md`

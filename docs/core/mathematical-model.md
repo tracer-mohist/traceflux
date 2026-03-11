@@ -230,7 +230,7 @@ Where:
 ### Position Weight
 
 ```text
-pos_weight(p) = 
+pos_weight(p) =
   1.0  if p appears at start of text
   0.8  if p appears at end of text
   0.5  otherwise
@@ -297,5 +297,5 @@ Use entropy to:
 
 ---
 
-**Last Updated**: 2026-03-11  
+**Last Updated**: 2026-03-11
 **Source Files**: `2026-03-06_mathematical-formalization*.md`

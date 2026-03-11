@@ -22,15 +22,15 @@ from collections import defaultdict
 def build_cooccurrence_graph(documents, window_size=5):
     """
     Build co-occurrence graph from documents.
-    
+
     Args:
         documents: List of text documents
         window_size: Words within this distance are connected
-    
+
     Returns: Graph as adjacency dict {node: {neighbor: weight}}
     """
     graph = defaultdict(lambda: defaultdict(int))
-    
+
     for doc in documents:
         words = tokenize(doc)
         for i, word1 in enumerate(words):
@@ -39,7 +39,7 @@ def build_cooccurrence_graph(documents, window_size=5):
                 # Add edge (undirected)
                 graph[word1][word2] += 1
                 graph[word2][word1] += 1
-    
+
     return graph
 ```
 
@@ -71,19 +71,19 @@ from collections import deque
 def find_associations(graph, start_word, max_degrees=3):
     """
     Find words connected within max_degrees steps.
-    
+
     Returns: List of (word, degree, path, strength) tuples
     """
     visited = {start_word}
     queue = deque([(start_word, 0, [start_word])])
     associations = []
-    
+
     while queue:
         word, degree, path = queue.popleft()
-        
+
         if degree >= max_degrees:
             continue
-        
+
         for neighbor, weight in graph[word].items():
             if neighbor not in visited:
                 visited.add(neighbor)
@@ -92,7 +92,7 @@ def find_associations(graph, start_word, max_degrees=3):
                 strength = weight / degree
                 associations.append((neighbor, degree + 1, new_path, strength))
                 queue.append((neighbor, degree + 1, new_path))
-    
+
     # Sort by strength
     return sorted(associations, key=lambda x: -x[3])
 ```
@@ -188,16 +188,16 @@ def filter_by_strength(associations, min_strength=0.1):
 def filter_by_consistency(associations, min_paths=2):
     """
     Filter associations requiring multiple paths.
-    
+
     Valid association must have >= min_paths independent paths.
     """
     path_count = defaultdict(int)
     path_details = defaultdict(list)
-    
+
     for word, degree, path, strength in associations:
         path_count[word] += 1
         path_details[word].append((path, strength))
-    
+
     return [
         (word, min_degree, path_details[word][0], max_strength)
         for word, paths in path_details.items()
@@ -302,5 +302,5 @@ Optimization:
 
 ---
 
-**Last Updated**: 2026-03-11  
+**Last Updated**: 2026-03-11
 **Source Files**: `2026-03-06_six-degrees*.md`

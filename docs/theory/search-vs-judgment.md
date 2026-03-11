@@ -114,14 +114,14 @@ def find_associations_WRONG(graph, start_word):
     WRONG: Judge relevance inside search engine.
     """
     associations = bfs_search(graph, start_word)
-    
+
     # DON'T: Filter by "seems irrelevant"
     associations = [a for a in associations if is_relevant(a)]
-    
+
     # DON'T: Assume user intent
     if user_type == "developer":
         associations = filter_technical(associations)
-    
+
     return associations  # Over-filtered!
 ```
 
@@ -225,5 +225,5 @@ Repeat this when designing features:
 
 ---
 
-**Last Updated**: 2026-03-11  
+**Last Updated**: 2026-03-11
 **Source Files**: `2026-03-06_search-vs-judgment*.md`

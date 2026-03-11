@@ -117,7 +117,7 @@ def build_lzw_dict(texts):
     dictionary = {}
     code = 0
     current = ""
-    
+
     for text in texts:
         for char in text:
             candidate = current + char
@@ -127,7 +127,7 @@ def build_lzw_dict(texts):
                 dictionary[code] = current + char
                 code += 1
                 current = char
-    
+
     return dictionary
 ```
 
@@ -137,17 +137,17 @@ def build_lzw_dict(texts):
 def build_cooccurrence_graph(dictionary, texts):
     """Build co-occurrence graph from dictionary."""
     graph = defaultdict(lambda: defaultdict(float))
-    
+
     for text in texts:
         # Find all dictionary entries in text
         entries = find_entries(dictionary, text)
-        
+
         # Add edges between co-occurring entries
         for i, e1 in enumerate(entries):
             for e2 in entries[i+1:i+5]:  # Window of 5
                 graph[e1][e2] += 1
                 graph[e2][e1] += 1
-    
+
     return graph
 ```
 
@@ -159,7 +159,7 @@ def compute_pagerank(graph, damping=0.85, iterations=20):
     nodes = list(graph.keys())
     N = len(nodes)
     pr = {node: 1.0 / N for node in nodes}
-    
+
     for _ in range(iterations):
         new_pr = {}
         for node in nodes:
@@ -170,7 +170,7 @@ def compute_pagerank(graph, damping=0.85, iterations=20):
             )
             new_pr[node] = (1 - damping) / N + damping * rank_sum
         pr = new_pr
-    
+
     return pr
 ```
 
@@ -180,7 +180,7 @@ def compute_pagerank(graph, damping=0.85, iterations=20):
 def autocomplete(query, dictionary, pagerank, top_k=5):
     """
     Get autocomplete suggestions for query.
-    
+
     Returns: List of (suggestion, score) tuples
     """
     # Find all dictionary entries starting with query
@@ -188,13 +188,13 @@ def autocomplete(query, dictionary, pagerank, top_k=5):
         (code, entry) for code, entry in dictionary.items()
         if entry.startswith(query)
     ]
-    
+
     # Score by PageRank
     scored = [
         (entry, pagerank.get(code, 0))
         for code, entry in candidates
     ]
-    
+
     # Sort by score, return top-k
     return sorted(scored, key=lambda x: -x[1])[:top_k]
 ```
@@ -289,5 +289,5 @@ Solutions:
 
 ---
 
-**Last Updated**: 2026-03-11  
+**Last Updated**: 2026-03-11
 **Source Files**: `2026-03-06_lzwpagerank-autocomplete*.md`
