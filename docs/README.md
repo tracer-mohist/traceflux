@@ -25,4 +25,4 @@
 
 ---
 
-**Note**: This documentation structure follows layered architecture (user/contributor/internal) to separate concerns and improve navigation.
+NOTE: This documentation structure follows layered architecture (user/contributor/internal) to separate concerns and improve navigation.
