@@ -135,104 +135,31 @@ USAGE: `./doc-navigator.sh "authentication" docs/`
 
 ## Use Cases
 
-### 1. Onboarding to a New Codebase
+ONBOARDING: `./code-explorer.sh "main" src/` then `./explore.sh "main" src/`
 
-```bash
-# Start with a known concept
-./code-explorer.sh "main" src/
+CONFIG DISCOVERY: `traceflux associations "config" src/ --hops 2` then `./find-related.sh "config" src/`
 
-# Follow associations to understand architecture
-./explore.sh "main" src/
-```
+API DISCOVERY: `traceflux associations "api" src/ --json | jq -r '.associations[].term' | xargs -I {} traceflux search {} src/ --limit 3`
 
-### 2. Finding Configuration Options
-
-```bash
-# What config options exist?
-traceflux associations "config" src/ --hops 2
-
-# Which files contain them?
-./find-related.sh "config" src/
-```
-
-### 3. API Discovery
-
-```bash
-# Find all API-related code
-traceflux associations "api" src/ --json | \
-  jq -r '.associations[].term' | \
-  xargs -I {} traceflux search {} src/ --limit 3
-```
-
-### 4. Research Note Navigation
-
-```bash
-# Connect concepts in research notes
-./doc-navigator.sh "nilpotent" notes/
-```
+RESEARCH NOTES: `./doc-navigator.sh "nilpotent" notes/`
 
 ---
 
 ## Tips
 
-### Getting Meaningful Results
+MEANINGFUL RESULTS: Use `traceflux patterns src/ --min-length 8` for longer patterns, `--min-length 6 --limit 20` to filter by frequency. See `../README.md` for trade-offs.
 
-traceflux detects repeated patterns (not dictionary words):
+COMBINE WITH TOOLS:
+- Count: `traceflux search "pattern" src/ --json | jq '.results | map({file, count: .positions | length})'`
+- Unique files: `traceflux search "pattern" src/ --json | jq -r '.results[].file' | sort -u`
+- Refine: `traceflux associations "proxy" src/ | grep -E "(chain|tunnel|socks)"`
 
-```bash
-# Short patterns (may be fragments)
-traceflux patterns src/
+JSON AUTOMATION:
+- Extract terms: `traceflux associations "pattern" src/ --json | jq -r '.associations[].term'`
+- Filter by strength: `jq '.associations[] | select(.strength > 0.5)'`
+- Batch list: `jq -r '.associations[:10][].term' > terms.txt`
 
-# Longer, more meaningful patterns
-traceflux patterns src/ --min-length 8
-
-# Filter by frequency
-traceflux patterns src/ --min-length 6 --limit 20
-```
-
-See: `../README.md` for trade-offs explanation.
-
-### Combine with Standard Tools
-
-```bash
-# Count occurrences per file
-traceflux search "pattern" src/ --json | \
-  jq '.results | map({file, count: .positions | length})'
-
-# Find unique files
-traceflux search "pattern" src/ --json | \
-  jq -r '.results[].file' | sort -u
-
-# Pipe to grep for refinement
-traceflux associations "proxy" src/ | \
-  grep -E "(chain|tunnel|socks)"
-```
-
-### Use JSON for Automation
-
-```bash
-# Extract just the terms
-traceflux associations "pattern" src/ --json | \
-  jq -r '.associations[].term'
-
-# Filter by strength
-traceflux associations "pattern" src/ --json | \
-  jq '.associations[] | select(.strength > 0.5)'
-
-# Build a list for batch processing
-traceflux associations "pattern" src/ --json | \
-  jq -r '.associations[:10][].term' > terms.txt
-```
-
-### Combine Multiple Searches
-
-```bash
-# Search for multiple terms at once
-for term in "proxy" "config" "settings"; do
-    echo "=== $term ==="
-    traceflux search "$term" src/ --limit 3
-done
-```
+MULTIPLE SEARCHES: `for term in "proxy" "config"; do traceflux search "$term" src/ --limit 3; done`
 
 ---
 
