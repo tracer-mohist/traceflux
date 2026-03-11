@@ -1,0 +1,42 @@
+# Documentation Quality Checker Configuration
+#
+# Purpose: Configure whitelist and rules for check-docs-quality.py
+#
+# Philosophy:
+#   - Whitelist is for exceptions, not the rule
+#   - Keep whitelist minimal to encourage good documentation habits
+#   - Document why each whitelist entry exists
+
+# File length whitelist
+# Files that can exceed MAX_LINES (256)
+line_whitelist:
+  - CHANGELOG.md
+  - CHANGELOG
+  - HISTORY.md
+
+# Reason: Changelogs are inherently long lists
+
+# Path patterns to ignore
+ignore_patterns:
+  - "\\.git/"
+  - "\\.venv/"
+  - "node_modules/"
+  - "__pycache__/"
+  - "\\.pyc$"
+  - "test_corpus/"
+
+# Reason: Not documentation (generated, dependencies, tests)
+
+# Simple English configuration
+simple_english:
+  enabled: false  # WARNING: Currently disabled - requires NLP library
+  max_sentence_length: 25
+  check_active_voice: false
+  check_idioms: false
+
+# Reason: NLP libraries add heavy dependencies. Consider future implementation.
+
+# Notes:
+# - Rules 1-5 (file length, ASCII, emoji, code block type, one code block per heading) are always enforced
+# - Rule 6 (Simple English) is optional and currently disabled
+# - Whitelist should be reviewed periodically and reduced when possible

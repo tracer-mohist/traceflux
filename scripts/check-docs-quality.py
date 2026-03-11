@@ -16,6 +16,9 @@ Usage:
 Exit codes:
     0 - All checks passed
     1 - Errors found
+
+Configuration:
+    .docs-quality-config.yaml (optional)
 """
 
 import os
@@ -24,9 +27,24 @@ import sys
 from pathlib import Path
 from typing import List, Optional, Tuple
 
-# Configuration
+try:
+    import yaml
+
+    YAML_AVAILABLE = True
+except ImportError:
+    YAML_AVAILABLE = False
+
+# Default configuration
 MAX_LINES = 256
-LINE_WHITELIST = {"CHANGELOG.md", "CHANGELOG", "HISTORY.md"}
+DEFAULT_LINE_WHITELIST = {"CHANGELOG.md", "CHANGELOG", "HISTORY.md"}
+DEFAULT_IGNORE_PATTERNS = [
+    r"\.git/",
+    r"\.venv/",
+    r"node_modules/",
+    r"__pycache__/",
+    r"\.pyc$",
+    r"test_corpus/",
+]
 
 # Emoji ranges to block
 EMOJI_RANGES = [
@@ -56,15 +74,29 @@ ALLOWED_NON_ASCII = [
     (0x0370, 0x03FF),  # Greek and Coptic
 ]
 
-# Ignore patterns
-IGNORE_PATTERNS = [
-    r"\.git/",
-    r"\.venv/",
-    r"node_modules/",
-    r"__pycache__/",
-    r"\.pyc$",
-    r"test_corpus/",
-]
+
+def load_config() -> dict:
+    """Load configuration from .docs-quality-config.yaml if available."""
+    config_path = Path(".docs-quality-config.yaml")
+    if not config_path.exists() or not YAML_AVAILABLE:
+        return {
+            "line_whitelist": DEFAULT_LINE_WHITELIST,
+            "ignore_patterns": DEFAULT_IGNORE_PATTERNS,
+        }
+
+    try:
+        with open(config_path) as f:
+            config = yaml.safe_load(f)
+        return {
+            "line_whitelist": set(config.get("line_whitelist", DEFAULT_LINE_WHITELIST)),
+            "ignore_patterns": config.get("ignore_patterns", DEFAULT_IGNORE_PATTERNS),
+        }
+    except Exception:
+        # Fall back to defaults on error
+        return {
+            "line_whitelist": DEFAULT_LINE_WHITELIST,
+            "ignore_patterns": DEFAULT_IGNORE_PATTERNS,
+        }
 
 
 def is_emoji(code: int) -> bool:
@@ -77,12 +109,12 @@ def is_allowed_non_ascii(code: int) -> bool:
     return any(lo <= code <= hi for lo, hi in ALLOWED_NON_ASCII)
 
 
-def should_ignore(path: str) -> bool:
+def should_ignore(path: str, ignore_patterns: List[str]) -> bool:
     """Check if a path should be ignored."""
-    return any(re.search(pattern, path) for pattern in IGNORE_PATTERNS)
+    return any(re.search(pattern, path) for pattern in ignore_patterns)
 
 
-def collect_md_files(paths: List[str]) -> List[Path]:
+def collect_md_files(paths: List[str], ignore_patterns: List[str]) -> List[Path]:
     """Collect markdown files from paths."""
     files = []
     for path in paths:
@@ -90,21 +122,21 @@ def collect_md_files(paths: List[str]) -> List[Path]:
         if not p.exists():
             continue
         if p.is_file() and p.suffix == ".md":
-            if not should_ignore(str(p)):
+            if not should_ignore(str(p), ignore_patterns):
                 files.append(p)
         elif p.is_dir():
             for f in p.rglob("*.md"):
                 f_str = str(f)
                 # Normalize path separators for regex matching
                 f_normalized = f_str.replace("\\", "/")
-                if not should_ignore(f_normalized):
+                if not should_ignore(f_normalized, ignore_patterns):
                     files.append(f)
     return files
 
 
-def check_file_length(content: str, filepath: Path) -> Optional[str]:
+def check_file_length(content: str, filepath: Path, line_whitelist: set) -> Optional[str]:
     """Check if file exceeds maximum line count."""
-    if filepath.name in LINE_WHITELIST:
+    if filepath.name in line_whitelist:
         return None
 
     lines = content.split("\n")
@@ -167,7 +199,7 @@ def check_line_content(
     return None
 
 
-def check_file(filepath: Path) -> List[str]:
+def check_file(filepath: Path, line_whitelist: set, ignore_patterns: List[str]) -> List[str]:
     """Check a single markdown file."""
     errors = []
     warnings = []
@@ -178,7 +210,7 @@ def check_file(filepath: Path) -> List[str]:
         return [f"{filepath}: Failed to read: {e}"]
 
     # Check 1: File length
-    error = check_file_length(content, filepath)
+    error = check_file_length(content, filepath, line_whitelist)
     if error:
         errors.append(error)
 
@@ -222,12 +254,17 @@ def check_file(filepath: Path) -> List[str]:
 
 def main(args: List[str]) -> int:
     """Main entry point."""
+    # Load configuration
+    config = load_config()
+    line_whitelist = config["line_whitelist"]
+    ignore_patterns = config["ignore_patterns"]
+
     # Collect files
     if args:
         files = [Path(f) for f in args if f.endswith(".md")]
     else:
         # Default: check all markdown files in current directory
-        files = collect_md_files(["."])
+        files = collect_md_files(["."], ignore_patterns)
 
     if not files:
         print("No markdown files to check.")
@@ -236,7 +273,7 @@ def main(args: List[str]) -> int:
     # Check all files
     all_errors = []
     for filepath in sorted(files):
-        errors = check_file(filepath)
+        errors = check_file(filepath, line_whitelist, ignore_patterns)
         all_errors.extend(errors)
 
     # Report results
