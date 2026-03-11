@@ -1,11 +1,14 @@
-# .github/workflows/ci.yml
+# .github/workflows/validate.yml
 #
-# Continuous Integration
-# Runs on PR and push to main
-# Validates: test, lint, commit message, documentation
+# Validates code quality on every change
+# Runs: tests, linting, commit message format, documentation checks
+#
+# Triggers:
+# - Pull requests to main
+# - Direct pushes to main (safety net)
 #
 
-name: CI
+name: Validate
 
 on:
   push:

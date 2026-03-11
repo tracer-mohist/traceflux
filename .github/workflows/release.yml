@@ -1,11 +1,17 @@
-# .github/workflows/cd.yml
+# .github/workflows/release.yml
 #
-# Continuous Delivery
-# Triggers on push to main
-# Publishes release if semantic-release detects changes
+# Publishes new releases automatically
+# Uses semantic-release to calculate version from commit messages
+#
+# Triggers:
+# - Push to main (after validation passes)
+#
+# Behavior:
+# - If commits follow Conventional Commits: creates new release
+# - If no release-worthy commits: skips silently
 #
 
-name: CD
+name: Release
 
 on:
   push:
