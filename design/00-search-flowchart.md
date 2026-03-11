@@ -1,293 +1,171 @@
 # traceflux Search Flowchart (List Format)
 
-**Purpose**: Visualize search process from document to user.
+PURPOSE: Visualize search process from document to user.
 
-**Format**: Hierarchical list (easier to read than ASCII art).
+FORMAT: Hierarchical list (easier to read than ASCII art).
 
 ---
 
 ## Level 0: Document Library
 
-**Input**: Collection of documents
+INPUT: Collection of documents
 
-**Structure**:
-- Document 1
-  - Character sequence: [(char₀, pos₀), (char₁, pos₁), ...]
-- Document 2
-  - Character sequence: [(char₀, pos₀), (char₁, pos₁), ...]
-- Document N
-  - Character sequence: [(char₀, pos₀), (char₁, pos₁), ...]
+STRUCTURE:
+- Document N: Character sequence [(char0, pos0), (char1, pos1), ...]
 
-**Output**: Raw text data (UTF-8 encoded)
+OUTPUT: Raw text data (UTF-8 encoded)
 
 ---
 
 ## Level 1: Character Extraction
 
-**Purpose**: Convert documents to mathematical representation.
+PURPOSE: Convert documents to mathematical representation.
 
-**Process**:
-- For each document:
-  - Read as byte sequence (UTF-8)
-  - Convert to (char_code, position) pairs
-  - Store in index
+PROCESS:
+- For each document: Read as UTF-8 byte sequence, convert to (char_code, position) pairs, store in index
 
-**Example**:
-```
-Document: "Hello"
-
-Output:
-  - ('H', 0)
-  - ('e', 1)
-  - ('l', 2)
-  - ('l', 3)
-  - ('o', 4)
+EXAMPLE:
+```text
+Document: "Hello" -> [('H', 0), ('e', 1), ('l', 2), ('l', 3), ('o', 4)]
 ```
 
-**Output**: Character index
-```
-CharIndex = {
-  0x48 ('H'): [(doc₁, 0), (doc₅, 23), ...],
-  0x65 ('e'): [(doc₁, 1), (doc₂, 5), ...],
-  ...
-}
+OUTPUT: Character index
+```text
+CharIndex = { 0x48 ('H'): [(doc1, 0), (doc5, 23), ...], 0x65 ('e'): [(doc1, 1), (doc2, 5), ...] }
 ```
 
 ---
 
 ## Level 2: N-gram Abstraction
 
-**Purpose**: Create patterns from character sequences.
+PURPOSE: Create patterns from character sequences.
 
-**Process**:
-- For each character sequence:
-  - Extract n-grams (n=2,3,4,5)
-  - Record positions for each n-gram
-  - Build inverted index: n-gram → [positions]
+PROCESS:
+- Extract n-grams (n=2,3,4,5), record positions, build inverted index: n-gram -> [positions]
 
-**Example**:
-```
+EXAMPLE:
+```text
 Document: "Hello"
-
-2-grams (bigrams):
-  - "He" → [(doc₁, 0)]
-  - "el" → [(doc₁, 1)]
-  - "ll" → [(doc₁, 2)]
-  - "lo" → [(doc₁, 3)]
-
-3-grams (trigrams):
-  - "Hel" → [(doc₁, 0)]
-  - "ell" → [(doc₁, 1)]
-  - "llo" → [(doc₁, 2)]
+2-grams: "He"->[(doc1,0)], "el"->[(doc1,1)], "ll"->[(doc1,2)], "lo"->[(doc1,3)]
+3-grams: "Hel"->[(doc1,0)], "ell"->[(doc1,1)], "llo"->[(doc1,2)]
 ```
 
-**Output**: N-gram index
-```
-NGramIndex = {
-  "pro": [(doc₁, 10), (doc₁, 245), (doc₂, 892)],
-  "ro":  [(doc₁, 11), (doc₁, 246), (doc₂, 893)],
-  "xy":  [(doc₁, 13), (doc₁, 248), (doc₂, 895)],
-  ...
-}
+OUTPUT: N-gram index
+```text
+NGramIndex = { "pro": [(doc1,10), (doc1,245), (doc2,892)], "ro": [(doc1,11), ...], "xy": [(doc1,13), ...] }
 ```
 
 ---
 
 ## Level 3: Co-occurrence Analysis
 
-**Purpose**: Find relationships between n-grams.
+PURPOSE: Find relationships between n-grams.
 
-**Process**:
-- For each n-gram pair (G₁, G₂):
-  - Find positions where both appear
-  - Calculate distance: |pos₁ - pos₂|
-  - If distance ≤ window_size (e.g., 5):
-    - Record co-occurrence
-  - Build co-occurrence graph
+PROCESS:
+- For each n-gram pair (G1, G2): Find positions where both appear, calculate distance |pos1-pos2|, if distance <= window_size (e.g., 5) record co-occurrence, build co-occurrence graph
 
-**Example**:
-```
-N-gram "pro" at positions: [10, 245, 892]
-N-gram "xy" at positions: [13, 248, 895]
-
-Co-occurrences (window=5):
-  - Position 10 and 13: distance=3 ✓
-  - Position 245 and 248: distance=3 ✓
-  - Position 892 and 895: distance=3 ✓
-
-Result:
-  "pro" ↔ "xy" (strength: 3 co-occurrences, avg_distance: 3)
+EXAMPLE:
+```text
+N-gram "pro" at [10, 245, 892], "xy" at [13, 248, 895]
+Co-occurrences (window=5): 10-13 dist=3 [OK], 245-248 dist=3 [OK], 892-895 dist=3 [OK]
+Result: "pro" <-> "xy" (strength: 3 co-occurrences, avg_distance: 3)
 ```
 
-**Output**: Co-occurrence graph
-```
-CooccurrenceGraph = {
-  "pro": {
-    "xy": (count=3, avg_dist=3.0),
-    "config": (count=2, avg_dist=4.5),
-    "git": (count=2, avg_dist=2.0),
-  },
-  "xy": {
-    "pro": (count=3, avg_dist=3.0),
-    ...
-  },
-  ...
-}
+OUTPUT: Co-occurrence graph
+```text
+CooccurrenceGraph = { "pro": { "xy": (count=3, avg_dist=3.0), "config": (count=2, avg_dist=4.5) }, ... }
 ```
 
 ---
 
 ## Level 4: User Query Processing
 
-**Purpose**: Find associations for user's query.
+PURPOSE: Find associations for user's query.
 
-**Input**: User query string (e.g., "proxy")
+INPUT: User query string (e.g., "proxy")
 
-**Process**:
+PROCESS:
 
-### Step 1: Convert query to n-grams
-```
-Query: "proxy"
-
-N-grams:
-  - 2-grams: ["pr", "ro", "ox", "xy"]
-  - 3-grams: ["prox", "roxy"]
-  - 4-grams: ["proxy"]
+Step 1: Convert query to n-grams
+```text
+Query: "proxy" -> 2-grams: ["pr","ro","ox","xy"], 3-grams: ["prox","roxy"], 4-grams: ["proxy"]
 ```
 
-### Step 2: Find exact matches in index
-```
-"pro" → [doc₁:10, doc₁:245, doc₂:892]
-"xy"  → [doc₁:13, doc₁:248, doc₂:895]
+Step 2: Find exact matches in index
+```text
+"pro" -> [doc1:10, doc1:245, doc2:892], "xy" -> [doc1:13, doc1:248, doc2:895]
 ```
 
-### Step 3: Traverse co-occurrence graph (BFS, max_degrees=3)
-```
+Step 3: Traverse co-occurrence graph (BFS, max_degrees=3)
+```text
 Start: "pro"
-
-1° associations (direct):
-  - "xy" (same word, co-occur at distance 3)
-  - "ro" (adjacent n-gram)
-  - "ox" (adjacent n-gram)
-
-2° associations (friend's friend):
-  - "config" (co-occur with "pro" in doc₁)
-  - "git" (co-occur with "pro" in doc₁)
-  - "environment" (co-occur with "config")
-
-3° associations (distant):
-  - "security" (co-occur with "config")
-  - "authentication" (co-occur with "security")
-  - "firewall" (co-occur with "security")
+1st: "xy" (same word), "ro"/"ox" (adjacent)
+2nd: "config", "git", "environment" (co-occur with "pro")
+3rd: "security", "authentication", "firewall" (distant)
 ```
 
-### Step 4: Format output
-```
-For each association, include:
-  - N-gram (the related term)
-  - Degree (1°, 2°, 3°)
-  - Path (how connected: "pro" → "config" → "security")
-  - Co-occurrence count (strength)
-  - Average distance (closeness)
-  - Document locations (where found)
+Step 4: Format output
+```text
+For each: N-gram, Degree (1st/2nd/3rd), Path, Co-occurrence count, Avg distance, Document locations
 ```
 
-**Output**: List of associations (NO judgment on relevance)
-```
+OUTPUT: List of associations (NO judgment on relevance)
+```text
 Associations for "proxy":
-  1°:
-    - "xy" (path: ["pro", "xy"], count=3, avg_dist=3.0)
-    - "config" (path: ["pro", "config"], count=2, avg_dist=4.5)
-  
-  2°:
-    - "git" (path: ["pro", "git"], count=2, avg_dist=2.0)
-    - "environment" (path: ["pro", "config", "environment"], count=1, avg_dist=5.0)
-  
-  3°:
-    - "security" (path: ["pro", "config", "security"], count=1, avg_dist=6.0)
-    - "authentication" (path: ["pro", "config", "security", "authentication"], count=1, avg_dist=7.0)
+  1st: "xy" (path:["pro","xy"], count=3, avg_dist=3.0), "config" (path:["pro","config"], count=2, avg_dist=4.5)
+  2nd: "git" (path:["pro","git"], count=2, avg_dist=2.0), "environment" (path:["pro","config","environment"], count=1)
+  3rd: "security" (path:["pro","config","security"], count=1), "authentication" (path:[...], count=1)
 ```
 
 ---
 
 ## Level 5: User / Agent
 
-**Purpose**: Judge relevance and act.
+PURPOSE: Judge relevance and act.
 
-**Input**: List of associations with metadata
+INPUT: List of associations with metadata
 
-**Process**:
-- Review associations
-- Judge relevance based on current task/context
-- Select useful associations
-- Ignore irrelevant ones
+PROCESS: Review associations, judge relevance based on context, select useful, ignore irrelevant
 
-**Example**:
-```
-User Task: "Debug proxy configuration issue"
-
-Associations received:
-  1°: proxychains, git, config
-  2°: SSH, environment variables
-  3°: security, authentication
-
-User Judgment:
-  ✅ Use: proxychains, git, config, environment variables
-  ❌ Skip: SSH, security, authentication (not relevant for this task)
-
-User Action:
-  - Check proxychains configuration
-  - Review git proxy settings
-  - Inspect environment variables
+EXAMPLE:
+```text
+Task: "Debug proxy configuration issue"
+Received: 1st: proxychains/git/config, 2nd: SSH/env vars, 3rd: security/auth
+Judgment: [USE] proxychains/git/config/env, [SKIP] SSH/security/auth
+Action: Check proxychains config, review git proxy settings, inspect env vars
 ```
 
-**Output**: User takes action based on selected associations
+OUTPUT: User takes action based on selected associations
 
 ---
 
 ## Complete Flow Summary
 
-```
-1. Document Library
-   ↓ (character extraction)
-2. Character Index
-   ↓ (n-gram abstraction)
-3. N-gram Index
-   ↓ (co-occurrence analysis)
-4. Co-occurrence Graph
-   ↓ (query processing + BFS)
-5. Associations List
-   ↓ (user judgment)
-6. User Action
+```text
+1. Document Library -> 2. Character Index -> 3. N-gram Index -> 4. Co-occurrence Graph -> 5. Associations List -> 6. User Action
 ```
 
 ---
 
 ## Key Properties
 
-### Separation of Concerns
+Separation of Concerns:
+- LEVEL 0-4: Engine (objective, no judgment)
+- LEVEL 5: User/Agent (subjective, judges relevance)
 
-- **Level 0-4**: Engine (objective, no judgment)
-- **Level 5**: User/Agent (subjective, judges relevance)
-
-### Language Independence
-
+Language Independence:
 - All levels operate on character codes and positions
-- No linguistic assumptions (what is a "word"?)
-- Works for English, Chinese, Arabic, etc.
+- No linguistic assumptions, works for English/Chinese/Arabic/etc.
 
-### Mathematical Foundation
-
+Mathematical Foundation:
 - Level 1: Set theory (ordered pairs)
 - Level 2: Sequence theory (n-grams)
 - Level 3: Graph theory (co-occurrence graph)
 - Level 4: Graph traversal (BFS)
 - Level 5: User decision (outside scope)
 
-### No Hidden Judgment
-
+No Hidden Judgment:
 - Engine provides ALL associations (up to max_degrees)
-- No filtering by "seems irrelevant"
 - User sees everything, decides what's useful
 
 ---
@@ -300,9 +178,9 @@ User Action:
 - [ ] Level 4: Query processing (BFS)
 - [ ] Level 5: Output formatting (no judgment)
 
-**User/Agent responsibility**: Level 5 judgment (not implemented in engine)
+USER/AGENT RESPONSIBILITY: Level 5 judgment (not implemented in engine)
 
 ---
 
-**Status**: Flowchart complete in list format  
-**Next**: Implement Level 1-2 (character and n-gram indexing)
+STATUS: Flowchart complete in list format
+NEXT: Implement Level 1-2 (character and n-gram indexing)

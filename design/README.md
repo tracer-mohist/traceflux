@@ -1,14 +1,14 @@
 # Design Documents
 
-**Purpose**: Stable design specifications and architecture decisions.
+PURPOSE: Stable design specifications and architecture decisions.
 
-**Status**: Reviewed and approved (not drafts).
+STATUS: Reviewed and approved (not drafts).
 
 ---
 
 ## Structure
 
-```
+```text
 design/
 ├── README.md              # This file (index)
 ├── 01-core-concept.md     # Core concept & philosophy
@@ -22,11 +22,11 @@ design/
 ## Numbering System
 
 Files are numbered for logical ordering:
-- `01-*` — Foundation (concept, philosophy)
-- `02-*` — Interface (CLI, API)
-- `03-*` — Algorithms (scoring, extraction)
-- `04-*` — Implementation (code structure)
-- `05-*` — Testing (test strategy)
+- `01-*` -- Foundation (concept, philosophy)
+- `02-*` -- Interface (CLI, API)
+- `03-*` -- Algorithms (scoring, extraction)
+- `04-*` -- Implementation (code structure)
+- `05-*` -- Testing (test strategy)
 
 ---
 
@@ -35,9 +35,9 @@ Files are numbered for logical ordering:
 ```markdown
 # Design: [Component Name]
 
-**Status**: Draft / Approved / Deprecated  
-**Date**: YYYY-MM-DD  
-**Replaces**: (if applicable)
+STATUS: Draft / Approved / Deprecated
+DATE: YYYY-MM-DD
+REPLACES: (if applicable)
 
 ## Purpose
 
@@ -64,15 +64,15 @@ Links to related designs, research, external docs.
 
 ## Change Process
 
-1. **Research** — Explore in `research/`
-2. **Draft** — Write in `drafts/`
-3. **Review** — Discuss, iterate
-4. **Approve** — Move to `design/` with status "Approved"
-5. **Deprecate** — Mark as deprecated (don't delete)
+1. RESEARCH -- Explore in `research/`
+2. DRAFT -- Write in `drafts/`
+3. REVIEW -- Discuss, iterate
+4. APPROVE -- Move to `design/` with status "Approved"
+5. DEPRECATE -- Mark as deprecated (don't delete)
 
 ---
 
-**Related**:
-- `research/` — Exploratory research
-- `drafts/` — Work-in-progress
-- `docs/` — User-facing documentation
+RELATED:
+- `research/` -- Exploratory research
+- `drafts/` -- Work-in-progress
+- `docs/` -- User-facing documentation
