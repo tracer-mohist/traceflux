@@ -1,6 +1,6 @@
 # Algorithms
 
-**Purpose**: Implementation details for TraceFlux core algorithms.
+Purpose: Implementation details for TraceFlux core algorithms.
 
 ---
 
@@ -14,21 +14,21 @@ This directory contains algorithm implementations and technical specifications.
 
 ### Autocomplete Engine
 
-- **File**: [autocomplete.md](./autocomplete.md)
-- **Purpose**: Real-time search suggestions
-- **Techniques**: LZW compression, prefix trees, frequency ranking
+- File: [autocomplete.md](./autocomplete.md)
+- Purpose: Real-time search suggestions
+- Techniques: LZW compression, prefix trees, frequency ranking
 
 ### Divergent Search
 
-- **File**: [divergent-search.md](./divergent-search.md)
-- **Purpose**: Find non-obvious associations
-- **Techniques**: Multi-hop traversal, noise injection, six-degrees theory
+- File: [divergent-search.md](./divergent-search.md)
+- Purpose: Find non-obvious associations
+- Techniques: Multi-hop traversal, noise injection, six-degrees theory
 
 ### Punctuation Context Tree
 
-- **File**: [punctuation-context-tree.md](./punctuation-context-tree.md)
-- **Purpose**: Context-aware text segmentation
-- **Techniques**: Punctuation namespaces, context trees, boundary detection
+- File: [punctuation-context-tree.md](./punctuation-context-tree.md)
+- Purpose: Context-aware text segmentation
+- Techniques: Punctuation namespaces, context trees, boundary detection
 
 ---
 
@@ -48,4 +48,4 @@ This directory contains algorithm implementations and technical specifications.
 
 ---
 
-**NOTE**: Consolidated from research/01-foundations/ (2026-03-11)
+NOTE: Consolidated from research/01-foundations/ (2026-03-11)

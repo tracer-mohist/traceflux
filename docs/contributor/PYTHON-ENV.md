@@ -18,7 +18,7 @@ python --version
 
 # Check project's required version
 cat .python-version
-```
+```text
 
 ---
 
@@ -40,7 +40,7 @@ curl -sSL https://pdm.fming.dev/install-pdm.py | python3 -
 
 # Verify installation
 pdm --version
-```
+```text
 
 ### Project Setup
 
@@ -50,7 +50,7 @@ pdm install
 
 # Verify installation
 pdm run traceflux --help
-```
+```text
 
 ### Running Commands
 
@@ -69,7 +69,7 @@ pdm run pre-commit run --all-files
 # Run linters
 pdm run black src/
 pdm run flake8 src/
-```
+```text
 
 Why `pdm run`?
 - Uses project's virtual environment
@@ -90,7 +90,7 @@ pdm info --python
 
 # Show environment info
 pdm info
-```
+```text
 
 ### Manual Activation (Optional)
 
@@ -102,7 +102,7 @@ source .venv/bin/activate  # Linux/macOS
 # Now you can run commands without `pdm run`
 traceflux --help
 pytest
-```
+```text
 
 NOTE: Activation is optional. Using `pdm run` is recommended for clarity.
 
@@ -118,7 +118,7 @@ pdm run pre-commit install
 
 # Verify installation
 ls -la .git/hooks/pre-commit
-```
+```text
 
 Run manually:
 
@@ -128,7 +128,7 @@ pdm run pre-commit run --all-files
 
 # Run specific hook
 pdm run pre-commit run black
-```
+```text
 
 CONFIGURATION: `.pre-commit-config.yaml`
 
@@ -152,7 +152,7 @@ echo "3.13" > .python-version
 # Reinstall dependencies
 rm -rf .venv
 pdm install
-```
+```text
 
 ### Pre-commit Hook Failures
 
@@ -165,7 +165,7 @@ rm -rf ~/.cache/pre-commit
 
 # Reinstall hooks
 pdm run pre-commit install --force
-```
+```text
 
 ### Dependency Conflicts
 
@@ -179,7 +179,7 @@ pdm install
 
 # Or update specific dependency
 pdm update package-name
-```
+```text
 
 ---
 
@@ -201,7 +201,7 @@ pdm run pre-commit install
 # 4. Verify installation
 pdm run traceflux --help
 pdm run pytest
-```
+```text
 
 Development Workflow:
 
@@ -221,7 +221,7 @@ git commit -m "feat: add new feature"
 
 # Push
 git push
-```
+```text
 
 ---
 

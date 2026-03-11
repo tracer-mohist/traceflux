@@ -31,7 +31,7 @@ Only `pyproject.toml` maintains the version.
 ```bash
 # Run release - everything is automated
 pdm run semantic-release version
-```
+```text
 
 This automatically:
 1. Validates - Runs tests, lint, format checks (via `build_command`)
@@ -46,7 +46,7 @@ This automatically:
 ```bash
 # Push triggers GitHub Release creation
 git push origin main --tags
-```
+```text
 
 CI/CD will automatically create GitHub Release with changelog.
 
@@ -59,21 +59,21 @@ CI/CD will automatically create GitHub Release with changelog.
 ```bash
 # See what version would be released
 pdm run semantic-release version --print
-```
+```text
 
 ### Preview Changelog
 
 ```bash
 # See changelog entries
 pdm run semantic-release changelog --print
-```
+```text
 
 ### Dry Run
 
 ```bash
 # Test release without modifications
 pdm run semantic-release version --dry-run
-```
+```text
 
 ---
 
@@ -97,7 +97,7 @@ pdm run flake8 src/ tests/
 
 # Run application
 pdm run traceflux search "pattern" .
-```
+```text
 
 Why PDM: Manages virtual environment, dependencies, and command execution in one tool.
 
@@ -137,7 +137,7 @@ Cost: ~5 minutes per run (single Python version)
 Fix the reported issues, then re-run:
 ```bash
 pdm run semantic-release version
-```
+```text
 
 ### Tag Already Exists
 
@@ -145,7 +145,7 @@ pdm run semantic-release version
 git tag -d v1.0.1
 git push origin :refs/tags/v1.0.1
 pdm run semantic-release version
-```
+```text
 
 ### Force Specific Version Bump
 
@@ -154,7 +154,7 @@ pdm run semantic-release version
 pdm run semantic-release version --bump major
 pdm run semantic-release version --bump minor
 pdm run semantic-release version --bump patch
-```
+```text
 
 ---
 

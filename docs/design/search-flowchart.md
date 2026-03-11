@@ -27,12 +27,12 @@ PROCESS:
 EXAMPLE:
 ```text
 Document: "Hello" -> [('H', 0), ('e', 1), ('l', 2), ('l', 3), ('o', 4)]
-```
+```text
 
 OUTPUT: Character index
 ```text
 CharIndex = { 0x48 ('H'): [(doc1, 0), (doc5, 23), ...], 0x65 ('e'): [(doc1, 1), (doc2, 5), ...] }
-```
+```text
 
 ---
 
@@ -48,12 +48,12 @@ EXAMPLE:
 Document: "Hello"
 2-grams: "He"->[(doc1,0)], "el"->[(doc1,1)], "ll"->[(doc1,2)], "lo"->[(doc1,3)]
 3-grams: "Hel"->[(doc1,0)], "ell"->[(doc1,1)], "llo"->[(doc1,2)]
-```
+```text
 
 OUTPUT: N-gram index
 ```text
 NGramIndex = { "pro": [(doc1,10), (doc1,245), (doc2,892)], "ro": [(doc1,11), ...], "xy": [(doc1,13), ...] }
-```
+```text
 
 ---
 
@@ -69,12 +69,12 @@ EXAMPLE:
 N-gram "pro" at [10, 245, 892], "xy" at [13, 248, 895]
 Co-occurrences (window=5): 10-13 dist=3 [OK], 245-248 dist=3 [OK], 892-895 dist=3 [OK]
 Result: "pro" <-> "xy" (strength: 3 co-occurrences, avg_distance: 3)
-```
+```text
 
 OUTPUT: Co-occurrence graph
 ```text
 CooccurrenceGraph = { "pro": { "xy": (count=3, avg_dist=3.0), "config": (count=2, avg_dist=4.5) }, ... }
-```
+```text
 
 ---
 
@@ -89,12 +89,12 @@ PROCESS:
 Step 1: Convert query to n-grams
 ```text
 Query: "proxy" -> 2-grams: ["pr","ro","ox","xy"], 3-grams: ["prox","roxy"], 4-grams: ["proxy"]
-```
+```text
 
 Step 2: Find exact matches in index
 ```text
 "pro" -> [doc1:10, doc1:245, doc2:892], "xy" -> [doc1:13, doc1:248, doc2:895]
-```
+```text
 
 Step 3: Traverse co-occurrence graph (BFS, max_degrees=3)
 ```text
@@ -102,12 +102,12 @@ Start: "pro"
 1st: "xy" (same word), "ro"/"ox" (adjacent)
 2nd: "config", "git", "environment" (co-occur with "pro")
 3rd: "security", "authentication", "firewall" (distant)
-```
+```text
 
 Step 4: Format output
 ```text
 For each: N-gram, Degree (1st/2nd/3rd), Path, Co-occurrence count, Avg distance, Document locations
-```
+```text
 
 OUTPUT: List of associations (NO judgment on relevance)
 ```text
@@ -115,7 +115,7 @@ Associations for "proxy":
   1st: "xy" (path:["pro","xy"], count=3, avg_dist=3.0), "config" (path:["pro","config"], count=2, avg_dist=4.5)
   2nd: "git" (path:["pro","git"], count=2, avg_dist=2.0), "environment" (path:["pro","config","environment"], count=1)
   3rd: "security" (path:["pro","config","security"], count=1), "authentication" (path:[...], count=1)
-```
+```text
 
 ---
 
@@ -133,7 +133,7 @@ Task: "Debug proxy configuration issue"
 Received: 1st: proxychains/git/config, 2nd: SSH/env vars, 3rd: security/auth
 Judgment: [USE] proxychains/git/config/env, [SKIP] SSH/security/auth
 Action: Check proxychains config, review git proxy settings, inspect env vars
-```
+```text
 
 OUTPUT: User takes action based on selected associations
 
@@ -143,7 +143,7 @@ OUTPUT: User takes action based on selected associations
 
 ```text
 1. Document Library -> 2. Character Index -> 3. N-gram Index -> 4. Co-occurrence Graph -> 5. Associations List -> 6. User Action
-```
+```text
 
 ---
 

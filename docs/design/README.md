@@ -1,6 +1,6 @@
 # Design
 
-**Purpose**: System design documents and architecture.
+Purpose: System design documents and architecture.
 
 ---
 
@@ -8,9 +8,9 @@
 
 ### Search Flowchart
 
-- **File**: [search-flowchart.md](./search-flowchart.md)
-- **Purpose**: Visual flowchart of search process
-- **Type**: Architecture diagram
+- File: [search-flowchart.md](./search-flowchart.md)
+- Purpose: Visual flowchart of search process
+- Type: Architecture diagram
 
 ---
 
@@ -21,4 +21,4 @@
 
 ---
 
-**NOTE**: Moved from design/ (2026-03-11)
+NOTE: Moved from design/ (2026-03-11)

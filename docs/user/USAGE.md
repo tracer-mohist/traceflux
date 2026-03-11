@@ -15,7 +15,7 @@ Find text patterns in files.
 
 ```bash
 traceflux search "pattern" <path> [options]
-```
+```text
 
 Options:
 - --limit N: Limit results (default: 20)
@@ -33,7 +33,7 @@ traceflux search "import " src/ --limit 5
 
 # JSON output
 traceflux search "proxy" src/ --json | jq '.results[]'
-```
+```text
 
 ---
 
@@ -43,7 +43,7 @@ Find related concepts.
 
 ```bash
 traceflux associations "<term>" <path> [options]
-```
+```text
 
 Options:
 - --hops N: Association depth (1-3, default: 2)
@@ -65,7 +65,7 @@ traceflux associations "pattern" src/ --explain
 
 # JSON pipeline
 traceflux associations "proxy" src/ --json | jq '.associations[:5]'
-```
+```text
 
 ---
 
@@ -75,7 +75,7 @@ List discovered patterns.
 
 ```bash
 traceflux patterns <path> [options]
-```
+```text
 
 Options:
 - --min-length N: Minimum pattern length (default: 3)
@@ -93,7 +93,7 @@ traceflux patterns src/ --min-length 8
 
 # Top 30 patterns
 traceflux patterns src/ --limit 30
-```
+```text
 
 ---
 
@@ -103,13 +103,13 @@ Build persistent index.
 
 ```bash
 traceflux index <path> -o <output.json>
-```
+```text
 
 Example:
 
 ```bash
 traceflux index src/ -o index.json
-```
+```text
 
 ---
 
@@ -122,13 +122,13 @@ Associations for 'proxy' (hops=2):
   proxychains              strength: 0.85 (degree 1)
   HTTP_PROXY               strength: 0.72 (degree 1)
   git config               strength: 0.65 (degree 2)
-```
+```text
 
 ### JSON (Machine-Readable)
 
 ```bash
 traceflux associations "proxy" src/ --json
-```
+```text
 
 ```json
 {
@@ -137,19 +137,19 @@ traceflux associations "proxy" src/ --json
     {"term": "HTTP_PROXY", "strength": 0.72, "degree": 1}
   ]
 }
-```
+```text
 
 ### With Explanations
 
 ```bash
 traceflux associations "proxy" src/ --explain
-```
+```text
 
 ```html
 proxy -> pagerank -> rank
   proxy co-occurs with pagerank (strength: 0.90)
   pagerank co-occurs with rank (strength: 0.85)
-```
+```text
 
 ---
 
@@ -170,7 +170,7 @@ traceflux patterns src/ --min-length 8
 
 # Best (filter by frequency)
 traceflux patterns src/ --min-length 6 --limit 20
-```
+```text
 
 ### Design Trade-offs
 
@@ -197,7 +197,7 @@ traceflux associations "PageRank" src/ --hops 2
 
 # 3. Search and refine
 traceflux search "proxy" src/ | grep -v test
-```
+```text
 
 ### Pipeline Exploration
 
@@ -205,7 +205,7 @@ traceflux search "proxy" src/ | grep -v test
 traceflux associations "pattern" src/ --json | \
   jq -r '.associations[:5][].term' | \
   xargs -I {} traceflux search {} src/ --limit 3
-```
+```text
 
 ### UNIX Pipes
 
@@ -218,7 +218,7 @@ traceflux associations "proxy" src/ | grep HTTP
 
 # Pipe to jq
 traceflux associations "proxy" src/ --json | jq '.associations[]'
-```
+```text
 
 ---
 

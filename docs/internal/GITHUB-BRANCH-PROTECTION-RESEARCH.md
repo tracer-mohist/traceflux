@@ -24,7 +24,7 @@ Answer: YES - When `enforce_admins: true`, protection applies to everyone includ
 Retrieved via GitHub API:
 ```bash
 gh api /repos/tracer-mohist/traceflux/branches/main/protection
-```
+```text
 
 ### Settings
 
@@ -74,7 +74,7 @@ git push origin main
 gh api -X PUT /repos/tracer-mohist/traceflux/branches/main/protection \
   -F required_status_checks='{"contexts":["CI"]}' \
   -F required_pull_request_reviews='{"required_approving_review_count":1}'
-```
+```text
 
 RISK: Temporarily removes all protection
 
@@ -87,7 +87,7 @@ RISK: Temporarily removes all protection
 gh api -X PUT /repos/tracer-mohist/traceflux/branches/main/protection \
   -F enforce_admins=false \
   -F allow_force_pushes=true
-```
+```text
 
 RISK: Reduces protection level permanently
 
@@ -103,7 +103,7 @@ gh pr create --title "Phase 8: Infrastructure" --body "See status report"
 
 # Merge
 gh pr merge --merge
-```
+```text
 
 Benefit: Follows best practices, tests CI/CD
 
@@ -114,12 +114,12 @@ Benefit: Follows best practices, tests CI/CD
 ### Get Protection
 ```javascript
 GET /repos/{owner}/{repo}/branches/{branch}/protection
-```
+```text
 
 ### Update Protection
 ```javascript
 PUT /repos/{owner}/{repo}/branches/{branch}/protection
-```
+```text
 
 Parameters:
 - `required_status_checks`
@@ -132,7 +132,7 @@ Parameters:
 ### Delete Protection
 ```javascript
 DELETE /repos/{owner}/{repo}/branches/{branch}/protection
-```
+```text
 
 ---
 

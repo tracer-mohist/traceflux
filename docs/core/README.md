@@ -1,6 +1,6 @@
 # Core Concepts
 
-**Purpose**: Foundational concepts for TraceFlux text analysis.
+Purpose: Foundational concepts for TraceFlux text analysis.
 
 ---
 
@@ -8,23 +8,23 @@
 
 TraceFlux uses a layered approach to text analysis:
 
-1. **Text Segmentation** - Split text into readable units (not by spaces)
-2. **N-gram Analysis** - Extract character patterns at multiple scales
-3. **Frequency Ranking** - Weight patterns by occurrence and position
-4. **Mathematical Model** - Formal foundation for scoring and ranking
+1. Text Segmentation - Split text into readable units (not by spaces)
+2. N-gram Analysis - Extract character patterns at multiple scales
+3. Frequency Ranking - Weight patterns by occurrence and position
+4. Mathematical Model - Formal foundation for scoring and ranking
 
 ---
 
 ## Quick Start
 
-**New to TraceFlux?** Read in this order:
+New to TraceFlux? Read in this order:
 
 1. [Text Segmentation](./text-segmentation.md) - How we split text (spaces are readable!)
 2. [N-gram Analysis](./ngram-analysis.md) - Pattern extraction at character level
 3. [Frequency Ranking](./frequency-ranking.md) - LZW + PageRank for weighting
 4. [Mathematical Model](./mathematical-model.md) - Formal definitions and proofs
 
-**Need implementation details?** See [Algorithms](../algorithms/README.md)
+Need implementation details? See [Algorithms](../algorithms/README.md)
 
 ---
 
@@ -35,9 +35,9 @@ TraceFlux uses a layered approach to text analysis:
 Spaces are NOT punctuation. They are part of readable content.
 
 ```text
-Wrong: "Hello world" → ["Hello", "world"]
-Right: "Hello world" → ["Hello world"]
-```
+Wrong: "Hello world" -> ["Hello", "world"]
+Right: "Hello world" -> ["Hello world"]
+```text
 
 Why? Preserves word relationships and phrases.
 
@@ -61,14 +61,14 @@ Raw frequency is not enough. Use:
 
 ## File Structure
 
-```
+```text
 core/
 ├── README.md               # This file - overview and navigation
 ├── text-segmentation.md    # How to split text correctly
 ├── ngram-analysis.md       # N-gram extraction and usage
 ├── frequency-ranking.md    # LZW + PageRank weighting
 └── mathematical-model.md   # Formal mathematical foundation
-```
+```text
 
 ---
 
@@ -80,4 +80,4 @@ core/
 
 ---
 
-**NOTE**: Consolidated from research/01-foundations/ (2026-03-11)
+NOTE: Consolidated from research/01-foundations/ (2026-03-11)

@@ -28,7 +28,7 @@ traceflux search "class" src/pagerank.py
 
 # 3. Explore further
 traceflux associations "graph" src/ --hops 2
-```
+```text
 
 ### Result
 
@@ -56,7 +56,7 @@ traceflux associations "proxy" docs/ --hops 2
 
 # Search for specific config
 traceflux search "HTTP_PROXY" docs/
-```
+```text
 
 ### Result
 
@@ -83,7 +83,7 @@ traceflux associations "nilpotent" notes/ --hops 2
 
 # Follow the chain
 traceflux associations "RSA" notes/ --hops 2
-```
+```text
 
 ### Result
 
@@ -110,7 +110,7 @@ traceflux associations "timeout" logs/ --hops 2
 #   connection reset         strength: 0.82
 #   retry failed             strength: 0.75
 #   upstream error           strength: 0.68
-```
+```text
 
 ### Result
 
@@ -137,7 +137,7 @@ traceflux patterns src/ --min-length 8 --limit 30
 
 # Find associations with "class"
 traceflux associations "class" src/ --hops 1
-```
+```text
 
 ### Result
 
