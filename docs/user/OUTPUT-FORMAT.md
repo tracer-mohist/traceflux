@@ -61,7 +61,7 @@ SUCCESS: Found 'proxy' in 2 file(s)
 Related terms:
   - config                    (strength: 0.320, degree 1)
   - session                   (strength: 0.318, degree 1)
-```text
+```
 
 ### Associations Command
 
@@ -73,7 +73,7 @@ SUCCESS: Associations for 'proxy' (hops=2)
   - config                    (strength: 0.320, degree 1)
   - session                   (strength: 0.318, degree 1)
   - timeout                   (strength: 0.318, degree 1)
-```text
+```
 
 ### Patterns Command
 
@@ -85,7 +85,7 @@ Top 10 patterns:
   def                              45 occurrence(s)
   return                           32 occurrence(s)
   import                           28 occurrence(s)
-```text
+```
 
 ### Index Command (Verbose)
 
@@ -99,7 +99,7 @@ SUCCESS: Index saved to .traceflux_index.json
   Patterns: 156
   Documents: 5
   Total occurrences: 892
-```text
+```
 
 ### Error Cases
 
@@ -107,13 +107,13 @@ SUCCESS: Index saved to .traceflux_index.json
 $ traceflux search "xyz" /nonexistent/
 
 ERROR: No documents found to search
-```text
+```
 
 ```bash
 $ traceflux associations "missing" src/
 
 No associations found for 'missing'
-```text
+```
 
 ```bash
 $ traceflux search "test" /root/
@@ -121,7 +121,7 @@ $ traceflux search "test" /root/
 WARNING: Could not read /root/secret.txt: Permission denied
 SUCCESS: Found 'test' in 1 file(s)
 ...
-```text
+```
 
 ---
 
@@ -141,7 +141,7 @@ $ traceflux associations "proxy" src/ --json | jq '.associations[]'
   "pagerank": 0.156,
   "path": null
 }
-```text
+```
 
 JSON output is always plain ASCII - safe for parsing and piping.
 
@@ -155,7 +155,7 @@ Disable any future color support (currently no colors by default):
 
 ```bash
 NO_COLOR=1 traceflux search "proxy" src/
-```text
+```
 
 ### FORCE_COLOR
 
@@ -163,7 +163,7 @@ Force color output (if color support is added in future):
 
 ```bash
 FORCE_COLOR=1 traceflux search "proxy" src/
-```text
+```
 
 ---
 
@@ -205,7 +205,7 @@ If you're used to tools with colors (rg, grep --color):
 
 # New (plain):
 SUCCESS: Found 'proxy' in 2 file(s)
-```text
+```
 
 ### From Emoji Output
 
@@ -219,7 +219,7 @@ If you're used to tools with emoji:
 # New (plain):
 SUCCESS: Found 'proxy' in 2 file(s)
 WARNING: Could not read file.txt
-```text
+```
 
 ---
 
@@ -235,7 +235,7 @@ traceflux associations "proxy" src/ --json | jq '.associations[].term'
 
 # Bad: Parse human-readable output
 traceflux associations "proxy" src/ | grep -oP '^\s+\K\S+'
-```text
+```
 
 ### Filtering Output
 
@@ -250,7 +250,7 @@ traceflux index src/ -v 2>&1 | grep "^WARNING:"
 
 # Find successful searches
 traceflux search "pattern" src/ 2>&1 | grep "^SUCCESS:"
-```text
+```
 
 ### Logging
 
@@ -262,7 +262,7 @@ traceflux search "pattern" src/ > output.log 2>&1
 
 # Or separate
 traceflux search "pattern" src/ > output.log 2> errors.log
-```text
+```
 
 ---
 

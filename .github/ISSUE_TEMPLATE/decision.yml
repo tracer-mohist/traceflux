@@ -1,0 +1,87 @@
+name: Decision Record
+description: Record a temporary decision or design choice (short-term, project-specific)
+labels: ["decision", "tmp"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Decision Record
+
+        Use this template for **temporary decisions** that:
+        - Are project-specific (not general principles)
+        - May change within 6 months
+        - Need discussion and tracking
+
+        For **permanent rules**, update docs/ instead.
+
+  - type: input
+    id: context
+    attributes:
+      label: Decision Context
+      description: What situation requires this decision?
+      placeholder: "e.g., Need to choose between X and Y for feature Z"
+    validations:
+      required: true
+
+  - type: textarea
+    id: options
+    attributes:
+      label: Options Considered
+      description: What alternatives were evaluated?
+      placeholder: |
+        Option A: ...
+        Option B: ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Decision Rationale
+      description: Why was this option chosen?
+      placeholder: "Explain the reasoning, trade-offs, and assumptions"
+    validations:
+      required: true
+
+  - type: input
+    id: owner
+    attributes:
+      label: Decision Owner
+      description: Who is responsible for this decision? (GitHub username)
+      placeholder: "username"
+    validations:
+      required: false
+
+  - type: input
+    id: review_date
+    attributes:
+      label: Review Date
+      description: When should this decision be revisited? (YYYY-MM-DD)
+      placeholder: "2026-09-13"
+    validations:
+      required: false
+
+  - type: textarea
+    id: related
+    attributes:
+      label: Related Links
+      description: Link to related issues, PRs, code files, or docs
+      placeholder: |
+        - Related to #123
+        - Affects: src/module.py
+        - See: docs/design/xyz.md
+    validations:
+      required: false
+
+  - type: dropdown
+    id: impact
+    attributes:
+      label: Impact Scope
+      description: How broad is the impact of this decision?
+      options:
+        - Local (single module)
+        - Module (multiple files)
+        - Project-wide
+        - Cross-project
+    validations:
+      required: true

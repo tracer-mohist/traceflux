@@ -22,7 +22,7 @@ Wrong (space as punctuation):
 Right (space as readable):
   Segments: ["Hello world", "how are you"]
   Preserved: Natural phrases
-```text
+```
 
 ### Phrase Preservation Example
 
@@ -37,7 +37,7 @@ This preserves:
 - Complete sentence
 - Word order
 - Phrase structure ("quick brown fox", "lazy dog")
-```text
+```
 
 ---
 
@@ -47,7 +47,7 @@ This preserves:
 
 ```text
 , . ! ? ; : " ' ( ) [ ] { } < > « » „ " ' ... - - -
-```text
+```
 
 ### NOT Punctuation (Part of Content)
 
@@ -56,7 +56,7 @@ This preserves:
 '\t' (tab)
 '\n' (newline)
 '\r' (carriage return)
-```text
+```
 
 Rationale:
 - Spaces separate words but are part of readable content
@@ -99,7 +99,7 @@ Segments:
   3. Content: " How are you"
      Pre: "!", Post: "?"
      Type: hash("!?")
-```text
+```
 
 ### Type Identifier
 
@@ -175,7 +175,7 @@ def is_punctuation(char):
         return False
 
     return False
-```text
+```
 
 ### Segmentation Function
 
@@ -204,7 +204,7 @@ def segment_text(text):
         segments.append((current_segment, pre_punct, "END"))
 
     return segments
-```text
+```
 
 ---
 

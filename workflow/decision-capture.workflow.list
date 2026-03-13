@@ -1,0 +1,43 @@
+# decision-capture.workflow.list
+# Purpose: Route traceflux decisions to Issue vs Docs
+#
+# Contract:
+#   Pre:  Have decision/information to record
+#   Post: Stored in correct destination
+#   Invariant: Docs stay clean (permanent rules only)
+#
+# Imported from: workflow-as-list/workflow/decision-capture.workflow.list
+# Adapted for: traceflux project
+
+# WHY: Temporary decisions clutter docs
+- (classify) Determine destination
+  - Ask: Will this be relevant in 6 months? (yes/no)
+  - Ask: Is this traceflux-specific or general? (specific/general)
+  - Rule: If no OR specific -> Issue (temporary)
+  - Rule: If yes AND general -> Docs (permanent)
+
+# WHY: Issues track decisions with discussion
+- (create-issue) If temporary:
+  - Template: .github/ISSUE_TEMPLATE/decision.yml
+  - Fields: Context, Options, Rationale, Owner, Review Date
+  - Labels: decision, tmp
+  - Link: Related files/issues
+
+# WHY: Docs store timeless principles
+- (update-docs) If permanent:
+  - Target: docs/ directory or README.md
+  - Format: Follow prompt-engineering principles
+  - Commit: "docs: <summary>"
+
+# WHY: Traceability matters
+- (link) Cross-reference
+  - Issue -> Link to related docs
+  - Docs -> Link to decision issue (in comment)
+
+# WHY: Verify before moving on
+- (verify) Confirm recording
+  - Issue: Show URL
+  - Docs: Show git diff
+  - Ask: Correct? (yes/no)
+
+- End

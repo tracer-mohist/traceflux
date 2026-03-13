@@ -45,7 +45,7 @@ Configure in GitHub: Settings -> Branches -> Add branch protection rule
 # On GitHub: Issues -> New Issue
 # Or use GitHub CLI:
 gh issue create --title "feat: add multi-hop search" --body "Description..."
-```text
+```
 
 ### 2. Create Branch
 
@@ -58,7 +58,7 @@ git pull origin main
 
 # Create branch (example: issue #42)
 git checkout -b issue/42-multi-hop-search
-```text
+```
 
 EXAMPLES:
 - `issue/42-multi-hop-search`
@@ -79,7 +79,7 @@ git commit -m "docs: update installation guide"
 git commit -m "fix stuff"
 git commit -m "WIP"
 git commit -m "asdfasdf"
-```text
+```
 
 Commit often - Small, focused commits are easier to review.
 
@@ -95,7 +95,7 @@ gh pr create \
   --body "Closes #42" \
   --base main \
   --head issue/42-multi-hop-search
-```text
+```
 
 PR Title: Must follow Conventional Commits (same as commit messages)
 
@@ -122,7 +122,7 @@ Use "Create a merge commit" (NOT squash or rebase):
 Merge pull request #42 from tracer-mohist/issue/42-multi-hop-search
 
 feat: add multi-hop association search
-```text
+```
 
 Why merge commits?
 - Preserves individual commit history
@@ -162,7 +162,7 @@ git commit -m "feat: Added new feature"  # Past tense, capitalized
 git commit -m "feat: add new feature"
 git commit -m "fix: handle edge case"
 git commit -m "docs: update README"
-```text
+```
 
 Rules:
 - Lowercase after type (feat: add, not feat: Add)

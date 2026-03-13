@@ -101,7 +101,7 @@ Connection: Humor relies on distant, unexpected associations.
 4. Serendipitous Learning
    - Discover unexpected connections
    - "I didn't know I needed this!"
-```text
+```
 
 ### When Noise Becomes Problematic
 
@@ -115,7 +115,7 @@ Solution: Not filtering, but ORGANIZING!
   - Show degree labels (1st, 2nd, 3rd)
   - Let user choose depth
   - Provide path visualization
-```text
+```
 
 ---
 
@@ -155,7 +155,7 @@ def find_associations_organized(graph, start_word, max_degrees=4):
 #   3: [("key", ["proxy", "git", "SSH", "key"], 2), ...],
 #   4: [("encryption", [...], 1), ...]
 # }
-```text
+```
 
 ### User Control
 
@@ -170,7 +170,7 @@ Default: Show 1st and 2nd
 Power users: Enable all degrees
 
 User controls their own noise tolerance!
-```text
+```
 
 ### Path Visualization
 
@@ -181,7 +181,7 @@ Show the path, not just the result:
   Path: proxy -> git -> SSH -> key -> encryption
 
 User sees the connection chain and judges relevance!
-```text
+```
 
 ---
 
@@ -197,7 +197,7 @@ Both have value. Different tasks need different modes.
 
 Fact-finding: Use traditional search
 Creative exploration: Use multi-hop associations
-```text
+```
 
 ### Trust the User
 
@@ -210,7 +210,7 @@ System: "Here are all associations, organized by distance."
 User: "I'll choose what's relevant."
 
 Trust user's judgment!
-```text
+```
 
 ---
 

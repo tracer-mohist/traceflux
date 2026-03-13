@@ -14,7 +14,7 @@ Welcome! This guide helps you get started with traceflux development.
 # Clone your fork
 git clone https://github.com/YOUR_USERNAME/traceflux.git
 cd traceflux
-```text
+```
 
 ### 2. Install for Development
 
@@ -24,7 +24,7 @@ pdm install
 
 # Verify installation
 pdm run traceflux --help
-```text
+```
 
 ### 3. Enable Git Hooks
 
@@ -37,7 +37,7 @@ echo "# Test" > test.py
 git add test.py
 git commit -m "Test commit"
 # Should run pre-commit checks
-```text
+```
 
 ### 4. Run Tests
 
@@ -50,7 +50,7 @@ pdm run pytest --cov=src/traceflux --cov-report=term-missing
 
 # Run specific test
 pdm run pytest tests/test_scanner_unit.py -v
-```text
+```
 
 ---
 
@@ -74,7 +74,7 @@ git pull origin main
 git checkout -b feature/your-feature-name
 # or
 git checkout -b fix/bug-description
-```text
+```
 
 ### Step 3: Make Changes
 
@@ -88,7 +88,7 @@ pdm run pytest
 pdm run black src/ tests/
 pdm run isort src/ tests/
 pdm run flake8 src/ tests/
-```text
+```
 
 ### Step 4: Commit
 
@@ -98,7 +98,7 @@ git add .
 git commit -m "feat: add your feature description"
 
 # If hooks fail, fix issues and try again
-```text
+```
 
 ### Step 5: Push and Create PR
 
@@ -110,7 +110,7 @@ git push origin feature/your-feature-name
 # - Use the PR template
 # - Link to related issues
 # - Describe what you changed
-```text
+```
 
 ---
 
@@ -138,12 +138,12 @@ def test_your_feature():
     """Test your feature works correctly."""
     result = your_function()
     assert result == expected_value
-```text
+```
 
 Run tests before committing:
 ```bash
 pdm run pytest tests/test_your_feature.py -v
-```text
+```
 
 ### Documentation
 
@@ -181,7 +181,7 @@ pdm run pytest
 git add .
 git commit -m "feat: add new feature"
 git push origin feature/new-feature
-```text
+```
 
 ### Fix a Bug
 
@@ -202,7 +202,7 @@ pdm run pytest
 git add .
 git commit -m "fix: describe the bug fix"
 git push origin fix/bug-description
-```text
+```
 
 ### Update Documentation
 
@@ -219,7 +219,7 @@ git checkout -b docs/update-description
 git add .
 git commit -m "docs: improve description of X"
 git push origin docs/update-description
-```text
+```
 
 ---
 
@@ -241,7 +241,7 @@ git commit
 # Try again
 git add .
 git commit
-```text
+```
 
 ### Tests Fail
 
@@ -255,7 +255,7 @@ pdm run pytest tests/test_failing.py -v
 # Read error message
 # Fix the issue
 # Re-run tests
-```text
+```
 
 ### Can't Push to Repository
 
@@ -268,7 +268,7 @@ SOLUTION:
 git push origin your-branch
 
 # Then create PR from your fork to upstream
-```text
+```
 
 ---
 
@@ -295,7 +295,7 @@ traceflux/
 │   ├── RELEASE_PROTOCOL.md # Release process
 │   └── pull_request_template.md
 └── pyproject.toml          # Package configuration
-```text
+```
 
 ---
 

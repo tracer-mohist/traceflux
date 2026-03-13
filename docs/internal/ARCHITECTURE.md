@@ -41,7 +41,7 @@ AssociativeSearch (BFS traversal)
     |
     v
 Results
-```text
+```
 
 ---
 

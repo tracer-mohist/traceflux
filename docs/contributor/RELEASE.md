@@ -46,7 +46,7 @@ NOTE: No manual steps required.
 git commit -m "feat: add new feature"
 git push origin main
 # Done. CI/CD handles the rest.
-```text
+```
 
 ### Manual Release (Advanced / Emergency Only)
 
@@ -61,7 +61,7 @@ pdm run semantic-release version --dry-run
 
 # Force release (bypasses automatic calculation)
 pdm run semantic-release version --bump major
-```text
+```
 
 ---
 
@@ -85,7 +85,7 @@ pdm run flake8 src/ tests/
 
 # Run application
 pdm run traceflux search "pattern" .
-```text
+```
 
 Why PDM: Manages virtual environment, dependencies, and command execution in one tool.
 
@@ -126,7 +126,7 @@ Note: Release job runs on every push to main but only creates a release if commi
 Fix the reported issues, then re-run:
 ```bash
 pdm run semantic-release version
-```text
+```
 
 ### Tag Already Exists
 
@@ -134,7 +134,7 @@ pdm run semantic-release version
 git tag -d v1.0.1
 git push origin :refs/tags/v1.0.1
 pdm run semantic-release version
-```text
+```
 
 ---
 

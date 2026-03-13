@@ -12,7 +12,7 @@ RECOMMENDED: Install via pipx from GitHub
 ```bash
 pipx install git+https://github.com/tracer-mohist/traceflux.git
 traceflux --help
-```text
+```
 
 ---
 
@@ -35,7 +35,7 @@ pipx install git+https://github.com/tracer-mohist/traceflux.git@main
 # Verify installation
 traceflux --help
 traceflux search "pattern" .
-```text
+```
 
 PROS:
 -  No PyPI registration required
@@ -68,7 +68,7 @@ python3.11 -m pip install git+https://github.com/tracer-mohist/traceflux.git
 
 # Install editable (for development)
 pip install -e git+https://github.com/tracer-mohist/traceflux.git#egg=traceflux
-```text
+```
 
 PROS:
 -  Works with any Python environment
@@ -99,7 +99,7 @@ pip install -e .
 # Or use PDM (if available)
 pipx install pdm
 pdm install
-```text
+```
 
 PROS:
 -  Full control over installation
@@ -129,7 +129,7 @@ python -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -e .
 traceflux --help
-```text
+```
 
 PROS:
 -  No installation required
@@ -153,7 +153,7 @@ python3 -m pipx ensurepath
 
 # Install traceflux
 pipx install git+https://github.com/tracer-mohist/traceflux.git
-```text
+```
 
 ### macOS
 
@@ -164,7 +164,7 @@ pipx ensurepath
 
 # Install traceflux
 pipx install git+https://github.com/tracer-mohist/traceflux.git
-```text
+```
 
 ### Windows
 
@@ -175,7 +175,7 @@ python -m pipx ensurepath
 
 # Restart terminal, then install traceflux
 pipx install git+https://github.com/tracer-mohist/traceflux.git
-```text
+```
 
 ---
 
@@ -196,7 +196,7 @@ traceflux search "hello" test.txt
 
 # Test associations
 traceflux associations "hello" test.txt --hops 1
-```text
+```
 
 Expected output:
 ```bash
@@ -204,7 +204,7 @@ SUCCESS: Found 'hello' in 1 file(s)
 
   test.txt
     2 occurrence(s) at positions: [0, 12]
-```text
+```
 
 ---
 
@@ -221,7 +221,7 @@ pipx upgrade-all
 
 # Reinstall (if upgrade fails)
 pipx reinstall traceflux
-```text
+```
 
 ### Update Source Installation
 
@@ -234,7 +234,7 @@ git pull origin main
 
 # Reinstall
 pip install -e . --upgrade
-```text
+```
 
 ---
 
@@ -244,13 +244,13 @@ pip install -e . --upgrade
 
 ```bash
 pipx uninstall traceflux
-```text
+```
 
 ### Uninstall pip Installation
 
 ```bash
 pip uninstall traceflux
-```text
+```
 
 ### Manual Cleanup
 
@@ -260,7 +260,7 @@ rm -rf /path/to/traceflux
 
 # Remove cache files
 rm -rf ~/.cache/pip/wheels/traceflux*
-```text
+```
 
 ---
 
@@ -276,7 +276,7 @@ python3 -m pipx ensurepath
 
 # Restart terminal or reload shell
 source ~/.bashrc  # or ~/.zshrc
-```text
+```
 
 ### Issue: `permission denied` during installation
 
@@ -291,7 +291,7 @@ SOLUTION:
 traceflux requires Python 3.10+. Check version:
 ```bash
 python --version
-```text
+```
 
 If older than 3.10:
 - Install newer Python (pyenv, deadsnakes PPA, etc.)
@@ -309,7 +309,7 @@ pip cache purge
 
 # Try again
 pipx install git+https://github.com/tracer-mohist/traceflux.git
-```text
+```
 
 ---
 

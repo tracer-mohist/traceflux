@@ -88,13 +88,13 @@ Do not test indexing, caching, parallel processing. These were abandoned per UNI
 BAD: Tests internal implementation
 ```python
 assert scanner._tokens[0] == "proxy"
-```text
+```
 
 GOOD: Tests behavior
 ```python
 results = search("proxy", file)
 assert len(results) > 0
-```text
+```
 
 ### 2. Tests Should Be Understandable Without Comments
 
@@ -103,26 +103,26 @@ BAD: Requires comment to understand
 def test_foo():
     # Check that the thing works with the stuff
     assert func(x) == y
-```text
+```
 
 GOOD: Self-documenting
 ```python
 def test_search_finds_occurrences():
     results = search("proxy", "test.txt")
     assert len(results) > 0
-```text
+```
 
 ### 3. Tests Should Fail Clearly
 
 BAD: Unclear failure
 ```python
 assert len(results) == expected
-```text
+```
 
 GOOD: Clear failure message
 ```python
 assert len(results) == expected, f"Expected {expected} results, got {len(results)}"
-```text
+```
 
 ### 4. Tests Should Be Fast
 

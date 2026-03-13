@@ -37,7 +37,7 @@ Spaces are NOT punctuation. They are part of readable content.
 ```text
 Wrong: "Hello world" -> ["Hello", "world"]
 Right: "Hello world" -> ["Hello world"]
-```text
+```
 
 Why? Preserves word relationships and phrases.
 
@@ -68,7 +68,7 @@ core/
 ├── ngram-analysis.md       # N-gram extraction and usage
 ├── frequency-ranking.md    # LZW + PageRank weighting
 └── mathematical-model.md   # Formal mathematical foundation
-```text
+```
 
 ---
 
