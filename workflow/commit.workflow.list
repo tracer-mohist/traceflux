@@ -3,4 +3,14 @@
 # Usage: workflow check workflow/commit.workflow.list
 # Reference: https://www.conventionalcommits.org/en/v1.0.0/
 
-import: https://raw.githubusercontent.com/tracer-mohist/workflow-as-list/refs/heads/main/examples/git/commit.workflow.list
+- (start) Traceflux Commit Workflow
+  # Import base commit workflow from workflow-as-list
+  import: https://raw.githubusercontent.com/tracer-mohist/workflow-as-list/refs/heads/main/examples/git/commit.workflow.list
+
+- (traceflux-specific) Apply traceflux conventions
+  # traceflux-specific commit conventions
+  - NOTE: src/ changes use feat/fix (triggers version)
+  - NOTE: scripts/ changes use chore (no version bump)
+  - NOTE: tests/ changes use test
+
+- End

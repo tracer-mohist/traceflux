@@ -78,3 +78,15 @@ REFERENCE: CONTRIBUTING.md for full guide.
 
 Created: 2026-03-06
 Last Updated: 2026-03-10
+
+## Workflow Automation
+
+This project uses workflow-as-list for process automation.
+
+NOTE: For `.workflow.list` files, use `workflow --help` or execute:
+  workflow check/run/exec <workflow-name>
+
+Quick start:
+  workflow list              # List available workflows
+  workflow check <name>      # Validate workflow
+  workflow run <name>        # Start execution

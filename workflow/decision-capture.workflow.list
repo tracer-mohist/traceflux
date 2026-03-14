@@ -6,9 +6,14 @@
 #   Issue = Temporary decisions (< 6 months, traceflux-specific)
 #   Docs = Permanent rules (timeless principles)
 
-import: https://raw.githubusercontent.com/tracer-mohist/workflow-as-list/refs/heads/main/examples/decision/route.workflow.list
+- (start) Traceflux Decision Capture
+  # Import base decision-capture workflow from workflow-as-list
+  import: https://raw.githubusercontent.com/tracer-mohist/workflow-as-list/refs/heads/main/examples/decision/route.workflow.list
 
-# traceflux-specific customization:
-# - Issue template: .github/ISSUE_TEMPLATE/decision.yml
-# - Docs target: docs/ directory
-# - Labels: decision, tmp
+- (traceflux-specific) Apply traceflux conventions
+  # traceflux-specific customization:
+  # - Issue template: .github/ISSUE_TEMPLATE/decision.yml
+  # - Docs target: docs/ directory
+  # - Labels: decision, tmp
+
+- End
