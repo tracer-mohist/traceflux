@@ -72,6 +72,8 @@ pdm install --dev
 pytest
 ```
 
+NOTE: Before committing, review `workflow/commit.workflow.list` for commit message conventions.
+
 REFERENCE: CONTRIBUTING.md for full guide.
 
 ---

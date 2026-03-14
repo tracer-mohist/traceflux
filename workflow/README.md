@@ -33,6 +33,8 @@ workflow approve <name>
 workflow run <name>
 ```
 
+NOTE: Before `git commit`, run `workflow run commit` to follow conventions.
+
 Query structure: `ls workflow/`
 
 ---
