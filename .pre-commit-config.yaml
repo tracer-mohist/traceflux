@@ -68,3 +68,12 @@ repos:
         language: system
         files: \.md$
         pass_filenames: true
+
+      - id: check-code-quality
+        name: Check code quality (256 lines max)
+        entry: python scripts/check-code-quality.py
+        language: system
+        types: [python]
+        pass_filenames: false
+        # Exclude existing files that need refactoring (technical debt)
+        exclude: ^(src/traceflux/(patterns|scanner|pagerank|associations|graph)\.py)
