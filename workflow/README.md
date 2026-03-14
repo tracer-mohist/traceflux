@@ -39,14 +39,17 @@ Query structure: `ls workflow/`
 
 ## Remote Imports
 
-Some workflows import from workflow-as-list:
+Workflows use `import:` to reuse templates from workflow-as-list:
 
-```bash
-# Example: Import commit workflow
-curl -O https://raw.githubusercontent.com/tracer-mohist/workflow-as-list/refs/heads/main/examples/git/commit.workflow.list
+Example (workflow/commit.workflow.list):
+```text
+import: https://raw.githubusercontent.com/tracer-mohist/workflow-as-list/refs/heads/main/examples/git/commit.workflow.list
 ```
 
-See: workflow/commit.workflow.list
+Benefits:
+- Single source of truth (update once, all projects benefit)
+- Test import functionality (DSL feature validation)
+- Reduce duplication
 
 ---
 
@@ -60,7 +63,7 @@ Use: docs/
 - Permanent rules
 - General principles
 
-See: workflow/decision-capture.workflow.list
+See: workflow/decision-capture.workflow.list (imports base + traceflux customization)
 
 ---
 

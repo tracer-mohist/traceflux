@@ -1,52 +1,6 @@
-# Git Commit Helper
+# Git Commit Helper for traceflux
 # Purpose: Guide Conventional Commits 1.0.0 specification
-# Usage: workflow check examples/git/commit.workflow.list
+# Usage: workflow check workflow/commit.workflow.list
 # Reference: https://www.conventionalcommits.org/en/v1.0.0/
 
-# WHY: Show actual changed files for informed type selection
-# NOTE: Command output provides factual basis, not memory-based judgment
-- (analyze) Analyze changed files with git diff --cached --name-only
-  - Run: git diff --cached --name-only
-  - Show: Changed files list (use for type selection below)
-
-# WHY: Ensure clean changes before composing message
-# NOTE: Check for .env files and debug statements (common mistakes)
-- (start) Validate no sensitive files are committed
-  - Ask: Ready to commit? (yes/no, fix issues first if no)
-  - @start[1]: Ready?
-
-# WHY: Header is required per spec, type determines version bump (feat->MINOR, fix->PATCH)
-# NOTE: Only src/ changes should use feat/fix (triggers version), others use chore/docs/test
-# REFERENCE: .github/COMMIT_CONVENTION.md (src/=feat/fix, tests/=test, docs/=docs, .github/=ci, scripts/=chore)
-- (header) Compose commit message header following Conventional Commits format: type[scope]: description
-  - Ask: Type based on changed directory? (src/+feature->feat, src/+fix->fix, tests/->test, docs/->docs, .github/->ci, scripts/->chore, refactor->refactor)
-  - Ask: Scope? (optional: cli/executor/security/parser/server, skip if unclear)
-  - Ask: Description? (imperative mood, lowercase start, no period, under 72 characters)
-  - Show: Complete format is:
-    <type>(<scope>): <description>
-
-    [optional body - separate paragraph]
-
-    [optional footer - BREAKING CHANGE: / Closes #]
-
-# WHY: Body explains WHY not WHAT, optional for complex changes
-# NOTE: Wrap at 72 characters, use for motivation and alternatives
-- (body) Ask if body is needed for complex changes that require explanation
-  - Ask: Need body? (yes/no, yes if change needs context or motivation)
-  - If yes: Ask: Body content? (explain motivation, alternatives considered, assumptions)
-
-# WHY: BREAKING CHANGE triggers MAJOR version, issue links close tickets
-# NOTE: Footer is optional, use when applicable
-- (footer) Ask if footer is needed for BREAKING CHANGE or issue links
-  - Ask: Breaking API change? (yes -> add BREAKING CHANGE: <description> in footer)
-  - Ask: Issue to close? (yes -> add Closes #<number> in footer)
-
-# WHY: Final review before irreversible action
-# NOTE: Full format has header, blank line, body (optional), blank line, footer (optional)
-- (confirm) Show full formatted commit message with header, body (if any), and footer (if any), ask for final confirmation
-  - Ask: Confirm and execute git commit? (yes/no)
-  - @confirm[1]: Confirmed?
-  - Execute: git commit -m "<full message>"
-  - Show: Commit hash with git rev-parse --short HEAD
-
-- End
+import: https://raw.githubusercontent.com/tracer-mohist/workflow-as-list/refs/heads/main/examples/git/commit.workflow.list
